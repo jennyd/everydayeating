@@ -1,4 +1,4 @@
-from food.models import Ingredient, Dish
+from food.models import Ingredient, Dish, Amount
 from django.contrib import admin
 
 class IngredientAdmin(admin.ModelAdmin):
@@ -13,4 +13,7 @@ class DishAdmin(admin.ModelAdmin):
     search_fields = ['name', 'date_cooked']
 
 admin.site.register(Dish, DishAdmin)
+
+
+admin.site.register(Amount)
 
