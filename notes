@@ -46,8 +46,17 @@ class Meal(Nutrition):
 
 
 
+##########################################################
+#### planned apps
 
+# food: add and edit basic foods (which are for our purposes in infinite supply)
+# dish: add, edit and duplicate dishes, which are collections of fixed quantities of foods and/or other dishes
 
+# diary: assign foods and dishes to times and dates, both past and future
+# shoppinglist: produce a list of foods in all dishes until a specified point in the future
+
+# visualisetheveg: calculate the weight of vegetables in diary over a period of time and scale images of those vegetables to represent quantities consumed
+# caloriesources: visually represent sources of calories (meat, carb, fat etc) over a period of time
 
 
 
