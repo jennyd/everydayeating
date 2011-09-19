@@ -50,12 +50,27 @@ class Meal(Nutrition):
 #### planned apps
 
 # food: add and edit basic foods (which are for our purposes in infinite supply)
+
 # dish: add, edit and duplicate dishes, which are collections of fixed quantities of foods and/or other dishes
 
+# users: user accounts...
+
+# linkusers: allow portions of dishes to be sent to linked users
+
 # diary: assign foods and dishes to times and dates, both past and future
+
+# restaurant: allow diary entries with estimated calorie counts, which won't appear in later search results (and can't be duplicated?)
+
 # shoppinglist: produce a list of foods in all dishes until a specified point in the future
 
+# pots: enter names & weights of owned pans & bowls, and use them to simplify calculation of dish quantities
+
+# zerocalories: add and edit a user-specific list of foods which should be treated as having 0 calories, and don't require quantities to be specified
+
+# recipe: edit and display a dish as a recipe, with instructions, extra pictures and ability to publish/share it
+
 # visualisetheveg: calculate the weight of vegetables in diary over a period of time and scale images of those vegetables to represent quantities consumed
+
 # caloriesources: visually represent sources of calories (meat, carb, fat etc) over a period of time
 
 
