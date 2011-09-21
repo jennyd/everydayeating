@@ -39,6 +39,9 @@ class Dish(Nutrition):
     total_quantity_unit = models.CharField(max_length=5, choices=UNIT_CHOICES, default="g")
     date_cooked = models.DateField("the date on which the dish is cooked") # default...
 
+    class Meta:
+        verbose_name_plural = "dishes"
+
 
 
 class Amount(models.Model):
@@ -48,7 +51,6 @@ class Amount(models.Model):
     quantity = models.DecimalField("the quantity of this ingredient in the dish, in ingredient units", max_digits=6, decimal_places=2, blank=True)
     ingredient = models.ForeignKey(Ingredient, null=True, blank=True)
     dish_as_ingredient = models.ForeignKey(Dish, related_name='amounts_using_set', null=True, blank=True)
-
 
 
 
