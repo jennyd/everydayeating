@@ -42,6 +42,8 @@ class Dish(Nutrition):
 
 
 class Amount(models.Model):
+    def __unicode__(self):
+        return self.ingredient.name
     containing_dish = models.ForeignKey(Dish, related_name='contained_amounts_set')
     quantity = models.DecimalField("the quantity of this ingredient in the dish, in ingredient units", max_digits=6, decimal_places=2, blank=True)
     ingredient = models.ForeignKey(Ingredient, null=True, blank=True)
