@@ -4,7 +4,7 @@ from food.models import Ingredient
 
 
 def ingredient_index(request):
-    ingredient_list = Ingredient.objects.all().order_by('name')[:10]
+    ingredient_list = Ingredient.objects.all().order_by('name')#[:10]
     return render_to_response('food/ingredient_index.html', {'ingredient_list': ingredient_list})
 
 
