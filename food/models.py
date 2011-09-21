@@ -1,4 +1,6 @@
 from django.db import models
+from django.forms import ModelForm
+
 
 UNIT_CHOICES = (
         ('g', 'grams'),
@@ -28,6 +30,11 @@ class Ingredient(Nutrition):
     reference_quantity_unit = models.CharField(max_length=5, choices=UNIT_CHOICES, default="g")
     calories = models.DecimalField(max_digits=6, decimal_places=2)
     # add other nutrients to track later? fat, calories from carbs etc
+
+
+class IngredientForm(ModelForm):
+    class Meta: 
+        model = Ingredient
 
 
 

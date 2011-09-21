@@ -9,5 +9,7 @@ urlpatterns = patterns('food.views',
     # (r'^everydayeating/', include('everydayeating.foo.urls')),
     (r'^ingredients/$', 'ingredient_index'),
     (r'^ingredients/(?P<ingredient_id>\d+)/$', 'ingredient_detail'),
+    (r'^ingredients/(?P<ingredient_id>\d+)/edit/$', 'ingredient_edit'),
     (r'^ingredients/add/$', 'ingredient_add'),
+    (r'^ingredients/add/thanks/$', 'ingredient_add_thanks'),
 )
