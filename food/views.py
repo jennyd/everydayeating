@@ -1,4 +1,5 @@
-from django.shortcuts import render_to_response
+from django.shortcuts import render_to_response, get_object_or_404
+from django.http import Http404
 from food.models import Ingredient
 
 
@@ -18,8 +19,20 @@ def ingredient_index(request):
 
 #    return HttpResponse("Hello, world. You're at the ingredients index.")
 
+
 def ingredient_detail(request, ingredient_id):
-    return HttpResponse("You're looking at ingredient %s." % ingredient_id)
+    i = get_object_or_404(Ingredient, pk=ingredient_id)
+
+#    try:
+#        i = Ingredient.objects.get(pk=ingredient_id)
+#    except Ingredient.DoesNotExist:
+#        raise Http404
+
+    return render_to_response('food/ingredient_detail.html', {'ingredient': i})
+
+
+
+#    return HttpResponse("You're looking at ingredient %s." % ingredient_id)
 
 def ingredient_add(request):
     return HttpResponse("Hello, world. You're trying to add a new ingredient.")
