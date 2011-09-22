@@ -35,7 +35,23 @@ def ingredient_detail(request, ingredient_id):
 
 def ingredient_edit(request, ingredient_id):
     i = get_object_or_404(Ingredient, pk=ingredient_id)
-    return HttpResponse("Hello, world. You're trying to edit %s." % i.name)
+    if request.method == 'POST': # If the form has been submitted...
+        form = IngredientForm(request.POST, instance=i) # A form bound to the POST data
+        if form.is_valid(): # All validation rules pass
+            # Process the data in form.cleaned_data
+            # ...
+            # FIXME Is cleaning also necessary with ModelForm?
+            form.save()
+            return HttpResponseRedirect('thanks/') # Redirect after POST
+    else:
+        form = IngredientForm(instance=i) # A bound form
+        # FIXME name should not be editable (or if it is, a new ingredient should be added and the old one unedited)
+
+    return render_to_response('food/ingredient_edit.html', {
+        'form': form}, context_instance=RequestContext(request)) # render_to_response() wants RequestContext rather than Context (default) for its extra csrf token
+        # https://docs.djangoproject.com/en/1.2/ref/templates/api/#django-core-context-processors-csrf
+
+#    return HttpResponse("Hello, world. You're trying to edit %s." % i.name)
 
 
 def ingredient_add(request):
@@ -44,7 +60,7 @@ def ingredient_add(request):
         if form.is_valid(): # All validation rules pass
             # Process the data in form.cleaned_data
             # ...
-            # Is cleaning also necessary with ModelForm?
+            # FIXME Is cleaning also necessary with ModelForm?
             form.save()
             return HttpResponseRedirect('thanks/') # Redirect after POST
     else:
@@ -57,4 +73,9 @@ def ingredient_add(request):
 
 def ingredient_add_thanks(request):
     return HttpResponse("Thanks for adding a new ingredient!")
+
+
+def ingredient_edit_thanks(request, ingredient_id):
+#    return HttpResponse("Thanks! That ingredient has been updated.")
+    return HttpResponse("Thanks! %s has been updated." % ingredient_id) # FIXME would be better to have name here rather than id, but seems daft to have to get it again...
 
