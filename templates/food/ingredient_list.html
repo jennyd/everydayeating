@@ -1,9 +1,15 @@
 {% block content %}
     <h2>Ingredients</h2>
-    <ul>
+    <table>
         {% for ingredient in ingredient_list %}
-            <li><a href="/food/ingredients/{{ ingredient.id }}/">{{ ingredient.name }}</a></li>
+            <tr>
+            <td><a href="/food/ingredients/{{ ingredient.id }}/">{{ ingredient.name }}</a></td>
+            <td>{{ ingredient.calories }} calories per 
+            {% if ingredient.reference_quantity_unit == "items" %}{{ ingredient.name }}
+            {% else %}{{ ingredient.reference_quantity }}{{ ingredient.reference_quantity_unit }}
+            {% endif %}
+            </td></tr>
         {% endfor %}
-    </ul><br />
+    </table><br />
     <a href="/food/ingredients/add/">Add a new ingredient</a>
 {% endblock %}
