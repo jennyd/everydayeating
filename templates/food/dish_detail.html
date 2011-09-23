@@ -1,0 +1,10 @@
+<h1>{{ dish.name }}</h1>
+<ul>
+{% if dish.reference_quantity_unit == "items" %}
+    {{ dish.total_quantity }} {{ dish.name }} cooked on {{ dish.date_cooked }}.
+{% else %}
+    {{ dish.total_quantity }}{{ dish.total_quantity_unit }} of {{ dish.name }} cooked on {{ dish.date_cooked }}.
+{% endif %}
+</ul>
+
+<a href="/food/dishes/{{ dish.id }}/edit/">Edit this dish</a>

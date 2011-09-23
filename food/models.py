@@ -50,6 +50,11 @@ class Dish(Nutrition):
         verbose_name_plural = "dishes"
 
 
+class DishForm(ModelForm):
+    class Meta: 
+        model = Dish
+
+
 
 class Amount(models.Model):
     def __unicode__(self):
@@ -58,6 +63,11 @@ class Amount(models.Model):
     quantity = models.DecimalField("the quantity of this ingredient in the dish, in ingredient units", max_digits=6, decimal_places=2, blank=True)
     ingredient = models.ForeignKey(Ingredient, null=True, blank=True)
     dish_as_ingredient = models.ForeignKey(Dish, related_name='amounts_using_set', null=True, blank=True)
+
+
+class AmountForm(ModelForm):
+    class Meta: 
+        model = Amount
 
 
 

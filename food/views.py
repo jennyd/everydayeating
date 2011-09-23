@@ -1,7 +1,7 @@
 from django.shortcuts import HttpResponse, HttpResponseRedirect, render_to_response, get_object_or_404
 from django.template import RequestContext
 from django.http import Http404
-from food.models import Ingredient, IngredientForm
+from food.models import Ingredient, IngredientForm, Dish, DishForm, Amount, AmountForm
 
 
 def ingredient_index(request):
@@ -84,7 +84,19 @@ def ingredient_edit_thanks(request, ingredient_id):
     thanks_message = "Thanks! Ingredient %s has been updated." % ingredient_id
     return render_to_response('food/ingredient_thanks.html', {'thanks_message': thanks_message, 'ingredient_list': ingredient_list})
 
-
 #    return HttpResponse("Thanks! That ingredient has been updated.")
 #    return HttpResponse("Thanks! Ingredient %s has been updated." % ingredient_id) # FIXME would be better to have name here rather than id, but seems daft to have to get it again...
+
+
+#########################################
+
+def dish_index(request):
+    dish_list = Dish.objects.all().order_by('date_cooked')#[:10]
+    return render_to_response('food/dish_index.html', {'dish_list': dish_list})
+
+
+def dish_detail(request, dish_id):
+    d = get_object_or_404(Dish, pk=dish_id)
+    # get amounts for this dish and return them
+    return render_to_response('food/dish_detail.html', {'dish': d})
 
