@@ -15,4 +15,6 @@ urlpatterns = patterns('food.views',
     (r'^ingredients/add/thanks/$', 'ingredient_add_thanks'),
     (r'^dishes/$', 'dish_index'),
     (r'^dish/(?P<dish_id>\d+)/$', 'dish_detail'),
+    (r'^dishes/(?P<dish_id>\d+)/edit/$', 'dish_edit'),
+    (r'^dishes/(?P<dish_id>\d+)/edit/thanks/$', 'dish_edit_thanks'),
 )

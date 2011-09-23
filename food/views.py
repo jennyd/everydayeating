@@ -100,3 +100,30 @@ def dish_detail(request, dish_id):
     # get amounts for this dish and return them
     return render_to_response('food/dish_detail.html', {'dish': d})
 
+
+def dish_edit(request, dish_id):
+    d = get_object_or_404(Dish, pk=dish_id)
+    if request.method == 'POST': # If the form has been submitted...
+        form = DishForm(request.POST, instance=d) # A form bound to the POST data
+        if form.is_valid(): # All validation rules pass
+            # Process the data in form.cleaned_data
+            # ...
+            # FIXME Is cleaning also necessary with ModelForm?
+            form.save()
+            return HttpResponseRedirect('thanks/') # Redirect after POST
+    else:
+        form = DishForm(instance=d) # A bound form
+        # FIXME name should not be editable (or if it is, a new ingredient should be added and the old one unedited)
+
+    return render_to_response('food/dish_edit.html', {
+        'form': form}, context_instance=RequestContext(request))
+
+
+
+
+
+
+
+
+
+
