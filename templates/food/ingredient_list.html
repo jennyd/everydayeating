@@ -1,0 +1,9 @@
+{% block content %}
+    <h2>Ingredients</h2>
+    <ul>
+        {% for ingredient in ingredient_list %}
+            <li><a href="/food/ingredients/{{ ingredient.id }}/">{{ ingredient.name }}</a></li>
+        {% endfor %}
+    </ul><br />
+    <a href="/food/ingredients/add/">Add a new ingredient</a>
+{% endblock %}
