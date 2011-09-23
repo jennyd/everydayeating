@@ -72,10 +72,19 @@ def ingredient_add(request):
 
 
 def ingredient_add_thanks(request):
-    return HttpResponse("Thanks for adding a new ingredient!")
+    ingredient_list = Ingredient.objects.all().order_by('name')
+    thanks_message = "Thanks for adding a new ingredient!"
+    return render_to_response('food/ingredient_thanks.html', {'thanks_message': thanks_message, 'ingredient_list': ingredient_list})
+
+#    return HttpResponse("Thanks for adding a new ingredient!")
 
 
 def ingredient_edit_thanks(request, ingredient_id):
+    ingredient_list = Ingredient.objects.all().order_by('name')
+    thanks_message = "Thanks! Ingredient %s has been updated." % ingredient_id
+    return render_to_response('food/ingredient_thanks.html', {'thanks_message': thanks_message, 'ingredient_list': ingredient_list})
+
+
 #    return HttpResponse("Thanks! That ingredient has been updated.")
-    return HttpResponse("Thanks! %s has been updated." % ingredient_id) # FIXME would be better to have name here rather than id, but seems daft to have to get it again...
+#    return HttpResponse("Thanks! Ingredient %s has been updated." % ingredient_id) # FIXME would be better to have name here rather than id, but seems daft to have to get it again...
 
