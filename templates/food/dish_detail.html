@@ -1,21 +1,23 @@
 <h1>{{ dish.name }}</h1>
-<ul>
+<p>
 {% if dish.reference_quantity_unit == "items" %}
     {{ dish.total_quantity }} {{ dish.name }} cooked on {{ dish.date_cooked }}.
 {% else %}
     {{ dish.total_quantity }}{{ dish.total_quantity_unit }} of {{ dish.name }} cooked on {{ dish.date_cooked }}.
 {% endif %}
-</ul>
+<a href="/food/dishes/{{ dish.id }}/edit/">Edit</a><p/>
 
 {% if amounts %}
     Ingredients:
     <ul>
     {% for amount in amounts %}
-        {{ amount.quantity }}{{ amount.ingredient.reference_quantity_unit }} of {{ amount.ingredient }}<br />
+        {{ amount.quantity }}{{ amount.ingredient.reference_quantity_unit }} of {{ amount.ingredient }}
+        <a href="/food/dishes/{{ dish.id }}/edit/{{ amount.id}}">Edit</a>
+        <br />
     {% endfor %}
     </ul>
 {% else %}
     <p>This dish doesn't have any ingredients.</p>
 {% endif %}
 
-<a href="/food/dishes/{{ dish.id }}/edit/">Edit this dish</a>
+

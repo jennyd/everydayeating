@@ -98,28 +98,44 @@ def dish_index(request):
 def dish_detail(request, dish_id):
     d = get_object_or_404(Dish, pk=dish_id)
     # get amounts for this dish and return them
-    amounts = Amount.objects.filter(containing_dish=dish_id)    
+    amounts = Amount.objects.filter(containing_dish=dish_id)
     return render_to_response('food/dish_detail.html', {'dish': d, 'amounts': amounts})
 
 
 def dish_edit(request, dish_id):
     d = get_object_or_404(Dish, pk=dish_id)
     if request.method == 'POST': # If the form has been submitted...
-        form = DishForm(request.POST, instance=d) # A form bound to the POST data
+        dish_form = DishForm(request.POST, instance=d) # A form bound to the POST data
         if form.is_valid(): # All validation rules pass
             # Process the data in form.cleaned_data
             # ...
             # FIXME Is cleaning also necessary with ModelForm?
-            form.save()
+            dish_form.save()
             return HttpResponseRedirect('thanks/') # Redirect after POST
     else:
-        form = DishForm(instance=d) # A bound form
+        dish_form = DishForm(instance=d) # A bound form
         # FIXME name should not be editable (or if it is, a new ingredient should be added and the old one unedited)
 
     return render_to_response('food/dish_edit.html', {
-        'form': form}, context_instance=RequestContext(request))
+        'dish_form': dish_form}, context_instance=RequestContext(request))
 
 
+def amount_edit(request, dish_id, amount_id):
+    a = get_object_or_404(Amount, pk=amount_id)
+    if request.method == 'POST': # If the form has been submitted...
+        amount_form = AmountForm(request.POST, instance=a) # A form bound to the POST data
+        if form.is_valid(): # All validation rules pass
+            # Process the data in form.cleaned_data
+            # ...
+            # FIXME Is cleaning also necessary with ModelForm?
+            amount_form.save()
+            return HttpResponseRedirect('thanks/') # Redirect after POST
+    else:
+        amount_form = AmountForm(instance=a) # A bound form
+        # FIXME name should not be editable (or if it is, a new ingredient should be added and the old one unedited)
+
+    return render_to_response('food/amount_edit.html', {
+        'amount_form': amount_form}, context_instance=RequestContext(request))
 
 
 
