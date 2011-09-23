@@ -1,0 +1,13 @@
+{% block content %}
+    <h2>Dishes</h2>
+    <table>
+        {% for dish in dish_list %}
+            <tr>
+            <td><a href="/food/dish/{{ dish.id }}/">{{ dish.name }}</a></td>
+            <td>cooked on</td>
+            <td>{{ dish.date_cooked }}</td>
+            </tr>
+        {% endfor %}
+    </table><br />
+    <a href="/food/dishes/add/">Add a new dish</a>
+{% endblock %}
