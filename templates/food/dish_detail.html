@@ -7,4 +7,15 @@
 {% endif %}
 </ul>
 
+{% if amounts %}
+    Ingredients:
+    <ul>
+    {% for amount in amounts %}
+        {{ amount.quantity }}{{ amount.ingredient.reference_quantity_unit }} of {{ amount.ingredient }}<br />
+    {% endfor %}
+    </ul>
+{% else %}
+    <p>This dish doesn't have any ingredients.</p>
+{% endif %}
+
 <a href="/food/dishes/{{ dish.id }}/edit/">Edit this dish</a>

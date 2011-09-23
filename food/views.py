@@ -98,7 +98,8 @@ def dish_index(request):
 def dish_detail(request, dish_id):
     d = get_object_or_404(Dish, pk=dish_id)
     # get amounts for this dish and return them
-    return render_to_response('food/dish_detail.html', {'dish': d})
+    amounts = Amount.objects.filter(containing_dish=dish_id)    
+    return render_to_response('food/dish_detail.html', {'dish': d, 'amounts': amounts})
 
 
 def dish_edit(request, dish_id):
