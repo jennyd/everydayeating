@@ -35,25 +35,26 @@ from food.models import Ingredient, IngredientForm, Dish, DishForm, Amount, Amou
 ##    return HttpResponse("You're looking at ingredient %s." % ingredient_id)
 
 
-def ingredient_edit(request, ingredient_id):
-    i = get_object_or_404(Ingredient, pk=ingredient_id)
-    if request.method == 'POST': # If the form has been submitted...
-        form = IngredientForm(request.POST, instance=i) # A form bound to the POST data
-        if form.is_valid(): # All validation rules pass
-            # Process the data in form.cleaned_data
-            # ...
-            # FIXME Is cleaning also necessary with ModelForm?
-            form.save()
-            return HttpResponseRedirect('thanks/') # Redirect after POST
-    else:
-        form = IngredientForm(instance=i) # A bound form
-        # FIXME name should not be editable (or if it is, a new ingredient should be added and the old one unedited)
+#### not used now - generic view for ingredient_edit instead
+#def ingredient_edit(request, ingredient_id):
+#    i = get_object_or_404(Ingredient, pk=ingredient_id)
+#    if request.method == 'POST': # If the form has been submitted...
+#        form = IngredientForm(request.POST, instance=i) # A form bound to the POST data
+#        if form.is_valid(): # All validation rules pass
+#            # Process the data in form.cleaned_data
+#            # ...
+#            # FIXME Is cleaning also necessary with ModelForm?
+#            form.save()
+#            return HttpResponseRedirect('thanks/') # Redirect after POST
+#    else:
+#        form = IngredientForm(instance=i) # A bound form
+#        # FIXME name should not be editable (or if it is, a new ingredient should be added and the old one unedited)
 
-    return render_to_response('food/ingredient_edit.html', {
-        'form': form}, context_instance=RequestContext(request)) # render_to_response() wants RequestContext rather than Context (default) for its extra csrf token
-        # https://docs.djangoproject.com/en/1.2/ref/templates/api/#django-core-context-processors-csrf
+#    return render_to_response('food/ingredient_edit.html', {
+#        'form': form}, context_instance=RequestContext(request)) # render_to_response() wants RequestContext rather than Context (default) for its extra csrf token
+#        # https://docs.djangoproject.com/en/1.2/ref/templates/api/#django-core-context-processors-csrf
 
-#    return HttpResponse("Hello, world. You're trying to edit %s." % i.name)
+##    return HttpResponse("Hello, world. You're trying to edit %s." % i.name)
 
 
 #### not used now - generic view for ingredient_add instead
@@ -83,13 +84,14 @@ def ingredient_edit(request, ingredient_id):
 #    return HttpResponse("Thanks for adding a new ingredient!")
 
 
-def ingredient_edit_thanks(request, ingredient_id):
-    ingredient_list = Ingredient.objects.all().order_by('name')
-    thanks_message = "Thanks! Ingredient %s has been updated." % ingredient_id
-    return render_to_response('food/ingredient_thanks.html', {'thanks_message': thanks_message, 'ingredient_list': ingredient_list})
+#### not used now - generic view for ingredient_edit instead
+#def ingredient_edit_thanks(request, ingredient_id):
+#    ingredient_list = Ingredient.objects.all().order_by('name')
+#    thanks_message = "Thanks! Ingredient %s has been updated." % ingredient_id
+#    return render_to_response('food/ingredient_thanks.html', {'thanks_message': thanks_message, 'ingredient_list': ingredient_list})
 
-#    return HttpResponse("Thanks! That ingredient has been updated.")
-#    return HttpResponse("Thanks! Ingredient %s has been updated." % ingredient_id) # FIXME would be better to have name here rather than id, but seems daft to have to get it again...
+##    return HttpResponse("Thanks! That ingredient has been updated.")
+##    return HttpResponse("Thanks! Ingredient %s has been updated." % ingredient_id) # FIXME would be better to have name here rather than id, but seems daft to have to get it again...
 
 
 #########################################

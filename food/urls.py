@@ -11,6 +11,7 @@ ingredient_info = {
     "template_object_name" : "ingredient",
 }
 
+# using ingredient_add_info for edit too - same options for now
 ingredient_add_info = {
     "model" : Ingredient,
     "post_save_redirect" : "/food/ingredients/",
@@ -32,8 +33,8 @@ urlpatterns = patterns('food.views',
     # (r'^everydayeating/', include('everydayeating.foo.urls')),
 #    (r'^ingredients/$', 'ingredient_index'),
 #    (r'^ingredients/(?P<ingredient_id>\d+)/$', 'ingredient_detail'),
-    url(r'^ingredients/(?P<ingredient_id>\d+)/edit/$', 'ingredient_edit', name="ingredient_edit"),
-    url(r'^ingredients/(?P<ingredient_id>\d+)/edit/thanks/$', 'ingredient_edit_thanks', name="ingredient_edit_thanks"),
+#    url(r'^ingredients/(?P<ingredient_id>\d+)/edit/$', 'ingredient_edit', name="ingredient_edit"),
+#    url(r'^ingredients/(?P<ingredient_id>\d+)/edit/thanks/$', 'ingredient_edit_thanks', name="ingredient_edit_thanks"),
 #    url(r'^ingredients/add/$', 'ingredient_add', name="ingredient_add"),
 #    url(r'^ingredients/add/thanks/$', 'ingredient_add_thanks', name="ingredient_add_thanks"),
 #    (r'^dishes/$', 'dish_index'),
@@ -49,6 +50,7 @@ urlpatterns += patterns('',
     url(r'^ingredients/$', list_detail.object_list, ingredient_info, "ingredient_list"),
     url(r'^ingredients/add/$', create_update.create_object, ingredient_add_info, "ingredient_add"),
     url(r'^ingredients/(?P<object_id>\d+)/$', list_detail.object_detail, ingredient_detail, "ingredient_detail"),
+    url(r'^ingredients/(?P<object_id>\d+)/edit/$', create_update.update_object, ingredient_add_info, "ingredient_edit"),
     url(r'^dishes/$', list_detail.object_list, dish_info, "dish_list"),
 )
 
