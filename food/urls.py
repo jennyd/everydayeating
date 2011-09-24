@@ -42,7 +42,7 @@ urlpatterns = patterns('food.views',
 urlpatterns += patterns('',
     url(r'^$', simple.direct_to_template, {'template': 'food/food_index.html'}, "food_index"),
     url(r'^ingredients/$', list_detail.object_list, ingredient_info, "ingredient_list"),
-    url(r'^dishes/$', list_detail.object_list, dish_info, "dish_list"),
     url(r'^ingredients/(?P<object_id>\d+)/$', list_detail.object_detail, ingredient_detail, "ingredient_detail"),
+    url(r'^dishes/$', list_detail.object_list, dish_info, "dish_list"),
 )
 
