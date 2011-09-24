@@ -120,6 +120,10 @@ def dish_edit(request, dish_id):
         'dish_form': dish_form}, context_instance=RequestContext(request))
 
 
+def dish_edit_thanks(request, dish_id):
+    return HttpResponse("Thanks! That dish has been updated.")
+
+
 def amount_edit(request, dish_id, amount_id):
     a = get_object_or_404(Amount, pk=amount_id)
     if request.method == 'POST': # If the form has been submitted...
@@ -138,6 +142,8 @@ def amount_edit(request, dish_id, amount_id):
         'amount_form': amount_form}, context_instance=RequestContext(request))
 
 
+def amount_edit_thanks(request, dish_id, amount_id):
+    return HttpResponse("Thanks! That amount has been updated.")
 
 
 
