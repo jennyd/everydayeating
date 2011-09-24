@@ -5,14 +5,14 @@
 {% else %}
     {{ dish.total_quantity }}{{ dish.total_quantity_unit }} of {{ dish.name }} cooked on {{ dish.date_cooked }}.
 {% endif %}
-<a href="/food/dishes/{{ dish.id }}/edit/">Edit</a><p/>
+<a href="{% url dish_edit dish.id %}">Edit</a><p/>
 
 {% if amounts %}
     Ingredients:
     <ul>
     {% for amount in amounts %}
         {{ amount.quantity }}{{ amount.ingredient.reference_quantity_unit }} of {{ amount.ingredient }}
-        <a href="/food/dishes/{{ dish.id }}/edit/{{ amount.id}}">Edit</a>
+        <a href="{% url amount_edit dish.id amount.id %}">Edit</a>
         <br />
     {% endfor %}
     </ul>

@@ -1,11 +1,11 @@
 {% block message %}{% endblock %}
 
-<a href="/food/dishes/add/">Add a new dish</a>
+<a href="{% url dish_add %}">Add a new dish</a>
 
 {% if dish_list %}
     <ul>
     {% for dish in dish_list %}
-        <li><a href="/food/dish/{{ dish.id }}/">{{ dish.name }}</a> cooked on {{ dish.date_cooked }}</li>
+        <li><a href="{% url dish_detail dish.id %}">{{ dish.name }}</a> cooked on {{ dish.date_cooked }}</li>
     {% endfor %}
     </ul>
 {% else %}

@@ -7,4 +7,4 @@
 {% endif %}
 </ul>
 
-<a href="/food/ingredients/{{ ingredient.id }}/edit/">Edit this ingredient</a>
+<a href="{% url ingredient_edit ingredient.id %}">Edit this ingredient</a>
