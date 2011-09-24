@@ -1,5 +1,5 @@
 from django.conf.urls.defaults import *
-from django.views.generic import list_detail
+from django.views.generic import simple, list_detail
 from food.models import Ingredient, Dish
 
 # Uncomment the next two lines to enable the admin:
@@ -39,6 +39,7 @@ urlpatterns = patterns('food.views',
 )
 
 urlpatterns += patterns('',
+    (r'^$', simple.direct_to_template, {'template': 'food/food_index.html'}),
     (r'^ingredients/$', list_detail.object_list, ingredient_info),
     (r'^dishes/$', list_detail.object_list, dish_info),
     (r'^ingredients/(?P<object_id>\d+)/$', list_detail.object_detail, ingredient_detail),
