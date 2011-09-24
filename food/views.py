@@ -106,7 +106,7 @@ def dish_edit(request, dish_id):
     d = get_object_or_404(Dish, pk=dish_id)
     if request.method == 'POST': # If the form has been submitted...
         dish_form = DishForm(request.POST, instance=d) # A form bound to the POST data
-        if form.is_valid(): # All validation rules pass
+        if dish_form.is_valid(): # All validation rules pass
             # Process the data in form.cleaned_data
             # ...
             # FIXME Is cleaning also necessary with ModelForm?
@@ -124,7 +124,7 @@ def amount_edit(request, dish_id, amount_id):
     a = get_object_or_404(Amount, pk=amount_id)
     if request.method == 'POST': # If the form has been submitted...
         amount_form = AmountForm(request.POST, instance=a) # A form bound to the POST data
-        if form.is_valid(): # All validation rules pass
+        if amount_form.is_valid(): # All validation rules pass
             # Process the data in form.cleaned_data
             # ...
             # FIXME Is cleaning also necessary with ModelForm?
