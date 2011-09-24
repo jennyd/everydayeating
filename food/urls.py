@@ -16,11 +16,17 @@ dish_info = {
     "template_object_name" : "dish",
 }
 
+ingredient_detail = {
+    "queryset" : Ingredient.objects.all(),
+    "template_object_name" : "ingredient",
+#    "object_id" : "ingredient_id",
+}
+
 urlpatterns = patterns('food.views',
     # Example:
     # (r'^everydayeating/', include('everydayeating.foo.urls')),
 #    (r'^ingredients/$', 'ingredient_index'),
-    (r'^ingredients/(?P<ingredient_id>\d+)/$', 'ingredient_detail'),
+#    (r'^ingredients/(?P<ingredient_id>\d+)/$', 'ingredient_detail'),
     (r'^ingredients/(?P<ingredient_id>\d+)/edit/$', 'ingredient_edit'),
     (r'^ingredients/(?P<ingredient_id>\d+)/edit/thanks/$', 'ingredient_edit_thanks'),
     (r'^ingredients/add/$', 'ingredient_add'),
@@ -35,5 +41,6 @@ urlpatterns = patterns('food.views',
 urlpatterns += patterns('',
     (r'^ingredients/$', list_detail.object_list, ingredient_info),
     (r'^dishes/$', list_detail.object_list, dish_info),
+    (r'^ingredients/(?P<object_id>\d+)/$', list_detail.object_detail, ingredient_detail),
 )
 
