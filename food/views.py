@@ -102,11 +102,12 @@ from food.models import Ingredient, IngredientForm, Dish, DishForm, Amount, Amou
 #    return render_to_response('food/dish_index.html', {'dish_list': dish_list})
 
 
-def dish_detail(request, dish_id):
-    d = get_object_or_404(Dish, pk=dish_id)
-    # get amounts for this dish and return them
-    amounts = Amount.objects.filter(containing_dish=dish_id)
-    return render_to_response('food/dish_detail.html', {'dish': d, 'amounts': amounts})
+#### not used now - generic view for dish_detail instead
+#def dish_detail(request, dish_id):
+#    d = get_object_or_404(Dish, pk=dish_id)
+#    # get amounts for this dish and return them
+#    amounts = Amount.objects.filter(containing_dish=dish_id)
+#    return render_to_response('food/dish_detail.html', {'dish': d, 'amounts': amounts})
 
 
 def dish_edit(request, dish_id):
