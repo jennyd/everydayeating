@@ -1,6 +1,6 @@
 from django.conf.urls.defaults import *
 from django.views.generic import simple, list_detail, create_update
-from food.models import Ingredient, Dish
+from food.models import Ingredient, Dish, Amount
 
 # Uncomment the next two lines to enable the admin:
 from django.contrib import admin
@@ -28,10 +28,11 @@ ingredient_detail_info = {
 #    "object_id" : "ingredient_id",
 }
 
-dish_detail_info = {
-    "queryset" : Dish.objects.all(),
-    "template_object_name" : "dish",
-}
+#dish_detail_info = {
+#    "queryset" : Dish.objects.all(),
+#    "template_object_name" : "dish",
+#    "extra_context" : {"amounts" : get_amounts},
+#}
 
 urlpatterns = patterns('food.views',
     # Example:
@@ -43,7 +44,7 @@ urlpatterns = patterns('food.views',
 #    url(r'^ingredients/add/$', 'ingredient_add', name="ingredient_add"),
 #    url(r'^ingredients/add/thanks/$', 'ingredient_add_thanks', name="ingredient_add_thanks"),
 #    (r'^dishes/$', 'dish_index'),
-#    url(r'^dishes/(?P<dish_id>\d+)/$', 'dish_detail', name="dish_detail"),
+    url(r'^dishes/(?P<dish_id>\d+)/$', 'dish_detail_with_amounts', name="dish_detail"),
     url(r'^dishes/(?P<dish_id>\d+)/edit/$', 'dish_edit', name="dish_edit"),
     url(r'^dishes/(?P<dish_id>\d+)/edit/(?P<amount_id>\d+)/$', 'amount_edit', name="amount_edit"),
     url(r'^dishes/(?P<dish_id>\d+)/edit/thanks/$', 'dish_edit_thanks', name="dish_edit_thanks"),
@@ -57,6 +58,6 @@ urlpatterns += patterns('',
     url(r'^ingredients/(?P<object_id>\d+)/$', list_detail.object_detail, ingredient_detail_info, "ingredient_detail"),
     url(r'^ingredients/(?P<object_id>\d+)/edit/$', create_update.update_object, ingredient_add_info, "ingredient_edit"),
     url(r'^dishes/$', list_detail.object_list, dish_info, "dish_list"),
-    url(r'^dishes/(?P<object_id>\d+)/$', list_detail.object_detail, dish_detail_info, "dish_detail"),
+#    url(r'^dishes/(?P<object_id>\d+)/$', list_detail.object_detail, dish_detail_info, "dish_detail"),
 )
 

@@ -11,7 +11,6 @@
     {% endif %}
     <a href="{% url dish_edit dish.id %}">Edit</a><p/>
     
-{% comment %}
     {% if amounts %}
         Ingredients:
         <ul>
@@ -24,6 +23,5 @@
     {% else %}
         <p>This dish doesn't have any ingredients.</p>
     {% endif %}
-{% endcomment %}
 
 {% endblock content %}

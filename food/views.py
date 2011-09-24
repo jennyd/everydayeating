@@ -1,6 +1,7 @@
 from django.shortcuts import HttpResponse, HttpResponseRedirect, render_to_response, get_object_or_404
 from django.template import RequestContext
 from django.http import Http404
+from django.views.generic import list_detail, create_update
 from food.models import Ingredient, IngredientForm, Dish, DishForm, Amount, AmountForm
 
 #### not used now - generic view for ingredient_list instead
@@ -108,6 +109,21 @@ from food.models import Ingredient, IngredientForm, Dish, DishForm, Amount, Amou
 #    # get amounts for this dish and return them
 #    amounts = Amount.objects.filter(containing_dish=dish_id)
 #    return render_to_response('food/dish_detail.html', {'dish': d, 'amounts': amounts})
+
+
+def dish_detail_with_amounts(request, dish_id):
+    dish = get_object_or_404(Dish, pk=dish_id)
+    amounts = dish.contained_amounts_set.all()
+    return list_detail.object_detail(
+        request,
+        queryset = Dish.objects.all(),
+        # this also works, but still requires object_id:
+        # queryset = Dish.objects.filter(pk=dish_id),
+        object_id = dish_id,
+        template_name = "food/dish_detail.html",
+        template_object_name = "dish",
+        extra_context = {"amounts" : amounts}
+    )
 
 
 def dish_edit(request, dish_id):
