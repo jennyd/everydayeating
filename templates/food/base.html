@@ -1,0 +1,26 @@
+{% block title %}
+
+{% endblock title %}
+
+
+{% block links %}
+
+    <a href="{% url food_index %}">Food</a></br>
+    <a href="{% url ingredient_list %}">Ingredients</a></br>
+    <a href="{% url dish_list %}">Dishes</a>
+
+{% endblock links %}
+
+
+{% block message %}
+
+    {% if message %}
+        {{ message }}
+    {% endif %}
+
+{% endblock message %}
+
+
+{% block content %}
+
+{% endblock content %}

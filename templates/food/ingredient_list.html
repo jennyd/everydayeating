@@ -1,4 +1,7 @@
+{% extends "food/base.html" %}
+
 {% block content %}
+
     <h2>Ingredients</h2>
     <table>
         {% for ingredient in ingredient_list %}
@@ -12,4 +15,5 @@
         {% endfor %}
     </table><br />
     <a href="{% url ingredient_add %}">Add a new ingredient</a>
-{% endblock %}
+
+{% endblock content %}

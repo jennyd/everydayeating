@@ -1,4 +1,7 @@
+{% extends "food/base.html" %}
+
 {% block content %}
+
     <h2>Dishes</h2>
     <table>
         {% for dish in dish_list %}
@@ -10,4 +13,5 @@
         {% endfor %}
     </table><br />
     {% comment %} <a href="{% url dish_add %}">Add a new dish</a> {% endcomment %}
-{% endblock %}
+
+{% endblock content %}

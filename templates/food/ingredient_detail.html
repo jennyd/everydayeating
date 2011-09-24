@@ -1,10 +1,16 @@
-<h1>{{ ingredient.name }}</h1>
-<ul>
-{% if ingredient.reference_quantity_unit == "items" %}
-    There are {{ ingredient.calories }} calories in one {{ ingredient.name }}.
-{% else %}
-    There are {{ ingredient.calories }} calories in {{ingredient.reference_quantity }} {{ ingredient.reference_quantity_unit }} of {{ ingredient.name }}.
-{% endif %}
-</ul>
+{% extends "food/base.html" %}
 
-<a href="{% url ingredient_edit ingredient.id %}">Edit this ingredient</a>
+{% block content %}
+
+    <h1>{{ ingredient.name }}</h1>
+    <ul>
+    {% if ingredient.reference_quantity_unit == "items" %}
+        There are {{ ingredient.calories }} calories in one {{ ingredient.name }}.
+    {% else %}
+        There are {{ ingredient.calories }} calories in {{ingredient.reference_quantity }} {{ ingredient.reference_quantity_unit }} of {{ ingredient.name }}.
+    {% endif %}
+    </ul>
+
+    <a href="{% url ingredient_edit ingredient.id %}">Edit this ingredient</a>
+
+{% endblock content %}
