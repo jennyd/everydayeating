@@ -1,5 +1,6 @@
 from django.conf.urls.defaults import *
-from django.views.generic import simple, list_detail, create_update
+from django.views.generic import simple, list_detail, create_update # deprecated function-based generic views
+from django.views.generic import base # new class-based generic views
 from food.models import Ingredient, Dish, Amount
 
 # Uncomment the next two lines to enable the admin:
@@ -36,6 +37,7 @@ ingredient_detail_info = {
 #}
 
 
+# first versions of my views
 urlpatterns = patterns('food.views',
     # Example:
     # (r'^everydayeating/', include('everydayeating.foo.urls')),
@@ -53,8 +55,9 @@ urlpatterns = patterns('food.views',
     url(r'^dishes/(?P<dish_id>\d+)/edit/(?P<amount_id>\d+)/thanks/$', 'amount_edit_thanks', name="amount_edit_thanks"),
 )
 
+# using old function-based generic views
 urlpatterns += patterns('',
-    url(r'^$', simple.direct_to_template, {'template': 'food/food_index.html'}, "food_index"),
+#    url(r'^$', simple.direct_to_template, { 'template' : 'food/food_index.html' }, "food_index"),
     url(r'^ingredients/$', list_detail.object_list, ingredient_info, "ingredient_list"),
     url(r'^ingredients/add/$', create_update.create_object, ingredient_add_info, "ingredient_add"),
     url(r'^ingredients/(?P<object_id>\d+)/$', list_detail.object_detail, ingredient_detail_info, "ingredient_detail"),
@@ -63,3 +66,7 @@ urlpatterns += patterns('',
 #    url(r'^dishes/(?P<object_id>\d+)/$', list_detail.object_detail, dish_detail_info, "dish_detail"),
 )
 
+# using new class-based generic views
+urlpatterns += patterns('',
+    url(r'^$', base.TemplateView.as_view(template_name='food/food_index.html'), name="food_index"),
+)
