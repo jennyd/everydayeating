@@ -58,12 +58,12 @@ urlpatterns = patterns('food.views',
 # using old function-based generic views
 urlpatterns += patterns('',
 #    url(r'^$', simple.direct_to_template, { 'template' : 'food/food_index.html' }, "food_index"),
-    url(r'^ingredients/$', list_detail.object_list, ingredient_info, "ingredient_list"),
-    url(r'^ingredients/add/$', create_update.create_object, ingredient_add_info, "ingredient_add"),
-    url(r'^ingredients/(?P<object_id>\d+)/$', list_detail.object_detail, ingredient_detail_info, "ingredient_detail"),
-    url(r'^ingredients/(?P<object_id>\d+)/edit/$', create_update.update_object, ingredient_add_info, "ingredient_edit"),
-    url(r'^dishes/$', list_detail.object_list, dish_info, "dish_list"),
-#    url(r'^dishes/(?P<object_id>\d+)/$', list_detail.object_detail, dish_detail_info, "dish_detail"),
+    url(r'^ingredients/$', list_detail.object_list, kwargs=ingredient_info, name="ingredient_list"),
+    url(r'^ingredients/add/$', create_update.create_object, kwargs=ingredient_add_info, name="ingredient_add"),
+    url(r'^ingredients/(?P<object_id>\d+)/$', list_detail.object_detail, kwargs=ingredient_detail_info, name="ingredient_detail"),
+    url(r'^ingredients/(?P<object_id>\d+)/edit/$', create_update.update_object, kwargs=ingredient_add_info, name="ingredient_edit"),
+    url(r'^dishes/$', list_detail.object_list, kwargs=dish_info, name="dish_list"),
+#    url(r'^dishes/(?P<object_id>\d+)/$', list_detail.object_detail, kwargs=dish_detail_info, name="dish_detail"),
 )
 
 # using new class-based generic views
