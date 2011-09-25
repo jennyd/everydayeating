@@ -112,17 +112,17 @@ from food.models import Ingredient, IngredientForm, Dish, DishForm, Amount, Amou
 
 
 def dish_detail_with_amounts(request, dish_id):
-    dish = get_object_or_404(Dish, pk=dish_id)
-    amounts = dish.contained_amounts_set.all()
+#    dish = get_object_or_404(Dish, pk=dish_id)
+#    amounts = dish.contained_amounts_set.all()
     return list_detail.object_detail(
         request,
-        queryset = Dish.objects.all(),
+        # queryset = Dish.objects.all(),
         # this also works, but still requires object_id:
-        # queryset = Dish.objects.filter(pk=dish_id),
+        queryset = Dish.objects.filter(pk=dish_id), # object_detail filters again on primary key anyway...
         object_id = dish_id,
         template_name = "food/dish_detail.html",
         template_object_name = "dish",
-        extra_context = {"amounts" : amounts}
+        extra_context = {"amounts" : Dish.objects.get(pk=dish_id).contained_amounts_set.all()}
     )
 
 
