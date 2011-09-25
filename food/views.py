@@ -103,7 +103,7 @@ from food.models import Ingredient, IngredientForm, Dish, DishForm, Amount, Amou
 #    return render_to_response('food/dish_index.html', {'dish_list': dish_list})
 
 
-#### not used now - generic view for dish_detail instead
+#### not used now - using generic view through dish_detail_with_amounts instead
 #def dish_detail(request, dish_id):
 #    d = get_object_or_404(Dish, pk=dish_id)
 #    # get amounts for this dish and return them
@@ -112,8 +112,6 @@ from food.models import Ingredient, IngredientForm, Dish, DishForm, Amount, Amou
 
 
 def dish_detail_with_amounts(request, dish_id):
-#    dish = get_object_or_404(Dish, pk=dish_id)
-#    amounts = dish.contained_amounts_set.all()
     return list_detail.object_detail(
         request,
         # queryset = Dish.objects.all(),

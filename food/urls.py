@@ -6,6 +6,7 @@ from food.models import Ingredient, Dish, Amount
 from django.contrib import admin
 admin.autodiscover()
 
+
 ingredient_info = {
     "queryset" : Ingredient.objects.all().order_by("name"),
     "template_object_name" : "ingredient",
@@ -25,14 +26,15 @@ dish_info = {
 ingredient_detail_info = {
     "queryset" : Ingredient.objects.all(),
     "template_object_name" : "ingredient",
-#    "object_id" : "ingredient_id",
 }
 
+#### not used now - using generic view through dish_detail_with_amounts instead
 #dish_detail_info = {
 #    "queryset" : Dish.objects.all(),
 #    "template_object_name" : "dish",
 #    "extra_context" : {"amounts" : get_amounts},
 #}
+
 
 urlpatterns = patterns('food.views',
     # Example:
