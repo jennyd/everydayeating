@@ -1,6 +1,6 @@
 from django.conf.urls.defaults import *
 from django.views.generic import simple, list_detail, create_update # deprecated function-based generic views
-from django.views.generic import TemplateView, ListView, DetailView # new class-based generic views
+from django.views.generic import TemplateView, ListView, DetailView, CreateView # new class-based generic views
 from food.models import Ingredient, Dish, Amount
 
 # Uncomment the next two lines to enable the admin:
@@ -14,6 +14,7 @@ admin.autodiscover()
 #    "template_object_name" : "ingredient",
 #}
 
+#### not used now - using class-based generic CreateView
 # using ingredient_add_info for edit too - same options for now
 ingredient_add_info = {
     "model" : Ingredient,
@@ -25,10 +26,11 @@ dish_info = {
     "template_object_name" : "dish",
 }
 
-ingredient_detail_info = {
-    "queryset" : Ingredient.objects.all(),
-    "template_object_name" : "ingredient",
-}
+#### not used now - using class-based generic DetailView
+#ingredient_detail_info = {
+#    "queryset" : Ingredient.objects.all(),
+#    "template_object_name" : "ingredient",
+#}
 
 #### not used now - using generic view through dish_detail_with_amounts instead
 #dish_detail_info = {
@@ -60,7 +62,7 @@ urlpatterns = patterns('food.views',
 urlpatterns += patterns('',
 #    url(r'^$', simple.direct_to_template, { 'template' : 'food/food_index.html' }, "food_index"),
 #    url(r'^ingredients/$', list_detail.object_list, kwargs=ingredient_info, name="ingredient_list"),
-    url(r'^ingredients/add/$', create_update.create_object, kwargs=ingredient_add_info, name="ingredient_add"),
+#    url(r'^ingredients/add/$', create_update.create_object, kwargs=ingredient_add_info, name="ingredient_add"),
 #    url(r'^ingredients/(?P<object_id>\d+)/$', list_detail.object_detail, kwargs=ingredient_detail_info, name="ingredient_detail"),
     url(r'^ingredients/(?P<object_id>\d+)/edit/$', create_update.update_object, kwargs=ingredient_add_info, name="ingredient_edit"),
     url(r'^dishes/$', list_detail.object_list, kwargs=dish_info, name="dish_list"),
@@ -71,5 +73,6 @@ urlpatterns += patterns('',
 urlpatterns += patterns('',
     url(r'^$', TemplateView.as_view(template_name='food/food_index.html'), name="food_index"),
     url(r'^ingredients/$', ListView.as_view( queryset=Ingredient.objects.all().order_by("name") ), name="ingredient_list"),
+    url(r'^ingredients/add/$', CreateView.as_view( model=Ingredient, success_url="/food/ingredients/" ), name="ingredient_add"),
     url(r'^ingredients/(?P<pk>\d+)/$', DetailView.as_view( model=Ingredient ), name="ingredient_detail"),
 )
