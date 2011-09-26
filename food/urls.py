@@ -1,6 +1,6 @@
 from django.conf.urls.defaults import *
 from django.views.generic import simple, list_detail, create_update # deprecated function-based generic views
-from django.views.generic import base, ListView, DetailView # new class-based generic views
+from django.views.generic import TemplateView, ListView, DetailView # new class-based generic views
 from food.models import Ingredient, Dish, Amount
 
 # Uncomment the next two lines to enable the admin:
@@ -69,7 +69,7 @@ urlpatterns += patterns('',
 
 # using new class-based generic views
 urlpatterns += patterns('',
-    url(r'^$', base.TemplateView.as_view(template_name='food/food_index.html'), name="food_index"),
+    url(r'^$', TemplateView.as_view(template_name='food/food_index.html'), name="food_index"),
     url(r'^ingredients/$', ListView.as_view( queryset=Ingredient.objects.all().order_by("name") ), name="ingredient_list"),
     url(r'^ingredients/(?P<pk>\d+)/$', DetailView.as_view( model=Ingredient ), name="ingredient_detail"),
 )
