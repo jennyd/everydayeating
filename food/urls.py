@@ -21,10 +21,11 @@ admin.autodiscover()
 #    "post_save_redirect" : "/food/ingredients/",
 #}
 
-dish_info = {
-    "queryset" : Dish.objects.all().order_by("date_cooked"),
-    "template_object_name" : "dish",
-}
+#### not used now - using class-based generic ListView
+#dish_info = {
+#    "queryset" : Dish.objects.all().order_by("date_cooked"),
+#    "template_object_name" : "dish",
+#}
 
 #### not used now - using class-based generic DetailView
 #ingredient_detail_info = {
@@ -65,7 +66,7 @@ urlpatterns += patterns('',
 #    url(r'^ingredients/add/$', create_update.create_object, kwargs=ingredient_add_info, name="ingredient_add"),
 #    url(r'^ingredients/(?P<object_id>\d+)/$', list_detail.object_detail, kwargs=ingredient_detail_info, name="ingredient_detail"),
 #    url(r'^ingredients/(?P<object_id>\d+)/edit/$', create_update.update_object, kwargs=ingredient_add_info, name="ingredient_edit"),
-    url(r'^dishes/$', list_detail.object_list, kwargs=dish_info, name="dish_list"),
+#    url(r'^dishes/$', list_detail.object_list, kwargs=dish_info, name="dish_list"),
 #    url(r'^dishes/(?P<object_id>\d+)/$', list_detail.object_detail, kwargs=dish_detail_info, name="dish_detail"),
 )
 
@@ -77,4 +78,5 @@ urlpatterns += patterns('',
     url(r'^ingredients/(?P<pk>\d+)/$', DetailView.as_view( model=Ingredient ), name="ingredient_detail"),
     url(r'^ingredients/(?P<pk>\d+)/edit/$', UpdateView.as_view( model=Ingredient, success_url="/food/ingredients/"), name="ingredient_edit"),
     url(r'^ingredients/(?P<pk>\d+)/delete/$', DeleteView.as_view( model=Ingredient, success_url="/food/ingredients/"), name="ingredient_delete"),
+    url(r'^dishes/$', ListView.as_view( queryset=Dish.objects.all().order_by("date_cooked") ), name="dish_list"),
 )
