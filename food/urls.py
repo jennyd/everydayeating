@@ -20,9 +20,9 @@ urlpatterns = patterns('food.views',
 #    url(r'^ingredients/add/thanks/$', 'ingredient_add_thanks', name="ingredient_add_thanks"),
 #    (r'^dishes/$', 'dish_index'),
 #    url(r'^dishes/(?P<dish_id>\d+)/$', 'dish_detail_with_amounts', name="dish_detail"),
-    url(r'^dishes/(?P<dish_id>\d+)/edit/$', 'dish_edit', name="dish_edit"),
+#    url(r'^dishes/(?P<dish_id>\d+)/edit/$', 'dish_edit', name="dish_edit"),
     url(r'^dishes/(?P<dish_id>\d+)/edit/(?P<amount_id>\d+)/$', 'amount_edit', name="amount_edit"),
-    url(r'^dishes/(?P<dish_id>\d+)/edit/thanks/$', 'dish_edit_thanks', name="dish_edit_thanks"),
+#    url(r'^dishes/(?P<dish_id>\d+)/edit/thanks/$', 'dish_edit_thanks', name="dish_edit_thanks"),
     url(r'^dishes/(?P<dish_id>\d+)/edit/(?P<amount_id>\d+)/thanks/$', 'amount_edit_thanks', name="amount_edit_thanks"),
 )
 
@@ -36,4 +36,5 @@ urlpatterns += patterns('',
     url(r'^ingredients/(?P<pk>\d+)/delete/$', DeleteView.as_view( model=Ingredient, success_url="/food/ingredients/"), name="ingredient_delete"),
     url(r'^dishes/$', ListView.as_view( queryset=Dish.objects.all().order_by("-date_cooked") ), name="dish_list"),
     url(r'^dishes/(?P<pk>\d+)/$', DetailView.as_view( model = Dish ), name="dish_detail"),
+    url(r'^dishes/(?P<pk>\d+)/edit/$', UpdateView.as_view( model=Dish, success_url="/food/dishes/%(id)s/"), name="dish_edit"),
 )
