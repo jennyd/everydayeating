@@ -11,10 +11,10 @@
     {% endif %}
     <a href="{% url dish_edit dish.id %}">Edit</a><p/>
     
-    {% if amounts %}
+    {% if dish.contained_amounts_set.all %}
         Ingredients:
         <ul>
-        {% for amount in amounts %}
+        {% for amount in dish.contained_amounts_set.all %}
             {{ amount.quantity }}{{ amount.ingredient.reference_quantity_unit }} of {{ amount.ingredient }}
             <a href="{% url amount_edit dish.id amount.id %}">Edit</a>
             <br />

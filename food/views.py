@@ -2,6 +2,7 @@ from django.shortcuts import HttpResponse, HttpResponseRedirect, render_to_respo
 from django.template import RequestContext
 from django.http import Http404
 from django.views.generic import list_detail # old function-based generic views
+# from django.views.generic import  # new class-based generic views
 from food.models import Ingredient, IngredientForm, Dish, DishForm, Amount, AmountForm
 
 #### not used now - generic view for ingredient_list instead
@@ -111,17 +112,20 @@ from food.models import Ingredient, IngredientForm, Dish, DishForm, Amount, Amou
 #    return render_to_response('food/dish_detail.html', {'dish': d, 'amounts': amounts})
 
 
-def dish_detail_with_amounts(request, dish_id):
-    return list_detail.object_detail(
-        request,
-        # queryset = Dish.objects.all(),
-        # this also works, but still requires object_id:
-        queryset = Dish.objects.filter(pk=dish_id), # object_detail filters again on primary key anyway...
-        object_id = dish_id,
-        template_name = "food/dish_detail.html",
-        template_object_name = "dish",
-        extra_context = {"amounts" : Dish.objects.get(pk=dish_id).contained_amounts_set.all()}
-    )
+#### not used now - much simpler generic view for dish_detail instead
+#### template can access dish.contained_amounts_set directly so
+#### don't need to put amounts into extra_context
+#def dish_detail_with_amounts(request, dish_id):
+#    return list_detail.object_detail(
+#        request,
+#        # queryset = Dish.objects.all(),
+#        # this also works, but still requires object_id:
+#        queryset = Dish.objects.filter(pk=dish_id), # object_detail filters again on primary key anyway...
+#        object_id = dish_id,
+#        template_name = "food/dish_detail.html",
+#        template_object_name = "dish",
+#        extra_context = {"amounts" : Dish.objects.get(pk=dish_id).contained_amounts_set.all()}
+#    )
 
 
 def dish_edit(request, dish_id):
