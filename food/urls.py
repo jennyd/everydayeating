@@ -1,5 +1,5 @@
 from django.conf.urls.defaults import *
-from food.views import ingredient_manage
+from food.views import ingredient_manage, dish_edit_amounts
 from django.views.generic import TemplateView, ListView, CreateView, DetailView, UpdateView, DeleteView
 from food.models import Ingredient, Dish, Amount
 
@@ -12,6 +12,7 @@ urlpatterns = patterns('food.views',
     # Example:
     # (r'^everydayeating/', include('everydayeating.foo.urls')),
     url(r'^ingredients/manage/$', "ingredient_manage", name="ingredient_manage"),
+    url(r'^dishes/(?P<dish_id>\d+)/edit/ingredients/$', "dish_edit_amounts", name="dish_edit_amounts"),
 )
 
 urlpatterns += patterns('',

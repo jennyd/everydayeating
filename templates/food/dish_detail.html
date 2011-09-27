@@ -23,5 +23,7 @@
     {% else %}
         <p>This dish doesn't have any ingredients.</p>
     {% endif %}
+    
+    <a href="{% url dish_edit_amounts dish.id %}">Edit all of this dish's ingredients</a><p/>
 
 {% endblock content %}

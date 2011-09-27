@@ -3,7 +3,7 @@ from django.template import RequestContext
 from django.http import Http404
 # from django.views.generic import list_detail # old function-based generic views
 # from django.views.generic import  # new class-based generic views
-from django.forms.models import modelformset_factory
+from django.forms.models import modelformset_factory, inlineformset_factory
 from food.models import Ingredient, IngredientForm, Dish, DishForm, Amount, AmountForm
 
 def ingredient_manage(request):
@@ -21,6 +21,20 @@ def ingredient_manage(request):
     )
 
 
+def dish_edit_amounts(request, dish_id):
+    DishFormSet = inlineformset_factory(Dish, Amount, fk_name="containing_dish")
+    dish = Dish.objects.get(pk=dish_id)
+    if request.method == 'POST':
+        formset = DishFormSet(request.POST, request.FILES, instance=dish)
+        if formset.is_valid():
+            formset.save()
+            return HttpResponseRedirect('/food/dishes/')
+    else:
+        formset = DishFormSet(instance=dish)
+    return render_to_response("food/dish_edit_amounts.html", {
+        "formset": formset,},
+        context_instance=RequestContext(request) # needed for csrf token
+    )
 
 
 
