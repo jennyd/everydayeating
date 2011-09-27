@@ -33,5 +33,5 @@ urlpatterns += patterns('',
     url(r'^ingredients/(?P<pk>\d+)/$', DetailView.as_view( model=Ingredient ), name="ingredient_detail"),
     url(r'^ingredients/(?P<pk>\d+)/edit/$', UpdateView.as_view( model=Ingredient, success_url="/food/ingredients/"), name="ingredient_edit"),
     url(r'^ingredients/(?P<pk>\d+)/delete/$', DeleteView.as_view( model=Ingredient, success_url="/food/ingredients/"), name="ingredient_delete"),
-    url(r'^dishes/$', ListView.as_view( queryset=Dish.objects.all().order_by("date_cooked") ), name="dish_list"),
+    url(r'^dishes/$', ListView.as_view( queryset=Dish.objects.all().order_by("-date_cooked") ), name="dish_list"),
 )
