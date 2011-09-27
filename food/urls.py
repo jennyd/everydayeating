@@ -1,5 +1,5 @@
 from django.conf.urls.defaults import *
-# from food.views import 
+from food.views import ingredient_manage
 from django.views.generic import TemplateView, ListView, CreateView, DetailView, UpdateView, DeleteView
 from food.models import Ingredient, Dish, Amount
 
@@ -11,6 +11,7 @@ admin.autodiscover()
 urlpatterns = patterns('food.views',
     # Example:
     # (r'^everydayeating/', include('everydayeating.foo.urls')),
+    url(r'^ingredients/manage/$', "ingredient_manage", name="ingredient_manage"),
 )
 
 urlpatterns += patterns('',
