@@ -1,6 +1,6 @@
 from django.conf.urls.defaults import *
-from django.views.generic import TemplateView, ListView, CreateView, DetailView, UpdateView, DeleteView # new class-based generic views
-# from food.views import  # extended class-based generic views
+# from food.views import 
+from django.views.generic import TemplateView, ListView, CreateView, DetailView, UpdateView, DeleteView
 from food.models import Ingredient, Dish, Amount
 
 # Uncomment the next two lines to enable the admin:
@@ -8,25 +8,11 @@ from django.contrib import admin
 admin.autodiscover()
 
 
-# first versions of my views
 urlpatterns = patterns('food.views',
     # Example:
     # (r'^everydayeating/', include('everydayeating.foo.urls')),
-#    (r'^ingredients/$', 'ingredient_index'),
-#    (r'^ingredients/(?P<ingredient_id>\d+)/$', 'ingredient_detail'),
-#    url(r'^ingredients/(?P<ingredient_id>\d+)/edit/$', 'ingredient_edit', name="ingredient_edit"),
-#    url(r'^ingredients/(?P<ingredient_id>\d+)/edit/thanks/$', 'ingredient_edit_thanks', name="ingredient_edit_thanks"),
-#    url(r'^ingredients/add/$', 'ingredient_add', name="ingredient_add"),
-#    url(r'^ingredients/add/thanks/$', 'ingredient_add_thanks', name="ingredient_add_thanks"),
-#    (r'^dishes/$', 'dish_index'),
-#    url(r'^dishes/(?P<dish_id>\d+)/$', 'dish_detail_with_amounts', name="dish_detail"),
-#    url(r'^dishes/(?P<dish_id>\d+)/edit/$', 'dish_edit', name="dish_edit"),
-#    url(r'^dishes/(?P<dish_id>\d+)/edit/(?P<amount_id>\d+)/$', 'amount_edit', name="amount_edit"),
-#    url(r'^dishes/(?P<dish_id>\d+)/edit/thanks/$', 'dish_edit_thanks', name="dish_edit_thanks"),
-#    url(r'^dishes/(?P<dish_id>\d+)/edit/(?P<amount_id>\d+)/thanks/$', 'amount_edit_thanks', name="amount_edit_thanks"),
 )
 
-# using new class-based generic views
 urlpatterns += patterns('',
     url(r'^$', TemplateView.as_view(template_name='food/food_index.html'), name="food_index"),
     url(r'^ingredients/$', ListView.as_view( queryset=Ingredient.objects.all().order_by("name") ), name="ingredient_list"),
