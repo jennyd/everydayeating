@@ -1,7 +1,7 @@
 from django.shortcuts import HttpResponse, HttpResponseRedirect, render_to_response, get_object_or_404
 from django.template import RequestContext
 from django.http import Http404
-from django.views.generic import list_detail # old function-based generic views
+# from django.views.generic import list_detail # old function-based generic views
 # from django.views.generic import  # new class-based generic views
 from food.models import Ingredient, IngredientForm, Dish, DishForm, Amount, AmountForm
 
@@ -128,48 +128,52 @@ from food.models import Ingredient, IngredientForm, Dish, DishForm, Amount, Amou
 #    )
 
 
-def dish_edit(request, dish_id):
-    d = get_object_or_404(Dish, pk=dish_id)
-    if request.method == 'POST': # If the form has been submitted...
-        dish_form = DishForm(request.POST, instance=d) # A form bound to the POST data
-        if dish_form.is_valid(): # All validation rules pass
-            # Process the data in form.cleaned_data
-            # ...
-            # FIXME Is cleaning also necessary with ModelForm?
-            dish_form.save()
-            return HttpResponseRedirect('thanks/') # Redirect after POST
-    else:
-        dish_form = DishForm(instance=d) # A bound form
-        # FIXME name should not be editable (or if it is, a new ingredient should be added and the old one unedited)
+#### not used now - generic view for dish_edit instead
+#def dish_edit(request, dish_id):
+#    d = get_object_or_404(Dish, pk=dish_id)
+#    if request.method == 'POST': # If the form has been submitted...
+#        dish_form = DishForm(request.POST, instance=d) # A form bound to the POST data
+#        if dish_form.is_valid(): # All validation rules pass
+#            # Process the data in form.cleaned_data
+#            # ...
+#            # FIXME Is cleaning also necessary with ModelForm?
+#            dish_form.save()
+#            return HttpResponseRedirect('thanks/') # Redirect after POST
+#    else:
+#        dish_form = DishForm(instance=d) # A bound form
+#        # FIXME name should not be editable (or if it is, a new ingredient should be added and the old one unedited)
 
-    return render_to_response('food/dish_edit.html', {
-        'dish_form': dish_form}, context_instance=RequestContext(request))
-
-
-def dish_edit_thanks(request, dish_id):
-    return HttpResponse("Thanks! That dish has been updated.")
+#    return render_to_response('food/dish_edit.html', {
+#        'dish_form': dish_form}, context_instance=RequestContext(request))
 
 
-def amount_edit(request, dish_id, amount_id):
-    a = get_object_or_404(Amount, pk=amount_id)
-    if request.method == 'POST': # If the form has been submitted...
-        amount_form = AmountForm(request.POST, instance=a) # A form bound to the POST data
-        if amount_form.is_valid(): # All validation rules pass
-            # Process the data in form.cleaned_data
-            # ...
-            # FIXME Is cleaning also necessary with ModelForm?
-            amount_form.save()
-            return HttpResponseRedirect('thanks/') # Redirect after POST
-    else:
-        amount_form = AmountForm(instance=a) # A bound form
-        # FIXME name should not be editable (or if it is, a new ingredient should be added and the old one unedited)
-
-    return render_to_response('food/amount_edit.html', {
-        'amount_form': amount_form}, context_instance=RequestContext(request))
+#### not used now - generic view for dish_edit instead
+#def dish_edit_thanks(request, dish_id):
+#    return HttpResponse("Thanks! That dish has been updated.")
 
 
-def amount_edit_thanks(request, dish_id, amount_id):
-    return HttpResponse("Thanks! That amount has been updated.")
+#### not used now - generic view for amount_edit instead
+#def amount_edit(request, dish_id, amount_id):
+#    a = get_object_or_404(Amount, pk=amount_id)
+#    if request.method == 'POST': # If the form has been submitted...
+#        amount_form = AmountForm(request.POST, instance=a) # A form bound to the POST data
+#        if amount_form.is_valid(): # All validation rules pass
+#            # Process the data in form.cleaned_data
+#            # ...
+#            # FIXME Is cleaning also necessary with ModelForm?
+#            amount_form.save()
+#            return HttpResponseRedirect('thanks/') # Redirect after POST
+#    else:
+#        amount_form = AmountForm(instance=a) # A bound form
+#        # FIXME name should not be editable (or if it is, a new ingredient should be added and the old one unedited)
+
+#    return render_to_response('food/amount_edit.html', {
+#        'amount_form': amount_form}, context_instance=RequestContext(request))
+
+
+#### not used now - generic view for amount_edit instead
+#def amount_edit_thanks(request, dish_id, amount_id):
+#    return HttpResponse("Thanks! That amount has been updated.")
 
 
 
