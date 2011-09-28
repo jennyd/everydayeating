@@ -10,12 +10,13 @@ UNIT_CHOICES = (
 
 
 class Nutrition(models.Model):
-    CLAGGINESS_CHOICES = (
-        ('A', 'anti-clag'),
-        ('B', 'balanced'), # better name? bitclag?
-        ('C', 'clag')
-    )
-    clagginess = models.CharField(max_length=1, choices=CLAGGINESS_CHOICES, blank=True) # totes subjective opinion :)
+#### move clagginess into a ratings app later
+#    CLAGGINESS_CHOICES = (
+#        ('A', 'anti-clag'),
+#        ('B', 'balanced'), # better name? bitclag?
+#        ('C', 'clag')
+#    )
+#    clagginess = models.CharField(max_length=1, choices=CLAGGINESS_CHOICES, blank=True) # totes subjective opinion :)
     
     class Meta:
         abstract = True
