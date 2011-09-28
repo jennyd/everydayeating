@@ -4,7 +4,7 @@ from django.http import Http404
 # from django.views.generic import list_detail # old function-based generic views
 # from django.views.generic import  # new class-based generic views
 from django.forms.models import modelformset_factory, inlineformset_factory
-from food.models import Ingredient, IngredientForm, Dish, DishForm, Amount, AmountForm
+from food.models import Ingredient, Dish, Amount
 
 def ingredient_manage(request):
     IngredientFormSet = modelformset_factory(Ingredient, extra=3)

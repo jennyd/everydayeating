@@ -16,8 +16,8 @@ admin.site.register(Dish, DishAdmin)
 
 
 class AmountAdmin(admin.ModelAdmin):
-    fields = ['ingredient', 'quantity', 'containing_dish', 'dish_as_ingredient']
-    search_fields = ['ingredient', 'containing_dish']
+    fields = ['contained_comestible', 'quantity', 'containing_dish']
+    search_fields = ['contained_comestible', 'containing_dish']
 
 admin.site.register(Amount, AmountAdmin)
 

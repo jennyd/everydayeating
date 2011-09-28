@@ -11,11 +11,11 @@
     {% endif %}
     <a href="{% url dish_edit dish.id %}">Edit</a><p/>
     
-    {% if dish.contained_amounts_set.all %}
+    {% if dish.contained_comestibles_set.all %}
         Ingredients:
         <ul>
-        {% for amount in dish.contained_amounts_set.all %}
-            {{ amount.quantity }}{{ amount.ingredient.reference_quantity_unit }} of {{ amount.ingredient }}
+        {% for comestible in dish.contained_comestibles_set.all %} {# add condition for comestible.dish #}
+            {{ comestible.quantity }}{{ comestible.ingredient.reference_quantity_unit }} of {{ comestible.ingredient }}
             <a href="{% url amount_edit dish.id amount.id %}">Edit</a>
             <br />
         {% endfor %}
