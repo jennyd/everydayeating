@@ -73,11 +73,19 @@ UNIT_CHOICES = (
 #################################################
 
 class Comestible(models.Model):
+#    def __unicode__(self):
+#        import sys
+#        print "\n".join(dir(self))
+#        return u"balls"
+
     def __unicode__(self):
-        if self.ingredient:
-            return self.ingredient.name
-        else:
-            return self.dish.name
+        try:
+            return u"Ingredient: "+self.ingredient.name
+        except Ingredient.DoesNotExist:
+            try:
+                return u"Dish: "+self.dish.name
+            except Dish.DoesNotExist:
+                raise Comestible.DoesNotExist, "Strange lack of comestible in an unexpected place"
 
 
 
