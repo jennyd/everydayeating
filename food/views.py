@@ -32,7 +32,8 @@ def dish_edit_amounts(request, dish_id):
     else:
         formset = DishFormSet(instance=dish)
     return render_to_response("food/dish_edit_amounts.html", {
-        "formset": formset,},
+        "formset": formset,
+        "dish": dish,},
         context_instance=RequestContext(request) # needed for csrf token
     )
 
