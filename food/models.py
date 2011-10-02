@@ -119,7 +119,7 @@ class Dish(Comestible):
 
 class Amount(models.Model):
     def __unicode__(self):
-        return self.contained_comestible.name
+        return unicode(self.contained_comestible)
 #    containing_dish = models.ForeignKey(Dish, related_name='contained_amounts_set')
 #    ingredient = models.ForeignKey(Ingredient, null=True, blank=True)
 #    dish_as_ingredient = models.ForeignKey(Dish, related_name='amounts_using_set', null=True, blank=True)
