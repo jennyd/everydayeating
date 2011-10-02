@@ -108,6 +108,10 @@ class Dish(Comestible):
     total_quantity_unit = models.CharField(max_length=5, choices=UNIT_CHOICES, default="g")
     date_cooked = models.DateField("the date on which the dish is cooked") # default...
 
+    def get_dish_calories(self):
+        return sum(amount.get_amount_calories() for amount in self.contained_comestibles_set.all())
+
+
     class Meta:
         verbose_name_plural = "dishes"
 
@@ -122,6 +126,10 @@ class Amount(models.Model):
     containing_dish = models.ForeignKey(Dish, related_name='contained_comestibles_set')
     contained_comestible = models.ForeignKey(Comestible, related_name='containing_dishes_set')
     quantity = models.DecimalField("the quantity of this ingredient in the dish, in ingredient units", max_digits=6, decimal_places=2, blank=True)
+
+    def get_amount_calories(self): # make this work for contained_comestible.dish too
+        amount_calories = self.quantity * self.contained_comestible.ingredient.calories / self.contained_comestible.ingredient.reference_quantity
+        return amount_calories
 
 
 
