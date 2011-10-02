@@ -127,9 +127,21 @@ class Amount(models.Model):
     contained_comestible = models.ForeignKey(Comestible, related_name='containing_dishes_set')
     quantity = models.DecimalField("the quantity of this ingredient in the dish, in ingredient units", max_digits=6, decimal_places=2, blank=True)
 
-    def get_amount_calories(self): # make this work for contained_comestible.dish too
-        amount_calories = self.quantity * self.contained_comestible.ingredient.calories / self.contained_comestible.ingredient.reference_quantity
+    def get_amount_calories(self):
+#        amount_calories = self.quantity * self.contained_comestible.ingredient.calories / self.contained_comestible.ingredient.reference_quantity
+#        return amount_calories
+        try:
+            calories = self.contained_comestible.ingredient.calories
+            ref_quantity = self.contained_comestible.ingredient.reference_quantity
+        except Ingredient.DoesNotExist:
+            try:
+                calories = self.contained_comestible.dish.get_dish_calories()
+                ref_quantity = self.contained_comestible.dish.total_quantity
+            except Dish.DoesNotExist:
+                raise Comestible.DoesNotExist, "This is an amount of nothingness"
+        amount_calories = self.quantity * calories / ref_quantity
         return amount_calories
+
 
 
 
