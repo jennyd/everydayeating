@@ -3,7 +3,7 @@ from django.template import RequestContext
 from django.http import Http404
 # from django.views.generic import  # new class-based generic views
 from django.forms.models import modelformset_factory, inlineformset_factory
-from food.models import Ingredient, Dish, Amount
+from food.models import Ingredient, Dish, Amount, Meal, Eating
 
 def ingredient_manage(request):
     IngredientFormSet = modelformset_factory(Ingredient, extra=3)
@@ -18,7 +18,6 @@ def ingredient_manage(request):
         "formset": formset,},
         context_instance=RequestContext(request) # needed for csrf token
     )
-
 
 def dish_edit_amounts(request, dish_id):
     DishFormSet = inlineformset_factory(Dish, Amount, fk_name="containing_dish")
@@ -36,7 +35,21 @@ def dish_edit_amounts(request, dish_id):
         context_instance=RequestContext(request) # needed for csrf token
     )
 
-
+def meal_edit_eating(request, meal_id):
+    MealFormSet = inlineformset_factory(Meal, Eating)
+    meal = Meal.objects.get(pk=meal_id)
+    if request.method == 'POST':
+        formset = MealFormSet(request.POST, request.FILES, instance=meal)
+        if formset.is_valid():
+            formset.save()
+            return HttpResponseRedirect('/food/meals/')
+    else:
+        formset = MealFormSet(instance=meal)
+    return render_to_response("food/meal_edit_eating.html", {
+        "formset": formset,
+        "meal": meal,},
+        context_instance=RequestContext(request) # needed for csrf token
+    )
 
 
 

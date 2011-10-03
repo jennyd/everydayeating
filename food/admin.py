@@ -1,4 +1,4 @@
-from food.models import Ingredient, Dish, Amount
+from food.models import Ingredient, Dish, Amount, Meal, Eating
 from django.contrib import admin
 
 class IngredientAdmin(admin.ModelAdmin):
@@ -20,4 +20,10 @@ class AmountAdmin(admin.ModelAdmin):
     search_fields = ['contained_comestible', 'containing_dish']
 
 admin.site.register(Amount, AmountAdmin)
+
+
+class MealAdmin(admin.ModelAdmin):
+    fields = ['name', 'date', 'time']
+
+admin.site.register(Meal, MealAdmin)
 

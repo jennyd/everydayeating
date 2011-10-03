@@ -1,0 +1,18 @@
+{% extends "food/base.html" %}
+
+{% block content %}
+
+    <h1>{{ meal.name }} on {{ meal.date }} at {{ meal.time }}</h1>
+    <ul>
+    {% for eating in meal.eating_set.all %}
+        {{ eating.quantity }}{% firstof eating.comestible.ingredient.reference_quantity_unit eating.comestible.dish.total_quantity_unit %} of {{ eating.comestible }}</br>
+    {% empty %}
+        Don't skip meals!
+    {% endfor %}
+    </ul>
+
+    <a href="{% url meal_edit meal.id %}">Edit the name, date and time of this meal</a>
+    <a href="{% url meal_edit_eating meal.id %}">Edit what's eaten at this meal</a>
+
+
+{% endblock content %}
