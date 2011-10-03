@@ -1,7 +1,6 @@
 from django.shortcuts import HttpResponse, HttpResponseRedirect, render_to_response, get_object_or_404
 from django.template import RequestContext
 from django.http import Http404
-# from django.views.generic import list_detail # old function-based generic views
 # from django.views.generic import  # new class-based generic views
 from django.forms.models import modelformset_factory, inlineformset_factory
 from food.models import Ingredient, Dish, Amount
