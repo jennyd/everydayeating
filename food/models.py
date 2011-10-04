@@ -85,9 +85,10 @@ class Meal(models.Model):
         ('snack', 'snack'),
         ('elevenses', 'elevenses'),
         ('brunch', 'brunch'),
+        ('second breakfast', 'second breakfast'),
         ('tea', 'tea'),
     )
-    name = models.CharField(max_length=9, choices=NAME_CHOICES)
+    name = models.CharField(max_length=16, choices=NAME_CHOICES)
     date = models.DateField("the date on which the meal is eaten")
     time = models.TimeField("the time at which the meal is eaten")  # make defaults for each name choice...
     comestibles = models.ManyToManyField(Comestible, through='Eating')
