@@ -57,7 +57,7 @@ class Amount(models.Model):
 
     containing_dish = models.ForeignKey(Dish, related_name='contained_comestibles_set')
     contained_comestible = models.ForeignKey(Comestible, related_name='containing_dishes_set')
-    quantity = models.DecimalField("the quantity of this ingredient in the dish, in ingredient units", max_digits=6, decimal_places=2, blank=True)
+    quantity = models.DecimalField("the quantity of this ingredient in the dish, in ingredient units", max_digits=6, decimal_places=2, blank=True, null=True, default=0)
 
     def get_amount_calories(self):
         try:
