@@ -17,7 +17,7 @@ class Comestible(models.Model):
         elif self.child_model == 'D':
             return u"Dish: "+self.dish.name
         else:
-            return u"Child model field is useless" # should raise an exception - which?
+            raise Exception, u"Child model field is useless in Comestible.__unicode__"
 
     unit = models.CharField(max_length=5, choices=UNIT_CHOICES, default="g")
 
@@ -33,7 +33,7 @@ class Comestible(models.Model):
         elif self.child_model == 'D':
             return self.dish.total_quantity
         else:
-            return u"Child model field is useless" # should raise an exception - which?
+            raise Exception, u"Child model field is useless in Comestible.child_quantity"
 
     def child_calories(self):
         if self.child_model == 'I':
@@ -41,8 +41,7 @@ class Comestible(models.Model):
         elif self.child_model == 'D':
             return self.dish.get_dish_calories()
         else:
-            return u"Child model field is useless" # should raise an exception - which?
-
+            raise Exception, u"Child model field is useless in Comestible.child_calories"
 
 
 class Ingredient(Comestible):
