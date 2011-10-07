@@ -51,6 +51,7 @@ class Ingredient(Comestible):
         return self.name
 
     reference_quantity = models.DecimalField("the quantity to which the calorie value refers", max_digits=6, decimal_places=2, default=100)
+    quantity = models.DecimalField(max_digits=6, decimal_places=2, default=100)
     calories = models.DecimalField(max_digits=6, decimal_places=2)
     # add other nutrients to track later? fat, calories from carbs etc
 
@@ -66,6 +67,7 @@ class Dish(Comestible):
         return self.name
 
     total_quantity = models.DecimalField("the total quantity of the finished dish", max_digits=6, decimal_places=2, blank=True)
+    quantity = models.DecimalField(max_digits=6, decimal_places=2, blank=True)
     date_cooked = models.DateField("the date on which the dish is cooked") # default...
 
     def get_dish_calories(self):
