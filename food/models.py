@@ -17,7 +17,7 @@ class Comestible(models.Model):
         elif self.child_model == 'D':
             return u"Dish: "+self.dish.name
         else:
-            return u"Child model field is useless"
+            return u"Child model field is useless" # should raise an exception - which?
 
     unit = models.CharField(max_length=5, choices=UNIT_CHOICES, default="g")
 
@@ -25,7 +25,7 @@ class Comestible(models.Model):
         ('I', 'Ingredient'),
         ('D', 'Dish'),
     )
-    child_model = models.CharField(max_length=1, choices=CHILD_MODEL_CHOICES, editable=False, default='I')
+    child_model = models.CharField(max_length=1, choices=CHILD_MODEL_CHOICES, editable=False, default='D')
 
 
 class Ingredient(Comestible):
@@ -37,6 +37,10 @@ class Ingredient(Comestible):
     reference_quantity = models.DecimalField("the quantity to which the calorie value refers", max_digits=6, decimal_places=2, default=100)
     calories = models.DecimalField(max_digits=6, decimal_places=2)
     # add other nutrients to track later? fat, calories from carbs etc
+
+    def save(self, *args, **kwargs):
+        self.child_model = 'I' # so that the related comestible knows this is an ingredient
+        super(Ingredient, self).save(*args, **kwargs) # Call the "real" save() method.
 
 
 class Dish(Comestible):
@@ -50,10 +54,6 @@ class Dish(Comestible):
 
     def get_dish_calories(self):
         return sum(amount.get_amount_calories() for amount in self.contained_comestibles_set.all())
-
-    def save(self, *args, **kwargs):
-        self.child_model = 'D' # so that the related comestible knows this is a dish
-        super(Dish, self).save(*args, **kwargs) # Call the "real" save() method.
 
     class Meta:
         verbose_name_plural = "dishes"
