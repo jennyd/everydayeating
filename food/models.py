@@ -102,6 +102,9 @@ class Meal(models.Model):
     time = models.TimeField("the time at which the meal is eaten")  # make defaults for each name choice...
     comestibles = models.ManyToManyField(Comestible, through='Eating')
 
+    def get_meal_calories(self):
+        return sum(eating.get_eating_calories() for eating in Eating.objects.filter(meal=self))
+
 
 class Eating(models.Model):
 
@@ -112,6 +115,17 @@ class Eating(models.Model):
     meal = models.ForeignKey(Meal)
     quantity = models.DecimalField("the quantity eaten", max_digits=6, decimal_places=2, blank=True, null=True, default=0)
 
+    def get_eating_calories(self):
+        if self.comestible.child_model == 'I':
+            calories = self.comestible.ingredient.calories
+            quantity = self.comestible.ingredient.reference_quantity
+        elif self.comestible.child_model == 'D':
+            calories = self.comestible.dish.get_dish_calories()
+            quantity = self.comestible.dish.total_quantity
+        else:
+            return "This is an eating of nothingness" # should raise an exception - which?
+        eating_calories = self.quantity * calories / quantity
+        return eating_calories
 
 
 #class DishForm(ModelForm):

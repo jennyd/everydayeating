@@ -3,9 +3,10 @@
 {% block content %}
 
     <h1>{{ meal.name }} on {{ meal.date }} at {{ meal.time }}</h1>
+    ({{ meal.get_meal_calories }} calories)
     <ul>
     {% for eating in meal.eating_set.all %}
-        {{ eating.quantity }}{{ eating.comestible.unit }} of {{ eating.comestible }}</br>
+        {{ eating.quantity }}{{ eating.comestible.unit }} of {{ eating.comestible }} ({{ eating.get_eating_calories }} calories)</br>
     {% empty %}
         Don't skip meals!
     {% endfor %}
