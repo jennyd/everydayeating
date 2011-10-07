@@ -20,6 +20,15 @@ class Comestible(models.Model):
             except Dish.DoesNotExist:
                 raise Comestible.DoesNotExist, "Strange lack of comestible in an unexpected place"
 
+    def unit(self):
+        try:
+            return self.ingredient.reference_quantity_unit
+        except Ingredient.DoesNotExist:
+            try:
+                return self.dish.total_quantity_unit
+            except Dish.DoesNotExist:
+                raise Comestible.DoesNotExist, "Strange lack of comestible in an unexpected place"
+
 
 class Ingredient(Comestible):
     name = models.CharField(max_length=200, unique=True)

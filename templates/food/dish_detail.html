@@ -15,8 +15,7 @@
     Ingredients:
     <ul>
     {% for amount in dish.contained_comestibles_set.all %}
-        {{ amount.quantity }}{% firstof amount.contained_comestible.ingredient.reference_quantity_unit amount.contained_comestible.dish.total_quantity_unit %} of {{ amount.contained_comestible }} ({{ amount.get_amount_calories }} calories) {# add condition for dish units #}
-        <br />
+        {{ amount.quantity }}{{ amount.contained_comestible.unit }} of {{ amount.contained_comestible }} ({{ amount.get_amount_calories }} calories)</br>
     {% empty %}
         This dish doesn't have any ingredients.
     {% endfor %}
