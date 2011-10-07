@@ -27,6 +27,23 @@ class Comestible(models.Model):
     )
     child_model = models.CharField(max_length=1, choices=CHILD_MODEL_CHOICES, editable=False, default='D')
 
+    def child_quantity(self):
+        if self.child_model == 'I':
+            return self.ingredient.reference_quantity
+        elif self.child_model == 'D':
+            return self.dish.total_quantity
+        else:
+            return u"Child model field is useless" # should raise an exception - which?
+
+    def child_calories(self):
+        if self.child_model == 'I':
+            return self.ingredient.calories
+        elif self.child_model == 'D':
+            return self.dish.get_dish_calories()
+        else:
+            return u"Child model field is useless" # should raise an exception - which?
+
+
 
 class Ingredient(Comestible):
     name = models.CharField(max_length=200, unique=True)
@@ -69,17 +86,20 @@ class Amount(models.Model):
     quantity = models.DecimalField("the quantity of this ingredient in the dish, in ingredient units", max_digits=6, decimal_places=2, blank=True, null=True, default=0)
 
     def get_amount_calories(self):
-        try:
-            calories = self.contained_comestible.ingredient.calories
-            ref_quantity = self.contained_comestible.ingredient.reference_quantity
-        except Ingredient.DoesNotExist:
-            try:
-                calories = self.contained_comestible.dish.get_dish_calories()
-                ref_quantity = self.contained_comestible.dish.total_quantity
-            except Dish.DoesNotExist:
-                raise Comestible.DoesNotExist, "This is an amount of nothingness"
-        amount_calories = self.quantity * calories / ref_quantity
-        return amount_calories
+        return self.quantity * self.contained_comestible.child_calories() / self.contained_comestible.child_quantity()
+
+#    def get_amount_calories(self):
+#        try:
+#            calories = self.contained_comestible.ingredient.calories
+#            ref_quantity = self.contained_comestible.ingredient.reference_quantity
+#        except Ingredient.DoesNotExist:
+#            try:
+#                calories = self.contained_comestible.dish.get_dish_calories()
+#                ref_quantity = self.contained_comestible.dish.total_quantity
+#            except Dish.DoesNotExist:
+#                raise Comestible.DoesNotExist, "This is an amount of nothingness"
+#        amount_calories = self.quantity * calories / ref_quantity
+#        return amount_calories
 
 
 class Meal(models.Model):
@@ -116,17 +136,21 @@ class Eating(models.Model):
     quantity = models.DecimalField("the quantity eaten", max_digits=6, decimal_places=2, blank=True, null=True, default=0)
 
     def get_eating_calories(self):
-        if self.comestible.child_model == 'I':
-            calories = self.comestible.ingredient.calories
-            quantity = self.comestible.ingredient.reference_quantity
-        elif self.comestible.child_model == 'D':
-            calories = self.comestible.dish.get_dish_calories()
-            quantity = self.comestible.dish.total_quantity
-        else:
-            return "This is an eating of nothingness" # should raise an exception - which?
-        eating_calories = self.quantity * calories / quantity
-        return eating_calories
+        return self.quantity * self.comestible.child_calories() / self.comestible.child_quantity()
 
+#    def get_eating_calories(self):
+#        if self.comestible.child_model == 'I':
+#            calories = self.comestible.ingredient.calories
+#            quantity = self.comestible.ingredient.reference_quantity
+#        elif self.comestible.child_model == 'D':
+#            calories = self.comestible.dish.get_dish_calories()
+#            quantity = self.comestible.dish.total_quantity
+#        else:
+#            return "This is an eating of nothingness" # should raise an exception - which?
+#        eating_calories = self.quantity * calories / quantity
+#        return eating_calories
+
+#################################
 
 #class DishForm(ModelForm):
 #    class Meta: 
