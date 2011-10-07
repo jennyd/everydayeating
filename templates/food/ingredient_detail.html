@@ -4,10 +4,10 @@
 
     <h1>{{ ingredient.name }}</h1>
     <ul>
-    {% if ingredient.reference_quantity_unit == "items" %}
+    {% if ingredient.unit == "items" %}
         There are {{ ingredient.calories }} calories in one {{ ingredient.name }}.
     {% else %}
-        There are {{ ingredient.calories }} calories in {{ingredient.reference_quantity }} {{ ingredient.reference_quantity_unit }} of {{ ingredient.name }}.
+        There are {{ ingredient.calories }} calories in {{ingredient.reference_quantity }} {{ ingredient.unit }} of {{ ingredient.name }}.
     {% endif %}
     </ul>
 

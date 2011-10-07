@@ -4,10 +4,10 @@
 
     <h1>{{ dish.name }}</h1>
     <p>
-    {% if dish.total_quantity_unit == "items" %}
+    {% if dish.unit == "items" %}
         {{ dish.total_quantity }} {{ dish.name }} cooked on {{ dish.date_cooked }}.
     {% else %}
-        {{ dish.total_quantity }}{{ dish.total_quantity_unit }} of {{ dish.name }} cooked on {{ dish.date_cooked }}.
+        {{ dish.total_quantity }}{{ dish.unit }} of {{ dish.name }} cooked on {{ dish.date_cooked }}.
     {% endif %}
     ({{ dish.get_dish_calories }} calories)
     <a href="{% url dish_edit dish.id %}">Edit</a><p/>

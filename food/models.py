@@ -20,14 +20,7 @@ class Comestible(models.Model):
             except Dish.DoesNotExist:
                 raise Comestible.DoesNotExist, "Strange lack of comestible in an unexpected place"
 
-    def unit(self):
-        try:
-            return self.ingredient.reference_quantity_unit
-        except Ingredient.DoesNotExist:
-            try:
-                return self.dish.total_quantity_unit
-            except Dish.DoesNotExist:
-                raise Comestible.DoesNotExist, "Strange lack of comestible in an unexpected place"
+    unit = models.CharField(max_length=5, choices=UNIT_CHOICES, default="g")
 
 
 class Ingredient(Comestible):
@@ -37,7 +30,6 @@ class Ingredient(Comestible):
         return self.name
 
     reference_quantity = models.DecimalField("the quantity to which the calorie value refers", max_digits=6, decimal_places=2, default=100)
-    reference_quantity_unit = models.CharField(max_length=5, choices=UNIT_CHOICES, default="g")
     calories = models.DecimalField(max_digits=6, decimal_places=2)
     # add other nutrients to track later? fat, calories from carbs etc
 
@@ -49,7 +41,6 @@ class Dish(Comestible):
         return self.name
 
     total_quantity = models.DecimalField("the total quantity of the finished dish", max_digits=6, decimal_places=2, blank=True)
-    total_quantity_unit = models.CharField(max_length=5, choices=UNIT_CHOICES, default="g")
     date_cooked = models.DateField("the date on which the dish is cooked") # default...
 
     def get_dish_calories(self):
@@ -85,7 +76,7 @@ class Amount(models.Model):
 class Meal(models.Model):
 
     def __unicode__(self):
-        return self.name+u" on "+unicode(self.date)  # date ok like this?
+        return self.name+u" on "+unicode(self.date)
 
     NAME_CHOICES = (
         ('breakfast', 'breakfast'),

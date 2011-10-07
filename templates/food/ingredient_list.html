@@ -8,8 +8,10 @@
             <tr>
             <td><a href="{% url ingredient_detail ingredient.id %}">{{ ingredient.name }}</a></td>
             <td>{{ ingredient.calories }} calories per 
-            {% if ingredient.reference_quantity_unit == "items" %}{{ ingredient.name }}
-            {% else %}{{ ingredient.reference_quantity }}{{ ingredient.reference_quantity_unit }}
+            {% if ingredient.unit == "items" %}
+                {{ ingredient.name }}
+            {% else %}
+                {{ ingredient.reference_quantity }}{{ ingredient.unit }}
             {% endif %}
             </td></tr>
         {% endfor %}

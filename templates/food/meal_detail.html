@@ -5,7 +5,7 @@
     <h1>{{ meal.name }} on {{ meal.date }} at {{ meal.time }}</h1>
     <ul>
     {% for eating in meal.eating_set.all %}
-        {{ eating.quantity }}{% firstof eating.comestible.ingredient.reference_quantity_unit eating.comestible.dish.total_quantity_unit %} of {{ eating.comestible }}</br>
+        {{ eating.quantity }}{{ eating.comestible.unit }} of {{ eating.comestible }}</br>
     {% empty %}
         Don't skip meals!
     {% endfor %}
