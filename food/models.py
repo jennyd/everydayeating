@@ -110,7 +110,7 @@ class Eating(models.Model):
 
     comestible = models.ForeignKey(Comestible)
     meal = models.ForeignKey(Meal)
-    quantity = models.DecimalField("the quantity eaten", max_digits=6, decimal_places=2)
+    quantity = models.DecimalField("the quantity eaten", max_digits=6, decimal_places=2, blank=True, null=True, default=0)
 
 
 
