@@ -12,15 +12,20 @@ UNIT_CHOICES = (
 class Comestible(models.Model):
 
     def __unicode__(self):
-        try:
+        if self.child_model == 'I':
             return u"Ingredient: "+self.ingredient.name
-        except Ingredient.DoesNotExist:
-            try:
-                return u"Dish: "+self.dish.name
-            except Dish.DoesNotExist:
-                raise Comestible.DoesNotExist, "Strange lack of comestible in an unexpected place"
+        elif self.child_model == 'D':
+            return u"Dish: "+self.dish.name
+        else:
+            return u"Child model field is useless"
 
     unit = models.CharField(max_length=5, choices=UNIT_CHOICES, default="g")
+
+    CHILD_MODEL_CHOICES = (
+        ('I', 'Ingredient'),
+        ('D', 'Dish'),
+    )
+    child_model = models.CharField(max_length=1, choices=CHILD_MODEL_CHOICES, editable=False, default='I')
 
 
 class Ingredient(Comestible):
@@ -45,6 +50,10 @@ class Dish(Comestible):
 
     def get_dish_calories(self):
         return sum(amount.get_amount_calories() for amount in self.contained_comestibles_set.all())
+
+    def save(self, *args, **kwargs):
+        self.child_model = 'D' # so that the related comestible knows this is a dish
+        super(Dish, self).save(*args, **kwargs) # Call the "real" save() method.
 
     class Meta:
         verbose_name_plural = "dishes"
