@@ -102,6 +102,13 @@ class Amount(models.Model):
 #        amount_calories = self.quantity * calories / ref_quantity
 #        return amount_calories
 
+    def save(self, *args, **kwargs):
+        if self.contained_comestible.child_model == 'D' and self.contained_comestible.dish == self.containing_dish:
+            return u"A dish cannot contain itself" # allows following amounts to be saved correctly, but no notification to user...
+#            raise Exception, u"A dish cannot contain itself" # fails obviously, but following allowable amounts aren't saved
+        else:
+            super(Amount, self).save(*args, **kwargs) # Call the "real" save() method.
+
 
 class Meal(models.Model):
 
