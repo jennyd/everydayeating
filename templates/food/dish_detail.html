@@ -9,13 +9,13 @@
     {% else %}
         {{ dish.total_quantity }}{{ dish.unit }} of {{ dish.name }} cooked on {{ dish.date_cooked }}.
     {% endif %}
-    ({{ dish.get_dish_calories }} calories)
+    ({{ dish.calories }} calories)
     <a href="{% url dish_edit dish.id %}">Edit</a><p/>
     
     Ingredients:
     <ul>
     {% for amount in dish.contained_comestibles_set.all %}
-        {{ amount.quantity }}{{ amount.contained_comestible.unit }} of {{ amount.contained_comestible }} ({{ amount.get_amount_calories }} calories)</br>
+        {{ amount.quantity }}{{ amount.contained_comestible.unit }} of {{ amount.contained_comestible }} ({{ amount.calories }} calories)</br>
     {% empty %}
         This dish doesn't have any ingredients.
     {% endfor %}

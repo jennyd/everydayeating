@@ -71,7 +71,9 @@ class Dish(Comestible):
     date_cooked = models.DateField("the date on which the dish is cooked") # default...
 
     def get_dish_calories(self):
-        return sum(amount.get_amount_calories() for amount in self.contained_comestibles_set.all())
+        return sum(amount.calories for amount in self.contained_comestibles_set.all())
+
+    calories = property(get_dish_calories)
 
     class Meta:
         verbose_name_plural = "dishes"
@@ -88,6 +90,8 @@ class Amount(models.Model):
 
     def get_amount_calories(self):
         return self.quantity * self.contained_comestible.child_calories() / self.contained_comestible.child_quantity()
+
+    calories = property(get_amount_calories)
 
 #    def get_amount_calories(self):
 #        try:
@@ -131,7 +135,9 @@ class Meal(models.Model):
     comestibles = models.ManyToManyField(Comestible, through='Eating')
 
     def get_meal_calories(self):
-        return sum(eating.get_eating_calories() for eating in Eating.objects.filter(meal=self))
+        return sum(eating.calories for eating in Eating.objects.filter(meal=self))
+
+    calories = property(get_meal_calories)
 
 
 class Eating(models.Model):
@@ -145,6 +151,8 @@ class Eating(models.Model):
 
     def get_eating_calories(self):
         return self.quantity * self.comestible.child_calories() / self.comestible.child_quantity()
+
+    calories = property(get_eating_calories)
 
 #    def get_eating_calories(self):
 #        if self.comestible.child_model == 'I':
