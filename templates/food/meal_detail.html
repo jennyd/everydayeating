@@ -6,7 +6,11 @@
     ({{ meal.calories }} calories)
     <ul>
     {% for eating in meal.eating_set.all %}
-        {{ eating.quantity }}{{ eating.comestible.unit }} of {{ eating.comestible }} ({{ eating.calories }} calories)</br>
+        {% if eating.comestible.unit == "items" %}
+            {{ eating.quantity }} {{ eating.comestible }} ({{ eating.calories }} calories)</br>
+        {% else %}
+            {{ eating.quantity }}{{ eating.comestible.unit }} of {{ eating.comestible }} ({{ eating.calories }} calories)</br>
+        {% endif %}
     {% empty %}
         Don't skip meals!
     {% endfor %}
