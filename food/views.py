@@ -26,7 +26,7 @@ def dish_edit_amounts(request, dish_id):
         formset = DishFormSet(request.POST, request.FILES, instance=dish)
         if formset.is_valid():
             formset.save()
-            return HttpResponseRedirect('/food/dishes/')
+            return HttpResponseRedirect('/food/dishes/'+unicode(dish_id)+'/')
     else:
         formset = DishFormSet(instance=dish)
     return render_to_response("food/dish_edit_amounts.html", {
@@ -42,7 +42,7 @@ def meal_edit_eating(request, meal_id):
         formset = MealFormSet(request.POST, request.FILES, instance=meal)
         if formset.is_valid():
             formset.save()
-            return HttpResponseRedirect('/food/meals/')
+            return HttpResponseRedirect('/food/meals/'+unicode(meal_id)+'/')
     else:
         formset = MealFormSet(instance=meal)
     return render_to_response("food/meal_edit_eating.html", {
