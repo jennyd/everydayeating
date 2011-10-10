@@ -16,38 +16,43 @@ class Comestible(models.Model):
     )
     child_model = models.CharField(max_length=1, choices=CHILD_MODEL_CHOICES, editable=False, default='D')
     is_dish = models.BooleanField(default=True, editable=False) # as alternative to child_model
+    dishy = models.BooleanField(default=True, editable=False) # as alternative to child_model
     unit = models.CharField(max_length=5, choices=UNIT_CHOICES, default="g")
 
 #    def is_dish(self):
-#        if self.is_dish == True:
+#        if self.dishy == True:
 #            return True
-#        elif self.is_dish == False:
+#        elif self.dishy == False:
 #            return False
 #        else:
-#            raise Exception, u"Comestible.is_dish is somehow rubbish"
+#            raise Exception, u"Comestible.is_dish() is somehow rubbish"
 
-    def is_dish(self):
-        if self.child_model == 'D':
-            return True
-        elif self.child_model == 'I':
-            return False
-        else:
-            raise Exception, u"Child model field is useless in Comestible.is_dish()"
+#    def is_dish(self):
+#        if self.child_model == 'D':
+#            return True
+#        elif self.child_model == 'I':
+#            return False
+#        else:
+#            raise Exception, u"Child model field is useless in Comestible.is_dish()"
 
     def __unicode__(self):
-        if self.is_dish():
+        if self.is_dish == True:
             return u"Dish: "+self.dish.name
         else:
             return u"Ingredient: "+self.ingredient.name
+#        elif self.is_dish() == False:
+#            return u"Ingredient: "+self.ingredient.name
+#        else:
+#            raise Exception, u"Comestible.__unicode__() is broken"
 
     def child_quantity(self):
-        if self.is_dish():
+        if self.is_dish == True:
             return self.dish.total_quantity
         else:
             return self.ingredient.reference_quantity
 
     def child_calories(self):
-        if self.is_dish():
+        if self.is_dish == True:
             return self.dish.get_dish_calories()
         else:
             return self.ingredient.calories
@@ -66,6 +71,7 @@ class Ingredient(Comestible):
     def save(self, *args, **kwargs):
         self.child_model = 'I' # so that the related comestible knows this is an ingredient
         self.is_dish = False # as alternative to child_model
+        self.dishy = False # as alternative to child_model
         super(Ingredient, self).save(*args, **kwargs) # Call the "real" save() method.
 
 
@@ -83,7 +89,7 @@ class Dish(Comestible):
 
     calories = property(get_dish_calories)
 
-# perhaps Dish also needs a custom save method for child_model/is_dish, since defaults seem to be broken with South...
+# perhaps Dish also needs a custom save method for child_model/is_dish/dishy, since defaults seem to be broken with South...
 
     class Meta:
         verbose_name_plural = "dishes"
@@ -116,7 +122,7 @@ class Amount(models.Model):
 #        return amount_calories
 
     def save(self, *args, **kwargs):
-        if self.contained_comestible.is_dish() == True and self.contained_comestible.dish == self.containing_dish:
+        if self.contained_comestible.is_dish == True and self.contained_comestible.dish == self.containing_dish:
             return u"A dish cannot contain itself" # allows following amounts to be saved correctly, but no notification to user...
 #            raise Exception, u"A dish cannot contain itself" # fails obviously, but following allowable amounts aren't saved
         else:
