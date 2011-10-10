@@ -1,0 +1,13 @@
+{% extends "food/base.html" %}
+
+{% block content %}
+
+    <p>Do you really want to delete {{ dish }}?
+    
+    <form action="." method="post">{% csrf_token %}
+    <input type="submit" value="Yes, delete this dish" />
+    </form></p>
+
+    <a href="{% url ingredient_list %}">Back to Dishes</a>
+
+{% endblock content %}

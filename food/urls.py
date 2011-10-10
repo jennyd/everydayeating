@@ -29,6 +29,7 @@ urlpatterns += patterns('',
     url(r'^dishes/(?P<pk>\d+)/$', DetailView.as_view( model = Dish ), name="dish_detail"),
     url(r'^dishes/(?P<pk>\d+)/edit/$', UpdateView.as_view( model=Dish, success_url="/food/dishes/%(id)s/"), name="dish_edit"),
     url(r'^dishes/(?P<dish_id>\d+)/edit/(?P<pk>\d+)/$', UpdateView.as_view( model=Amount, success_url="/food/dishes/%(containing_dish_id)s/"), name="amount_edit"),
+    url(r'^dishes/(?P<pk>\d+)/delete/$', DeleteView.as_view( model=Dish, success_url="/food/dishes/"), name="dish_delete"),
 
     url(r'^meals/$', ListView.as_view( model=Meal ), name="meal_list"),
     url(r'^meals/add/$', CreateView.as_view( model=Meal, success_url="/food/meals/%(id)s/" ), name="meal_add"),
