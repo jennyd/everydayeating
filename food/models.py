@@ -137,7 +137,7 @@ class Meal(models.Model):
     name = models.CharField(max_length=16, choices=NAME_CHOICES)
     date = models.DateField("the date on which the meal is eaten")
     time = models.TimeField("the time at which the meal is eaten")  # make defaults for each name choice...
-    comestibles = models.ManyToManyField(Comestible, through='Eating')
+    comestibles = models.ManyToManyField(Comestible, through='Eating', editable=False)
 
     def __unicode__(self):
         return self.name+u" on "+unicode(self.date)
