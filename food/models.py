@@ -33,7 +33,7 @@ class Comestible(models.Model):
 
     def child_calories(self):
         if self.is_dish == True:
-            return self.dish.get_dish_calories()
+            return self.dish.calories
         else:
             return self.ingredient.calories
 
