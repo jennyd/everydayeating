@@ -2,14 +2,14 @@ from food.models import Ingredient, Dish, Amount, Meal, Eating
 from django.contrib import admin
 
 class IngredientAdmin(admin.ModelAdmin):
-    fields = ['name', 'calories', 'reference_quantity', 'unit']
+    fields = ['name', 'calories', 'quantity', 'unit']
     search_fields = ['name']
 
 admin.site.register(Ingredient, IngredientAdmin)
 
 
 class DishAdmin(admin.ModelAdmin):
-    fields = ['name', 'date_cooked', 'total_quantity', 'unit']
+    fields = ['name', 'date_cooked', 'quantity', 'unit']
     search_fields = ['name', 'date_cooked']
 
 admin.site.register(Dish, DishAdmin)

@@ -16,7 +16,6 @@ class Comestible(models.Model):
     )
     child_model = models.CharField(max_length=10, choices=CHILD_MODEL_CHOICES, editable=False, default='Dish')
     is_dish = models.BooleanField(default=True, editable=False) # as alternative to child_model
-    dishy = models.BooleanField(default=True, editable=False) # as alternative to child_model
     unit = models.CharField(max_length=5, choices=UNIT_CHOICES, default="g")
 
     def get_child(self):
@@ -33,10 +32,9 @@ class Comestible(models.Model):
 
 class Ingredient(Comestible):
     name = models.CharField(max_length=200, unique=True)
-    reference_quantity = models.DecimalField("the quantity to which the calorie value refers", max_digits=8, decimal_places=2, default=100)
-    quantity = models.DecimalField(max_digits=8, decimal_places=2, default=100) # not being used yet
+    quantity = models.DecimalField(max_digits=8, decimal_places=2, default=100)
     calories = models.DecimalField(max_digits=8, decimal_places=2)
-    # add other nutrients to track later? fat, calories from carbs etc
+    # add other nutrients to track later: fat, calories from carbs etc
 
     def __unicode__(self):
         return self.name
@@ -44,7 +42,6 @@ class Ingredient(Comestible):
     def save(self, *args, **kwargs):
         self.child_model = 'Ingredient' # so that the related comestible knows this is an ingredient
         self.is_dish = False # as alternative to child_model
-        self.dishy = False # as alternative to child_model
         super(Ingredient, self).save(*args, **kwargs) # Call the "real" save() method.
 
     class Meta:
@@ -53,8 +50,7 @@ class Ingredient(Comestible):
 
 class Dish(Comestible):
     name = models.CharField(max_length=200)
-    total_quantity = models.DecimalField("the total quantity of the finished dish", max_digits=8, decimal_places=2, blank=True, default=500, null=True)
-    quantity = models.DecimalField(max_digits=8, decimal_places=2, blank=True, default=500, null=True) # not being used yet
+    quantity = models.DecimalField(max_digits=8, decimal_places=2, blank=True, default=500, null=True)
     date_cooked = models.DateField("the date on which the dish is cooked") # default...
 
     def __unicode__(self):
@@ -65,7 +61,7 @@ class Dish(Comestible):
 
     calories = property(get_dish_calories)
 
-# perhaps Dish also needs a custom save method for child_model/is_dish/dishy, since defaults seem to be broken with South...
+# perhaps Dish also needs a custom save method for child_model/is_dish, since defaults seem to be broken with South...
 
     class Meta:
         verbose_name_plural = "dishes"

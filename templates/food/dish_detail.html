@@ -5,9 +5,9 @@
     <h1>{{ dish.name }}</h1>
     <p>
     {% if dish.unit == "items" %}
-        {{ dish.total_quantity }} {{ dish.name }} cooked on {{ dish.date_cooked }}.
+        {{ dish.quantity }} {{ dish.name }} cooked on {{ dish.date_cooked }}.
     {% else %}
-        {{ dish.total_quantity }}{{ dish.unit }} of {{ dish.name }} cooked on {{ dish.date_cooked }}.
+        {{ dish.quantity }}{{ dish.unit }} of {{ dish.name }} cooked on {{ dish.date_cooked }}.
     {% endif %}
     ({{ dish.calories }} calories)
     <a href="{% url dish_edit dish.id %}">Edit</a><p/>

@@ -11,7 +11,7 @@
             {% if ingredient.unit == "items" %}
                 {{ ingredient.name }}
             {% else %}
-                {{ ingredient.reference_quantity }}{{ ingredient.unit }}
+                {{ ingredient.quantity }}{{ ingredient.unit }}
             {% endif %}
             </td></tr>
         {% endfor %}

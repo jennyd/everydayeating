@@ -7,7 +7,7 @@
     {% if ingredient.unit == "items" %}
         There are {{ ingredient.calories }} calories in one {{ ingredient.name }}.
     {% else %}
-        There are {{ ingredient.calories }} calories in {{ingredient.reference_quantity }} {{ ingredient.unit }} of {{ ingredient.name }}.
+        There are {{ ingredient.calories }} calories in {{ingredient.quantity }} {{ ingredient.unit }} of {{ ingredient.name }}.
     {% endif %}
     </ul>
 
