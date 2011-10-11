@@ -1,26 +1,34 @@
 {% extends "food/base.html" %}
+{% load humanize %}
 
 {% block content %}
 
     <h1>{{ dish.name }}</h1>
     <p>
     {% if dish.unit == "items" %}
-        {{ dish.quantity }} {{ dish.name }} cooked on {{ dish.date_cooked }}.
+        {{ dish.quantity|apnumber }} {{ dish.name }} cooked: {{ dish.date_cooked|naturalday }}.
     {% else %}
-        {{ dish.quantity }}{{ dish.unit }} of {{ dish.name }} cooked on {{ dish.date_cooked }}.
+        {{ dish.quantity }}{{ dish.unit }} of {{ dish.name }} cooked: {{ dish.date_cooked|naturalday }}.
     {% endif %}
-    ({{ dish.calories }} calories)
+    ({{ dish.calories|floatformat:0 }} calories)
     <a href="{% url dish_edit dish.id %}">Edit</a><p/>
     
     Ingredients:
-    <ul>
-    {% for amount in dish.contained_comestibles_set.all %}
-        {{ amount.quantity }}{{ amount.contained_comestible.unit }} of {{ amount.contained_comestible }} ({{ amount.calories }} calories)</br>
-    {% empty %}
-        This dish doesn't have any ingredients.
-    {% endfor %}
-    </ul>
+        <table>
+            {% for amount in dish.contained_comestibles_set.all %}
+                 <tr>
+                {% if amount.contained_comestible.unit == "items" %}
+                    <td>{{ amount.quantity|apnumber }}</td><td></td><td>{{ amount.contained_comestible }}</td><td>({{ amount.calories|floatformat:0 }} calories)</td>
+                {% else %}
+                    <td>{{ amount.quantity }}{{ amount.contained_comestible.unit }}</td><td>of</td><td>{{ amount.contained_comestible }}</td><td>({{ amount.calories|floatformat:0 }} calories)</td>
+                {% endif %}
+                </tr>
+            {% empty %}
+                <tr><td>This dish doesn't have any ingredients.</td></tr>
+            {% endfor %}
+        </table>
 
+    </br>
     <a href="{% url dish_edit_amounts dish.id %}">Add or edit this dish's ingredients</a><p/>
 
 {% endblock content %}

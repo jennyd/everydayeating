@@ -1,11 +1,12 @@
 {% extends "food/base.html" %}
+{% load humanize %}
 
 {% block content %}
 
     <h1>{{ ingredient.name }}</h1>
     <ul>
     {% if ingredient.unit == "items" %}
-        There are {{ ingredient.calories }} calories in one {{ ingredient.name }}.
+        There are {{ ingredient.calories }} calories in {{ingredient.quantity|apnumber }} {{ ingredient.name }}.
     {% else %}
         There are {{ ingredient.calories }} calories in {{ingredient.quantity }} {{ ingredient.unit }} of {{ ingredient.name }}.
     {% endif %}

@@ -1,4 +1,5 @@
 {% extends "food/base.html" %}
+{% load humanize %}
 
 {% block content %}
 
@@ -7,9 +8,14 @@
         {% for ingredient in ingredient_list %}
             <tr>
             <td><a href="{% url ingredient_detail ingredient.id %}">{{ ingredient.name }}</a></td>
-            <td>{{ ingredient.calories }} calories per 
+            <td>{{ ingredient.calories }} calories</td>
+            <td>per
             {% if ingredient.unit == "items" %}
-                {{ ingredient.name }}
+                {% if ingredient.quantity == 1 %}
+                    {{ ingredient.name }}
+                {% else %}
+                    {{ ingredient.quantity|apnumber }} {{ ingredient.name }}s
+                {% endif %}
             {% else %}
                 {{ ingredient.quantity }}{{ ingredient.unit }}
             {% endif %}

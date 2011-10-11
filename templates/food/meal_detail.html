@@ -1,15 +1,16 @@
 {% extends "food/base.html" %}
+{% load humanize %}
 
 {% block content %}
 
-    <h1>{{ meal.name }} on {{ meal.date }} at {{ meal.time }}</h1>
-    ({{ meal.calories }} calories)
+    <h1>{{ meal.name }}, {{ meal.date|naturalday }} at {{ meal.time }}</h1>
+    ({{ meal.calories|floatformat:0 }} calories)
     <ul>
     {% for eating in meal.eating_set.all %}
         {% if eating.comestible.unit == "items" %}
-            {{ eating.quantity }} {{ eating.comestible }} ({{ eating.calories }} calories)</br>
+            {{ eating.quantity }} {{ eating.comestible }} ({{ eating.calories|floatformat:0 }} calories)</br>
         {% else %}
-            {{ eating.quantity }}{{ eating.comestible.unit }} of {{ eating.comestible }} ({{ eating.calories }} calories)</br>
+            {{ eating.quantity }}{{ eating.comestible.unit }} of {{ eating.comestible }} ({{ eating.calories|floatformat:0 }} calories)</br>
         {% endif %}
     {% empty %}
         Don't skip meals!

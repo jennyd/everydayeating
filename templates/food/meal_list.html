@@ -1,4 +1,5 @@
 {% extends "food/base.html" %}
+{% load humanize %}
 
 {% block content %}
 
@@ -7,11 +8,10 @@
         {% for meal in meal_list %}
             <tr>
             <td><a href="{% url meal_detail meal.id %}">{{ meal.name }}</a></td>
-            <td>on</td>
-            <td>{{ meal.date }}</td>
+            <td>{{ meal.date|naturalday }}</td>
             <td>at</td>
             <td>{{ meal.time }}</td>
-            <td>({{ meal.calories }} calories)</td>
+            <td>({{ meal.calories|floatformat:0 }} calories)</td>
             </tr>
         {% endfor %}
     </table><br />

@@ -1,4 +1,5 @@
 {% extends "food/base.html" %}
+{% load humanize %}
 
 {% block content %}
 
@@ -7,8 +8,8 @@
         {% for dish in dish_list %}
             <tr>
             <td><a href="{% url dish_detail dish.id %}">{{ dish.name }}</a></td>
-            <td>cooked on</td>
-            <td>{{ dish.date_cooked }}</td>
+            <td>cooked</td>
+            <td>{{ dish.date_cooked|naturalday }}</td>
             <td><a href="{% url dish_delete dish.id %}">Delete</a></td>
             </tr>
         {% endfor %}
