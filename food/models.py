@@ -19,31 +19,11 @@ class Comestible(models.Model):
     dishy = models.BooleanField(default=True, editable=False) # as alternative to child_model
     unit = models.CharField(max_length=5, choices=UNIT_CHOICES, default="g")
 
-#    def is_dish(self):
-#        if self.dishy == True:
-#            return True
-#        elif self.dishy == False:
-#            return False
-#        else:
-#            raise Exception, u"Comestible.is_dish() is somehow rubbish"
-
-#    def is_dish(self):
-#        if self.child_model == 'D':
-#            return True
-#        elif self.child_model == 'I':
-#            return False
-#        else:
-#            raise Exception, u"Child model field is useless in Comestible.is_dish()"
-
     def __unicode__(self):
         if self.is_dish == True:
             return u"Dish: "+self.dish.name
         else:
             return u"Ingredient: "+self.ingredient.name
-#        elif self.is_dish() == False:
-#            return u"Ingredient: "+self.ingredient.name
-#        else:
-#            raise Exception, u"Comestible.__unicode__() is broken"
 
     def child_quantity(self):
         if self.is_dish == True:
@@ -112,19 +92,6 @@ class Amount(models.Model):
 
     calories = property(get_amount_calories)
 
-#    def get_amount_calories(self):
-#        try:
-#            calories = self.contained_comestible.ingredient.calories
-#            ref_quantity = self.contained_comestible.ingredient.reference_quantity
-#        except Ingredient.DoesNotExist:
-#            try:
-#                calories = self.contained_comestible.dish.get_dish_calories()
-#                ref_quantity = self.contained_comestible.dish.total_quantity
-#            except Dish.DoesNotExist:
-#                raise Comestible.DoesNotExist, "This is an amount of nothingness"
-#        amount_calories = self.quantity * calories / ref_quantity
-#        return amount_calories
-
     def save(self, *args, **kwargs):
         if self.contained_comestible.is_dish == True and self.contained_comestible.dish == self.containing_dish:
             return u"A dish cannot contain itself" # allows following amounts to be saved correctly, but no notification to user...
@@ -181,27 +148,11 @@ class Eating(models.Model):
 #        order_with_respect_to = 'meal'
 
 
-#    def get_eating_calories(self):
-#        if self.comestible.child_model == 'I':
-#            calories = self.comestible.ingredient.calories
-#            quantity = self.comestible.ingredient.reference_quantity
-#        elif self.comestible.child_model == 'D':
-#            calories = self.comestible.dish.get_dish_calories()
-#            quantity = self.comestible.dish.total_quantity
-#        else:
-#            return "This is an eating of nothingness" # should raise an exception - which?
-#        eating_calories = self.quantity * calories / quantity
-#        return eating_calories
-
 #################################
 
 #class DishForm(ModelForm):
 #    class Meta: 
 #        model = Dish
-
-
-# use aggregate() to calculate calories etc from ingredients
-# use annotate() to show values for each ingredient
 
 
 ##### move clagginess into a ratings app later
