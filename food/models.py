@@ -11,10 +11,10 @@ UNIT_CHOICES = (
 
 class Comestible(models.Model):
     CHILD_MODEL_CHOICES = (
-        ('I', 'Ingredient'),
-        ('D', 'Dish'),
+        ('Ingredient', 'Ingredient'),
+        ('Dish', 'Dish'),
     )
-    child_model = models.CharField(max_length=1, choices=CHILD_MODEL_CHOICES, editable=False, default='D')
+    child_model = models.CharField(max_length=10, choices=CHILD_MODEL_CHOICES, editable=False, default='Dish')
     is_dish = models.BooleanField(default=True, editable=False) # as alternative to child_model
     dishy = models.BooleanField(default=True, editable=False) # as alternative to child_model
     unit = models.CharField(max_length=5, choices=UNIT_CHOICES, default="g")
@@ -49,7 +49,7 @@ class Ingredient(Comestible):
         return self.name
 
     def save(self, *args, **kwargs):
-        self.child_model = 'I' # so that the related comestible knows this is an ingredient
+        self.child_model = 'Ingredient' # so that the related comestible knows this is an ingredient
         self.is_dish = False # as alternative to child_model
         self.dishy = False # as alternative to child_model
         super(Ingredient, self).save(*args, **kwargs) # Call the "real" save() method.
