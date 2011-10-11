@@ -19,7 +19,7 @@ class Comestible(models.Model):
     unit = models.CharField(max_length=5, choices=UNIT_CHOICES, default="g")
 
     def get_child(self):
-        if self.is_dish == True:
+        if self.is_dish:
             return self.dish
         else:
             return self.ingredient
@@ -82,7 +82,7 @@ class Amount(models.Model):
     calories = property(get_amount_calories)
 
     def save(self, *args, **kwargs):
-        if self.contained_comestible.is_dish == True and self.contained_comestible.dish == self.containing_dish:
+        if self.contained_comestible.is_dish and self.contained_comestible.dish == self.containing_dish:
             return u"A dish cannot contain itself" # allows following amounts to be saved correctly, but no notification to user...
 #            raise Exception, u"A dish cannot contain itself" # fails obviously, but following allowable amounts aren't saved
         else:
