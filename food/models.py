@@ -19,23 +19,16 @@ class Comestible(models.Model):
     dishy = models.BooleanField(default=True, editable=False) # as alternative to child_model
     unit = models.CharField(max_length=5, choices=UNIT_CHOICES, default="g")
 
+    def get_child(self):
+        if self.is_dish == True:
+            return self.dish
+        else:
+            return self.ingredient
+
+    child = property(get_child)
+
     def __unicode__(self):
-        if self.is_dish == True:
-            return u"Dish: "+self.dish.name
-        else:
-            return u"Ingredient: "+self.ingredient.name
-
-    def child_quantity(self):
-        if self.is_dish == True:
-            return self.dish.total_quantity
-        else:
-            return self.ingredient.reference_quantity
-
-    def child_calories(self):
-        if self.is_dish == True:
-            return self.dish.calories
-        else:
-            return self.ingredient.calories
+        return self.child.name+u" ("+self.child_model+u")"
 
 
 class Ingredient(Comestible):
@@ -88,7 +81,7 @@ class Amount(models.Model):
         return unicode(self.contained_comestible)
 
     def get_amount_calories(self):
-        return self.quantity * self.contained_comestible.child_calories() / self.contained_comestible.child_quantity()
+        return self.quantity * self.contained_comestible.child.calories / self.contained_comestible.child.quantity
 
     calories = property(get_amount_calories)
 
@@ -140,7 +133,7 @@ class Eating(models.Model):
         return unicode(self.comestible)
 
     def get_eating_calories(self):
-        return self.quantity * self.comestible.child_calories() / self.comestible.child_quantity()
+        return self.quantity * self.comestible.child.calories / self.comestible.child.quantity
 
     calories = property(get_eating_calories)
 
