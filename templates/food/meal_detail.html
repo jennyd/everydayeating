@@ -8,10 +8,16 @@
     <ul>
     {% for eating in meal.eating_set.all %}
         {% if eating.comestible.unit == "items" %}
-            {{ eating.quantity }} {{ eating.comestible }} ({{ eating.calories|floatformat:0 }} calories)</br>
+            {{ eating.quantity }}
         {% else %}
-            {{ eating.quantity }}{{ eating.comestible.unit }} of {{ eating.comestible }} ({{ eating.calories|floatformat:0 }} calories)</br>
+            {{ eating.quantity }}{{ eating.comestible.unit }} of 
         {% endif %}
+        {% if eating.comestible.is_dish %}
+            <td><a href="{% url dish_detail eating.comestible.id %}">{{ eating.comestible }}</a></td>
+        {% else %}
+            <td><a href="{% url ingredient_detail eating.comestible.id %}">{{ eating.comestible }}</a></td>
+        {% endif %}
+         ({{ eating.calories|floatformat:0 }} calories)</br>
     {% empty %}
         Don't skip meals!
     {% endfor %}
