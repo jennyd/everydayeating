@@ -10,12 +10,7 @@ UNIT_CHOICES = (
 
 
 class Comestible(models.Model):
-    CHILD_MODEL_CHOICES = (
-        ('Ingredient', 'Ingredient'),
-        ('Dish', 'Dish'),
-    )
-    child_model = models.CharField(max_length=10, choices=CHILD_MODEL_CHOICES, editable=False, default='Dish')
-    is_dish = models.BooleanField(default=True, editable=False) # as alternative to child_model
+    is_dish = models.BooleanField(default=True, editable=False)
     unit = models.CharField(max_length=5, choices=UNIT_CHOICES, default="g")
 
     def get_child(self):
@@ -27,7 +22,7 @@ class Comestible(models.Model):
     child = property(get_child)
 
     def __unicode__(self):
-        return self.child.name+u" ("+self.child_model+u")"
+        return self.child.name+u" ("+unicode(self.child.__class__)+u")"
 
 
 class Ingredient(Comestible):
@@ -40,8 +35,7 @@ class Ingredient(Comestible):
         return self.name
 
     def save(self, *args, **kwargs):
-        self.child_model = 'Ingredient' # so that the related comestible knows this is an ingredient
-        self.is_dish = False # as alternative to child_model
+        self.is_dish = False # so that the related comestible knows this is an ingredient (default=True)
         super(Ingredient, self).save(*args, **kwargs) # Call the "real" save() method.
 
     class Meta:
@@ -61,7 +55,7 @@ class Dish(Comestible):
 
     calories = property(get_dish_calories)
 
-# perhaps Dish also needs a custom save method for child_model/is_dish, since defaults seem to be broken with South...
+# perhaps Dish also needs a custom save method for is_dish, since defaults seem to be broken with South...
 
     class Meta:
         verbose_name_plural = "dishes"
@@ -142,6 +136,16 @@ class Eating(models.Model):
 #class DishForm(ModelForm):
 #    class Meta: 
 #        model = Dish
+
+
+#### from Comestible:
+#    CHILD_MODEL_CHOICES = (
+#        ('Ingredient', 'Ingredient'),
+#        ('Dish', 'Dish'),
+#    )
+#    child_model = models.CharField(max_length=10, choices=CHILD_MODEL_CHOICES, editable=False, default='Dish')
+#### from Ingredient.save():
+#        self.child_model = 'Ingredient' # so that the related comestible knows this is an ingredient
 
 
 ##### move clagginess into a ratings app later
