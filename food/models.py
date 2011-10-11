@@ -74,6 +74,9 @@ class Ingredient(Comestible):
         self.dishy = False # as alternative to child_model
         super(Ingredient, self).save(*args, **kwargs) # Call the "real" save() method.
 
+    class Meta:
+        ordering = ['name']
+
 
 class Dish(Comestible):
     name = models.CharField(max_length=200)
@@ -93,6 +96,7 @@ class Dish(Comestible):
 
     class Meta:
         verbose_name_plural = "dishes"
+        ordering = ['-date_cooked']
 
 
 class Amount(models.Model):
@@ -128,6 +132,9 @@ class Amount(models.Model):
         else:
             super(Amount, self).save(*args, **kwargs) # Call the "real" save() method.
 
+#    class Meta:
+#        order_with_respect_to = 'containing_dish'
+
 
 class Meal(models.Model):
     NAME_CHOICES = (
@@ -153,6 +160,9 @@ class Meal(models.Model):
 
     calories = property(get_meal_calories)
 
+    class Meta:
+        ordering = ['date', 'time']
+
 
 class Eating(models.Model):
     comestible = models.ForeignKey(Comestible)
@@ -166,6 +176,10 @@ class Eating(models.Model):
         return self.quantity * self.comestible.child_calories() / self.comestible.child_quantity()
 
     calories = property(get_eating_calories)
+
+#    class Meta:
+#        order_with_respect_to = 'meal'
+
 
 #    def get_eating_calories(self):
 #        if self.comestible.child_model == 'I':
