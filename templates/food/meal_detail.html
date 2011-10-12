@@ -13,11 +13,12 @@
             {{ eating.quantity }}{{ eating.comestible.unit }} of 
         {% endif %}
         {% if eating.comestible.is_dish %}
-            <td><a href="{% url dish_detail eating.comestible.id %}">{{ eating.comestible }}</a></td>
+            <a href="{% url dish_detail eating.comestible.id %}">{{ eating.comestible }}</a>
         {% else %}
-            <td><a href="{% url ingredient_detail eating.comestible.id %}">{{ eating.comestible }}</a></td>
+            <a href="{% url ingredient_detail eating.comestible.id %}">{{ eating.comestible }}</a>
         {% endif %}
-         ({{ eating.calories|floatformat:0 }} calories)</br>
+        ({{ eating.calories|floatformat:0 }} calories)
+        <a href="{% url eating_edit meal.id eating.id %}">Edit</a></br>
     {% empty %}
         Don't skip meals!
     {% endfor %}
