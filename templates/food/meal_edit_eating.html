@@ -1,8 +1,9 @@
 {% extends "food/base.html" %}
+{% load humanize %}
 
 {% block content %}
 
-    <h1>{{ meal.name }} on {{ meal.date }} at {{ meal.time }}</h1>
+    <h1>{{ meal.name }}, {{ meal.date|naturalday }} at {{ meal.time }}</h1>
 
     <form action="." method="post">{% csrf_token %}
     {{ formset.management_form }}
