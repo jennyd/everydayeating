@@ -62,6 +62,11 @@ class Dish(Comestible):
         ordering = ['-date_cooked']
 
 
+class DishForm(ModelForm):
+    class Meta:
+        model = Dish
+
+
 class Amount(models.Model):
     containing_dish = models.ForeignKey(Dish, related_name='contained_comestibles_set')
     contained_comestible = models.ForeignKey(Comestible, related_name='containing_dishes_set')
@@ -114,6 +119,11 @@ class Meal(models.Model):
         ordering = ['date', 'time']
 
 
+class MealForm(ModelForm):
+    class Meta:
+        model = Meal
+
+
 class Eating(models.Model):
     comestible = models.ForeignKey(Comestible)
     meal = models.ForeignKey(Meal)
@@ -132,11 +142,6 @@ class Eating(models.Model):
 
 
 #################################
-
-#class DishForm(ModelForm):
-#    class Meta: 
-#        model = Dish
-
 
 #### from Comestible:
 #    CHILD_MODEL_CHOICES = (

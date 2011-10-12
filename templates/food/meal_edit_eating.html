@@ -6,6 +6,7 @@
     <h1>{{ meal.name }}, {{ meal.date|naturalday }} at {{ meal.time }}</h1>
 
     <form action="." method="post">{% csrf_token %}
+    {{ form.as_p }}
     {{ formset.management_form }}
     {% for form in formset %}
         <li>{{ form }}</li>
