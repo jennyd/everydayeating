@@ -12,6 +12,7 @@
             <td>at</td>
             <td>{{ meal.time }}</td>
             <td>({{ meal.calories|floatformat:0 }} calories)</td>
+            <td><a href="{% url meal_delete meal.id %}">Delete</a></td>
             </tr>
         {% endfor %}
     </table><br />

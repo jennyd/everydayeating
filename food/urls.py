@@ -17,7 +17,8 @@ urlpatterns = patterns('food.views',
 )
 
 urlpatterns += patterns('',
-    url(r'^$', TemplateView.as_view(template_name='food/food_index.html'), name="food_index"),
+    url(r'^$', TemplateView.as_view( template_name='food/food_index.html' ), name="food_index"),
+
     url(r'^ingredients/$', ListView.as_view( model=Ingredient ), name="ingredient_list"),
     url(r'^ingredients/add/$', CreateView.as_view( model=Ingredient, success_url="/food/ingredients/" ), name="ingredient_add"),
     url(r'^ingredients/(?P<pk>\d+)/$', DetailView.as_view( model=Ingredient ), name="ingredient_detail"),
@@ -36,4 +37,5 @@ urlpatterns += patterns('',
     url(r'^meals/(?P<pk>\d+)/$', DetailView.as_view( model = Meal ), name="meal_detail"),
     url(r'^meals/(?P<pk>\d+)/edit/$', UpdateView.as_view( model=Meal, success_url="/food/meals/%(id)s/"), name="meal_edit"),
     url(r'^meals/(?P<meal_id>\d+)/edit/(?P<pk>\d+)/$', UpdateView.as_view( model=Eating, success_url="/food/meals/%(meal_id)s/"), name="eating_edit"),
+    url(r'^meals/(?P<pk>\d+)/delete/$', DeleteView.as_view( model=Meal, success_url="/food/meals/"), name="meal_delete"),
 )

@@ -1,0 +1,14 @@
+{% extends "food/base.html" %}
+{% load humanize %}
+
+{% block content %}
+
+    <p>Do you really want to delete {{ meal.name }} for {{ meal.date|naturalday }}?
+
+    <form action="." method="post">{% csrf_token %}
+    <input type="submit" value="Yes, delete this meal" />
+    </form></p>
+
+    <a href="{% url ingredient_list %}">Back to Meals</a>
+
+{% endblock content %}
