@@ -1,4 +1,4 @@
-from django.shortcuts import HttpResponse, HttpResponseRedirect, render_to_response, get_object_or_404
+from django.shortcuts import HttpResponse, HttpResponseRedirect, render_to_response, get_object_or_404, redirect
 from django.template import RequestContext
 from django.http import Http404
 # from django.views.generic import  # new class-based generic views
@@ -19,16 +19,19 @@ def ingredient_manage(request):
         context_instance=RequestContext(request) # needed for csrf token
     )
 
-def dish_edit_amounts(request, dish_id):
+def dish_amounts_form(request, dish_id=None):
     DishFormSet = inlineformset_factory(Dish, Amount, fk_name="containing_dish")
-    dish = Dish.objects.get(pk=dish_id)
+    if dish_id:
+        dish = Dish.objects.get(pk=dish_id)
+    else:
+        dish = Dish()
     if request.method == 'POST':
         form = DishForm(request.POST, request.FILES, instance=dish)
         formset = DishFormSet(request.POST, request.FILES, instance=dish)
         if form.is_valid() and formset.is_valid():
             form.save()
             formset.save()
-            return HttpResponseRedirect('/food/dishes/'+unicode(dish_id)+'/')
+            return redirect('dish_detail', dish.id)
     else:
         form = DishForm(instance=dish)
         formset = DishFormSet(instance=dish)
@@ -39,16 +42,19 @@ def dish_edit_amounts(request, dish_id):
         context_instance=RequestContext(request) # needed for csrf token
     )
 
-def meal_edit_eating(request, meal_id):
+def meal_eating_form(request, meal_id=None):
     MealFormSet = inlineformset_factory(Meal, Eating)
-    meal = Meal.objects.get(pk=meal_id)
+    if meal_id:
+        meal = Meal.objects.get(pk=meal_id)
+    else:
+        meal = Meal()
     if request.method == 'POST':
         form = MealForm(request.POST, request.FILES, instance=meal)
         formset = MealFormSet(request.POST, request.FILES, instance=meal)
         if form.is_valid() and formset.is_valid():
             form.save()
             formset.save()
-            return HttpResponseRedirect('/food/meals/'+unicode(meal_id)+'/')
+            return redirect('meal_detail', meal.id)
     else:
         form = MealForm(instance=meal)
         formset = MealFormSet(instance=meal)
