@@ -4,7 +4,8 @@
 {% block content %}
 
     <h1>{{ meal.name }}, {{ meal.date|naturalday }} at {{ meal.time }}</h1>
-    ({{ meal.calories|floatformat:0 }} calories)
+    ({{ meal.calories|floatformat:0 }} calories)</br>
+    <a href="{% url meal_edit meal.id %}">Edit this meal</a>
     <ul>
     {% for eating in meal.eating_set.all %}
         {% if eating.comestible.unit == "items" %}
@@ -24,8 +25,7 @@
     {% endfor %}
     </ul>
 
-    <a href="{% url meal_edit meal.id %}">Edit the name, date and time of this meal</a>
-    <a href="{% url meal_edit_eating meal.id %}">Edit what's eaten at this meal</a>
+    <a href="{% url meal_edit_eating meal.id %}">Edit this meal and what's eaten at it</a>
 
 
 {% endblock content %}
