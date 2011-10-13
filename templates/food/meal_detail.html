@@ -5,7 +5,6 @@
 
     <h1>{{ meal.name }}, {{ meal.date|naturalday }} at {{ meal.time }}</h1>
     ({{ meal.calories|floatformat:0 }} calories)</br>
-    <a href="{% url meal_edit meal.id %}">Edit this meal</a>
     <ul>
     {% for eating in meal.eating_set.all %}
         {% if eating.comestible.unit == "items" %}
@@ -18,14 +17,13 @@
         {% else %}
             <a href="{% url ingredient_detail eating.comestible.id %}">{{ eating.comestible }}</a>
         {% endif %}
-        ({{ eating.calories|floatformat:0 }} calories)
-        <a href="{% url eating_edit meal.id eating.id %}">Edit</a></br>
+        ({{ eating.calories|floatformat:0 }} calories)</br>
     {% empty %}
         Don't skip meals!
     {% endfor %}
     </ul>
 
-    <a href="{% url meal_edit_eating meal.id %}">Edit this meal and what's eaten at it</a>
+    <a href="{% url meal_edit_eating meal.id %}">Edit this meal</a>
 
 
 {% endblock content %}

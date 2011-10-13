@@ -6,12 +6,12 @@
     <h1>{{ dish.name }}</h1>
     <p>
     {% if dish.unit == "items" %}
-        {{ dish.quantity|apnumber }} {{ dish.name }} cooked: {{ dish.date_cooked|naturalday }}.
+        {{ dish.quantity|apnumber }}
     {% else %}
-        {{ dish.quantity }}{{ dish.unit }} of {{ dish.name }} cooked: {{ dish.date_cooked|naturalday }}.
+        {{ dish.quantity }}{{ dish.unit }} of
     {% endif %}
-    ({{ dish.calories|floatformat:0 }} calories)
-    <a href="{% url dish_edit dish.id %}">Edit</a><p/>
+     {{ dish.name }}, cooked: {{ dish.date_cooked|naturalday }}.
+    ({{ dish.calories|floatformat:0 }} calories)<p/>
     
     Ingredients:
         <table>
@@ -30,7 +30,6 @@
                     <td><a href="{% url ingredient_detail amount.contained_comestible.id %}">{{ amount.contained_comestible }}</a></td>
                 {% endif %}
                 <td>({{ amount.calories|floatformat:0 }} calories)</td>
-                <td><a href="{% url amount_edit dish.id amount.id %}">Edit</a></td>
                 </tr>
             {% empty %}
                 <tr><td>This dish doesn't have any ingredients.</td></tr>
@@ -38,6 +37,6 @@
         </table>
 
     </br>
-    <a href="{% url dish_edit_amounts dish.id %}">Edit this dish and its ingredients</a><p/>
+    <a href="{% url dish_edit_amounts dish.id %}">Edit this dish</a><p/>
 
 {% endblock content %}
