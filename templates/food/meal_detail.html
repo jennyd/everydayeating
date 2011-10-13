@@ -4,20 +4,20 @@
 {% block content %}
 
     <h1>{{ meal.name }}, {{ meal.date|naturalday }} at {{ meal.time }}</h1>
-    ({{ meal.calories|floatformat:0 }} calories)</br>
+    ({{ meal.calories|floatformat:0|intcomma }} calories)</br>
     <ul>
     {% for eating in meal.eating_set.all %}
         {% if eating.comestible.unit == "items" %}
-            {{ eating.quantity }}
+            {{ eating.quantity|intcomma }}
         {% else %}
-            {{ eating.quantity }}{{ eating.comestible.unit }} of 
+            {{ eating.quantity|intcomma }}{{ eating.comestible.unit }} of 
         {% endif %}
         {% if eating.comestible.is_dish %}
             <a href="{% url dish_detail eating.comestible.id %}">{{ eating.comestible }}</a>
         {% else %}
             <a href="{% url ingredient_detail eating.comestible.id %}">{{ eating.comestible }}</a>
         {% endif %}
-        ({{ eating.calories|floatformat:0 }} calories)</br>
+        ({{ eating.calories|floatformat:0|intcomma }} calories)</br>
     {% empty %}
         Don't skip meals!
     {% endfor %}

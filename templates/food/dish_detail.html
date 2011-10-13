@@ -6,22 +6,22 @@
     <h1>{{ dish.name }}</h1>
     <p>
     {% if dish.unit == "items" %}
-        {{ dish.quantity|apnumber }}
+        {{ dish.quantity|apnumber|intcomma }}
     {% else %}
-        {{ dish.quantity }}{{ dish.unit }} of
+        {{ dish.quantity|intcomma }}{{ dish.unit }} of
     {% endif %}
      {{ dish.name }}, cooked: {{ dish.date_cooked|naturalday }}.
-    ({{ dish.calories|floatformat:0 }} calories)<p/>
+    ({{ dish.calories|floatformat:0|intcomma }} calories)<p/>
     
     Ingredients:
         <table>
             {% for amount in dish.contained_comestibles_set.all %}
                  <tr>
                 {% if amount.contained_comestible.unit == "items" %}
-                    <td>{{ amount.quantity|apnumber }}</td>
+                    <td>{{ amount.quantity|apnumber|intcomma }}</td>
                     <td></td>
                 {% else %}
-                    <td>{{ amount.quantity }}{{ amount.contained_comestible.unit }}</td>
+                    <td>{{ amount.quantity|intcomma }}{{ amount.contained_comestible.unit }}</td>
                     <td>of</td>
                 {% endif %}
                 {% if amount.contained_comestible.is_dish %}
@@ -29,7 +29,7 @@
                 {% else %}
                     <td><a href="{% url ingredient_detail amount.contained_comestible.id %}">{{ amount.contained_comestible }}</a></td>
                 {% endif %}
-                <td>({{ amount.calories|floatformat:0 }} calories)</td>
+                <td>({{ amount.calories|floatformat:0|intcomma }} calories)</td>
                 </tr>
             {% empty %}
                 <tr><td>This dish doesn't have any ingredients.</td></tr>

@@ -6,9 +6,9 @@
     <h1>{{ ingredient.name }}</h1>
     <ul>
     {% if ingredient.unit == "items" %}
-        There are {{ ingredient.calories }} calories in {{ingredient.quantity|apnumber }} {{ ingredient.name }}.
+        There are {{ ingredient.calories|intcomma }} calories in {{ingredient.quantity|apnumber|intcomma }} {{ ingredient.name }}.
     {% else %}
-        There are {{ ingredient.calories }} calories in {{ingredient.quantity }} {{ ingredient.unit }} of {{ ingredient.name }}.
+        There are {{ ingredient.calories|intcomma }} calories in {{ingredient.quantity|intcomma }} {{ ingredient.unit }} of {{ ingredient.name }}.
     {% endif %}
     </ul>
 
