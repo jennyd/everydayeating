@@ -1,5 +1,7 @@
+import datetime
 from django.db import models
 from django.forms import ModelForm
+
 
 
 UNIT_CHOICES = (
@@ -45,7 +47,7 @@ class Ingredient(Comestible):
 class Dish(Comestible):
     name = models.CharField(max_length=200)
     quantity = models.DecimalField(max_digits=8, decimal_places=2, blank=True, default=500, null=True)
-    date_cooked = models.DateField("the date on which the dish is cooked") # default...
+    date_cooked = models.DateField("Cooked on:", default=datetime.date.today) # default...
 
     def __unicode__(self):
         return self.name+u" ("+unicode(self.date_cooked)+u")"
@@ -70,7 +72,7 @@ class DishForm(ModelForm):
 class Amount(models.Model):
     containing_dish = models.ForeignKey(Dish, related_name='contained_comestibles_set')
     contained_comestible = models.ForeignKey(Comestible, related_name='containing_dishes_set')
-    quantity = models.DecimalField("the quantity of this ingredient in the dish, in ingredient units", max_digits=8, decimal_places=2, blank=True, default=0, null=True)
+    quantity = models.DecimalField(max_digits=8, decimal_places=2, blank=True, default=0, null=True)
 
     def __unicode__(self):
         return unicode(self.contained_comestible)
@@ -103,8 +105,8 @@ class Meal(models.Model):
         ('tea', 'tea'),
     )
     name = models.CharField(max_length=16, choices=NAME_CHOICES)
-    date = models.DateField("the date on which the meal is eaten")
-    time = models.TimeField("the time at which the meal is eaten")  # make defaults for each name choice...
+    date = models.DateField("On:", default=datetime.date.today)
+    time = models.TimeField("at:")  # make defaults for each name choice...
     comestibles = models.ManyToManyField(Comestible, through='Eating', editable=False)
 
     def __unicode__(self):
