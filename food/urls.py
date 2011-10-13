@@ -12,8 +12,10 @@ urlpatterns = patterns('food.views',
     # Example:
     # (r'^everydayeating/', include('everydayeating.foo.urls')),
     url(r'^ingredients/manage/$', "ingredient_manage", name="ingredient_manage"),
+
     url(r'^dishes/add/$', "dish_amounts_form", name="dish_add"),
     url(r'^dishes/(?P<dish_id>\d+)/edit/ingredients/$', "dish_amounts_form", name="dish_edit_amounts"),
+
     url(r'^meals/add/$', "meal_eating_form", name="meal_add"),
     url(r'^meals/(?P<meal_id>\d+)/edit/eating/$', "meal_eating_form", name="meal_edit_eating"),
 )
@@ -30,14 +32,14 @@ urlpatterns += patterns('',
     url(r'^dishes/$', ListView.as_view( model=Dish ), name="dish_list"),
 #    url(r'^dishes/add/$', CreateView.as_view( model=Dish, success_url="/food/dishes/%(id)s/" ), name="dish_add"),
     url(r'^dishes/(?P<pk>\d+)/$', DetailView.as_view( model = Dish ), name="dish_detail"),
-    url(r'^dishes/(?P<pk>\d+)/edit/$', UpdateView.as_view( model=Dish, success_url="/food/dishes/%(id)s/"), name="dish_edit"),
-    url(r'^dishes/(?P<dish_id>\d+)/edit/(?P<pk>\d+)/$', UpdateView.as_view( model=Amount, success_url="/food/dishes/%(containing_dish_id)s/"), name="amount_edit"),
+#    url(r'^dishes/(?P<pk>\d+)/edit/$', UpdateView.as_view( model=Dish, success_url="/food/dishes/%(id)s/"), name="dish_edit"),
+#    url(r'^dishes/(?P<dish_id>\d+)/edit/(?P<pk>\d+)/$', UpdateView.as_view( model=Amount, success_url="/food/dishes/%(containing_dish_id)s/"), name="amount_edit"),
     url(r'^dishes/(?P<pk>\d+)/delete/$', DeleteView.as_view( model=Dish, success_url="/food/dishes/"), name="dish_delete"),
 
     url(r'^meals/$', ListView.as_view( model=Meal ), name="meal_list"),
 #    url(r'^meals/add/$', CreateView.as_view( model=Meal, success_url="/food/meals/%(id)s/" ), name="meal_add"),
     url(r'^meals/(?P<pk>\d+)/$', DetailView.as_view( model = Meal ), name="meal_detail"),
-    url(r'^meals/(?P<pk>\d+)/edit/$', UpdateView.as_view( model=Meal, success_url="/food/meals/%(id)s/"), name="meal_edit"),
-    url(r'^meals/(?P<meal_id>\d+)/edit/(?P<pk>\d+)/$', UpdateView.as_view( model=Eating, success_url="/food/meals/%(meal_id)s/"), name="eating_edit"),
+#    url(r'^meals/(?P<pk>\d+)/edit/$', UpdateView.as_view( model=Meal, success_url="/food/meals/%(id)s/"), name="meal_edit"),
+#    url(r'^meals/(?P<meal_id>\d+)/edit/(?P<pk>\d+)/$', UpdateView.as_view( model=Eating, success_url="/food/meals/%(meal_id)s/"), name="eating_edit"),
     url(r'^meals/(?P<pk>\d+)/delete/$', DeleteView.as_view( model=Meal, success_url="/food/meals/"), name="meal_delete"),
 )
