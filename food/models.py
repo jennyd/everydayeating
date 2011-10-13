@@ -22,7 +22,7 @@ class Comestible(models.Model):
     child = property(get_child)
 
     def __unicode__(self):
-        return self.child.name+u" ("+unicode(self.child.__class__)+u")"
+        return self.child.name # +u" ("+unicode(self.child.__class__)+u")"
 
 
 class Ingredient(Comestible):
