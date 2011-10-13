@@ -22,7 +22,7 @@ class Comestible(models.Model):
     child = property(get_child)
 
     def __unicode__(self):
-        return self.child.name # +u" ("+unicode(self.child.__class__)+u")"
+        return self.child.__unicode__() # +u" ("+unicode(self.child.__class__)+u")"
 
 
 class Ingredient(Comestible):
@@ -48,7 +48,7 @@ class Dish(Comestible):
     date_cooked = models.DateField("the date on which the dish is cooked") # default...
 
     def __unicode__(self):
-        return self.name
+        return self.name+u" ("+unicode(self.date_cooked)+u")"
 
     def get_dish_calories(self):
         return sum(amount.calories for amount in self.contained_comestibles_set.all())
