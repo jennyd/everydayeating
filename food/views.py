@@ -35,7 +35,7 @@ def dish_amounts_form(request, dish_id=None):
     else:
         form = DishForm(instance=dish)
         formset = DishFormSet(instance=dish)
-    return render_to_response("food/dish_edit_amounts.html", {
+    return render_to_response("food/dish_edit.html", {
         "form": form,
         "formset": formset,
         "dish": dish,},
@@ -58,7 +58,7 @@ def meal_eating_form(request, meal_id=None):
     else:
         form = MealForm(instance=meal)
         formset = MealFormSet(instance=meal)
-    return render_to_response("food/meal_edit_eating.html", {
+    return render_to_response("food/meal_edit.html", {
         "form": form,
         "formset": formset,
         "meal": meal,},
