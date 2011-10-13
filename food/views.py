@@ -20,7 +20,7 @@ def ingredient_manage(request):
     )
 
 def dish_amounts_form(request, dish_id=None):
-    DishFormSet = inlineformset_factory(Dish, Amount, fk_name="containing_dish")
+    DishFormSet = inlineformset_factory(Dish, Amount, fk_name="containing_dish", extra=6) # shouldn't need fk_name any more - only one fk to Dish now
     if dish_id:
         dish = Dish.objects.get(pk=dish_id)
     else:
@@ -43,7 +43,7 @@ def dish_amounts_form(request, dish_id=None):
     )
 
 def meal_eating_form(request, meal_id=None):
-    MealFormSet = inlineformset_factory(Meal, Eating)
+    MealFormSet = inlineformset_factory(Meal, Eating, extra=6)
     if meal_id:
         meal = Meal.objects.get(pk=meal_id)
     else:
