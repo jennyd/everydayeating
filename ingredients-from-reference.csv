@@ -27,6 +27,7 @@ Candied orange peel,100,323,g
 Carrots,100,41,g
 Cashew nuts,100,553,g
 Cauliflower,100,25,g
+Celery,100,16,g
 Chapati,100,280,g
 Cherries,100,63,g
 Cherry tomatoes,100,18,g
@@ -40,6 +41,8 @@ Chicory (endive),100,17,g
 "Chillies, fresh",100,40,g
 "Chocolate, dark (70%)",100,566,g
 "Chocolate, milk",100,525,g
+"Chocolate, milk, Migros bio",100,548,g
+"Chocolate, Frey citron et poivre",100,532,g
 "Chocolate, orangey",100,527,g
 "Chocolate, tourist cremant",100,513,g
 Chorizo,100,415,g
@@ -51,6 +54,7 @@ Courgette,100,17,g
 Couscous,100,369,g
 "Cream, double",100,343,ml
 Creme fraiche,100,338,g
+"Crisps, Zweifel nature",100,552,g
 "Crisps, root vegetable",100,488,g
 "Crisps, Tyrrells",100,510,g
 Crunchy muesli,100,445,g
@@ -66,8 +70,8 @@ Flour,100,345,g
 Garlic cloves,1,3,items
 Gin,100,236,ml
 Ginger,100,80,g
-Gnocchi,100,131,g
-Goats' cheese,100,177,g
+"Gnocchi, Migros",100,131,g
+"Goats' cheese, Chavroux",100,177,g
 Grana padano,100,385,g
 Grapes,100,69,g
 Greengages,100,42,g
@@ -76,6 +80,7 @@ Gruyere,100,396,g
 Hafercookies,1,61,items
 Halloumi,100,316,g
 "Harissa, Belazu",100,250,g
+"Hollandaise, Knorr",100,190,ml
 "Hollandaise, Tomy",100,230,ml
 Honey,100,335,g
 Hot chocolate powder,100,376,g
