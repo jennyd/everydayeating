@@ -66,9 +66,35 @@ def meal_eating_form(request, meal_id=None):
         context_instance=RequestContext(request) # needed for csrf token
     )
 
+def get_sum_day_calories(date):
+    """
+    Return the total calories in all meals on a date
+    """
+    meals = Meal.objects.filter(date=date)
+    calories = 0
+    for meal in meals:
+        calories += meal.calories
+    return calories
+
+def get_avg_week_calories(week_start_date):
+    """
+    Return the daily average calories over a week (only counting days with calories > 0)
+    """
+    total_calories = 0
+    date = week_start_date
+    day_count = 0
+    while date < week_start_date + datetime.timedelta(weeks=1):
+        day_calories = get_sum_day_calories(date)
+        if day_calories != 0:
+            total_calories += day_calories
+            day_count += 1
+        date += datetime.timedelta(days=1)
+    avg_calories = total_calories / day_count
+    return avg_calories
+
 def get_week_starts_in_month(month_start_date):
     """
-    Returns a list of datetime objects representing the first day of every
+    Return a list of datetime objects representing the first day of every
     week containing a day of the month, given the month_start_date
 
     >>> month_start_date = datetime.datetime(2011, 11, 1, 0, 0)
@@ -98,6 +124,10 @@ def get_week_starts_in_month(month_start_date):
         week_date_list.append(week_start)
         week_start += datetime.timedelta(weeks=1)
     return week_date_list
+
+
+
+
 
 
 
