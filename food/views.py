@@ -80,7 +80,7 @@ def get_avg_week_calories(week_start_date):
     total_calories = 0
     day = week_start_date
     day_count = 0
-    while date < (week_start_date + datetime.timedelta(weeks=1)):
+    while day < (week_start_date + datetime.timedelta(weeks=1)):
         # FIXME this queries the database many times more than necessary
         day_calories = get_sum_day_calories(day)
         if day_calories != 0:
