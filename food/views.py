@@ -4,6 +4,7 @@ from django.http import Http404
 # from django.views.generic import  # new class-based generic views
 from django.forms.models import modelformset_factory, inlineformset_factory
 from food.models import Ingredient, Dish, DishForm, Amount, Meal, MealForm, Eating
+import datetime
 
 def ingredient_manage(request):
     IngredientFormSet = modelformset_factory(Ingredient, extra=3)
@@ -64,6 +65,39 @@ def meal_eating_form(request, meal_id=None):
         "meal": meal,},
         context_instance=RequestContext(request) # needed for csrf token
     )
+
+def get_week_starts_in_month(month_start_date):
+    """
+    Returns a list of datetime objects representing the first day of every
+    week containing a day of the month, given the month_start_date
+
+    >>> month_start_date = datetime.datetime(2011, 11, 1, 0, 0)
+    >>> get_week_starts_in_month(month_start_date)
+    [datetime.datetime(2011, 10, 31, 0, 0),
+     datetime.datetime(2011, 11, 7, 0, 0),
+     datetime.datetime(2011, 11, 14, 0, 0),
+     datetime.datetime(2011, 11, 21, 0, 0),
+     datetime.datetime(2011, 11, 28, 0, 0)]
+
+    >>> month_start_date = datetime.datetime(2011, 12, 1, 0, 0)
+    >>> get_week_starts_in_month(month_start_date)
+    [datetime.datetime(2011, 11, 28, 0, 0),
+     datetime.datetime(2011, 12, 5, 0, 0),
+     datetime.datetime(2011, 12, 12, 0, 0),
+     datetime.datetime(2011, 12, 19, 0, 0),
+     datetime.datetime(2011, 12, 26, 0, 0)]
+
+    """
+    week_start = month_start_date - datetime.timedelta(month_start_date.weekday())
+    if month_start_date.month == 12:
+        next_month_start_date = month_start_date.replace(year=month_start_date.year + 1, month=1)
+    else:
+        next_month_start_date = month_start_date.replace(month=month_start_date.month + 1)
+    week_date_list = []
+    while week_start < next_month_start_date:
+        week_date_list.append(week_start)
+        week_start += datetime.timedelta(weeks=1)
+    return week_date_list
 
 
 
