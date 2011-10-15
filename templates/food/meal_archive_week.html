@@ -5,7 +5,7 @@
 
     <h2>Meals</h2>
 
-    {{ week }}
+    {{ week }}: Average {{ avg_week_calories|floatformat:0|intcomma }} calories per day
 
     <h3>Week beginning {{ week|date:'jS F Y' }}</h3>
 
