@@ -4,6 +4,12 @@
 {% block content %}
 
     <h2>Meals</h2>
+
+    <p>{% for date in date_list %}
+        {{ date.year }}, {{ date|date:'F' }} {{ date.day }}</br>
+    {% endfor %}
+    </p>
+
     <table>
         {% for meal in meal_list %}
             <tr>
@@ -17,6 +23,11 @@
         {% endfor %}
     </table><br />
     <a href="{% url meal_add %}">Add a new meal</a></br>
-    <a href="{% url meal_archive %}">Meal archive index</a>
+    {% if previous_day %}
+        <a href="{% url meal_archive_day previous_day.year previous_day|date:'m' previous_day.day %}"><-- {{ previous_day|date:'dS F Y' }}</a>
+    {% endif %}
+    {% if next_day %}
+        <a href="{% url meal_archive_day next_day.year next_day|date:'m' next_day.day %}">{{ next_day|date:'dS F Y' }} --></a></br>
+    {% endif %}
 
 {% endblock content %}

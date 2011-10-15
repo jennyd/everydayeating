@@ -4,8 +4,14 @@
 {% block content %}
 
     <h2>Meals</h2>
+
+    <p>{% for date in date_list %}
+        <a href="{% url meal_archive_year date.year %}">{{ date.year }}</a></br>
+    {% endfor %}
+    </p>
+
     <table>
-        {% for meal in meal_list %}
+        {% for meal in latest %}
             <tr>
             <td><a href="{% url meal_detail meal.id %}">{{ meal.name }}</a></td>
             <td>{{ meal.date|naturalday }}</td>
@@ -16,7 +22,6 @@
             </tr>
         {% endfor %}
     </table><br />
-    <a href="{% url meal_add %}">Add a new meal</a></br>
-    <a href="{% url meal_archive %}">Meal archive index</a>
+    <a href="{% url meal_add %}">Add a new meal</a>
 
 {% endblock content %}

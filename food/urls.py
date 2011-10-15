@@ -1,6 +1,6 @@
 from django.conf.urls.defaults import *
 from food.views import ingredient_manage, dish_amounts_form, meal_eating_form
-from django.views.generic import TemplateView, ListView, CreateView, DetailView, UpdateView, DeleteView
+from django.views.generic import TemplateView, ListView, CreateView, DetailView, UpdateView, DeleteView, ArchiveIndexView, YearArchiveView, MonthArchiveView, DayArchiveView
 from food.models import Ingredient, Dish, Amount, Meal, Eating
 
 # Uncomment the next two lines to enable the admin:
@@ -31,7 +31,11 @@ urlpatterns += patterns('',
     url(r'^dishes/(?P<pk>\d+)/$', DetailView.as_view( model = Dish ), name="dish_detail"),
     url(r'^dishes/(?P<pk>\d+)/delete/$', DeleteView.as_view( model=Dish, success_url="/food/dishes/"), name="dish_delete"),
 
-    url(r'^meals/$', ListView.as_view( model=Meal ), name="meal_list"),
+    url(r'^meals/$', ArchiveIndexView.as_view( model=Meal, date_field="date", allow_future=True ), name="meal_archive"),
+    url(r'^meals/(?P<year>\d{4})/$', YearArchiveView.as_view( model=Meal, date_field="date", allow_future=True, make_object_list=True ), name="meal_archive_year"),
+    url(r'^meals/(?P<year>\d{4})/(?P<month>\d{2})/$', MonthArchiveView.as_view( model=Meal, date_field="date", allow_future=True, month_format='%m' ), name="meal_archive_month"),
+    url(r'^meals/(?P<year>\d{4})/(?P<month>\d{2})/(?P<day>\d{2})/$', DayArchiveView.as_view( model=Meal, date_field="date", allow_future=True, month_format='%m' ), name="meal_archive_day"),
+    url(r'^meals/all/$', ListView.as_view( model=Meal ), name="meal_list"),
     url(r'^meals/(?P<pk>\d+)/$', DetailView.as_view( model = Meal ), name="meal_detail"),
     url(r'^meals/(?P<pk>\d+)/delete/$', DeleteView.as_view( model=Meal, success_url="/food/meals/"), name="meal_delete"),
 )
