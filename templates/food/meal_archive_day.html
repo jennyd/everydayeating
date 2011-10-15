@@ -5,7 +5,7 @@
 
     <h2>Meals</h2>
 
-    {{ day }}
+    {{ day }}: {{ day_calories|floatformat:0|intcomma }} calories</br>
 
     <h3>{{ day|date:'jS F Y' }}</h3>
 

@@ -1,10 +1,10 @@
 from django.shortcuts import HttpResponse, HttpResponseRedirect, render_to_response, get_object_or_404, redirect
 from django.template import RequestContext
 from django.http import Http404
-# from django.views.generic import  # new class-based generic views
+from django.views.generic import DayArchiveView # new class-based generic views
 from django.forms.models import modelformset_factory, inlineformset_factory
 from food.models import Ingredient, Dish, DishForm, Amount, Meal, MealForm, Eating
-import datetime
+import datetime, sys
 
 def ingredient_manage(request):
     IngredientFormSet = modelformset_factory(Ingredient, extra=3)
@@ -122,8 +122,25 @@ def get_week_starts_in_month(month_start_date):
         week_start += datetime.timedelta(weeks=1)
     return week_date_list
 
+class MealDayArchiveView(DayArchiveView):
 
+    model = Meal
+    date_field = "date"
+    allow_future = True
+    month_format = '%m'
 
+    def get_context_data(self, **kwargs):
+        # Call the base implementation first to get a context
+        context = super(MealDayArchiveView, self).get_context_data(**kwargs)
+#        print >> sys.stderr, '\n'.join(dir(self))
+#        print >> sys.stderr, '===='
+#        print >> sys.stderr, self.get_dated_items()
+#        print >> sys.stderr, type(self.get_dated_items())
+        # Add in calories sum for the day
+        day = self.get_dated_items()[2]['day']
+        context['day_calories'] = get_sum_day_calories(day)
+        context['type_day'] = type(day)
+        return context
 
 
 
