@@ -5,10 +5,9 @@
 
     <h2>Meals</h2>
 
-    <p>{% for date in date_list %}
-        {{ date.year }}, {{ date|date:'F' }} {{ date.day }}</br>
-    {% endfor %}
-    </p>
+    {{ week }}
+
+    <h3>Week beginning {{ week|date:'jS F Y' }}</h3>
 
     <table>
         {% for meal in meal_list %}
@@ -23,13 +22,11 @@
         {% endfor %}
     </table><br />
     <a href="{% url meal_add %}">Add a new meal</a></br>
-    {% if previous_day %}
-        <a href="{% url meal_archive_day previous_day.year previous_day|date:'m' previous_day.day %}"><-- {{ previous_day|date:'dS F Y' }}</a>
+    {% if previous_month %}
+        <a href="{% url meal_archive_month previous_month.year previous_month|date:'m' %}"><-- {{ previous_month|date:'F Y' }}</a>
     {% endif %}
-    {% if next_day %}
-        <a href="{% url meal_archive_day next_day.year next_day|date:'m' next_day.day %}">{{ next_day|date:'dS F Y' }} --></a></br>
+    {% if next_month %}
+        <a href="{% url meal_archive_month next_month.year next_month|date:'m' %}">{{ next_month|date:'F Y' }} --></a></br>
     {% endif %}
-
-    <a href="{% url meal_archive_week day.year day|date:'W' %}">This week</a>
 
 {% endblock content %}
