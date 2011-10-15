@@ -132,10 +132,6 @@ class MealDayArchiveView(DayArchiveView):
     def get_context_data(self, **kwargs):
         # Call the base implementation first to get a context
         context = super(MealDayArchiveView, self).get_context_data(**kwargs)
-#        print >> sys.stderr, '\n'.join(dir(self))
-#        print >> sys.stderr, '===='
-#        print >> sys.stderr, self.get_dated_items()
-#        print >> sys.stderr, type(self.get_dated_items())
         # Add in calories sum for the day
         day = self.get_dated_items()[2]['day']
         context['day_calories'] = get_sum_day_calories(day)
