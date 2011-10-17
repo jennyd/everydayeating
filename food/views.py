@@ -34,8 +34,9 @@ def dish_amounts_form(request, dish_id=None):
             # but amounts need dish to be there first for fk...
             form.save() # do this only if not dish.id? or dish_id?
             formset.save()
-            # ... so save dish again after amounts are saved from the formset
-            dish.save()
+            # don't need to save dish again here - signal receiver catches amounts being saved and updates dish for each one
+            ## ... so save dish again after amounts are saved from the formset
+            # dish.save()
             return redirect('dish_detail', dish.id)
     else:
         form = DishForm(instance=dish)
@@ -61,8 +62,9 @@ def meal_eating_form(request, meal_id=None):
             # but eatings need meal to be there first for fk...
             form.save() # do this only if not meal.id? or meal_id?
             formset.save()
-            # ... so save meal again after eatings are saved from the formset
-            meal.save()
+            # don't need to save meal again here - signal receiver catches eatings being saved and updates meal for each one
+            ## ... so save meal again after eatings are saved from the formset
+            # meal.save()
             return redirect('meal_detail', meal.id)
     else:
         form = MealForm(instance=meal)
