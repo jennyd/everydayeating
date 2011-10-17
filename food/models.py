@@ -185,6 +185,13 @@ def update_on_dish_save(sender, **kwargs):
         print >> sys.stderr, "Updating eating", eating, "in", eating.meal, eating.calories
         eating.save()
 
+@receiver(post_save, sender=Eating)
+def update_on_eating_save(sender, **kwargs):
+    eating = kwargs['instance']
+    meal = eating.meal
+    print >> sys.stderr, "Updating meal", meal, meal.calories, "calories"
+    meal.save()
+
 #################################
 
 #### from Comestible:
