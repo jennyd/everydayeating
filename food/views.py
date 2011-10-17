@@ -30,8 +30,12 @@ def dish_amounts_form(request, dish_id=None):
         form = DishForm(request.POST, request.FILES, instance=dish)
         formset = DishFormSet(request.POST, request.FILES, instance=dish)
         if form.is_valid() and formset.is_valid():
-            form.save()
+            # dish can't calculate calories from amounts until they're saved...
+            # but amounts need dish to be there first for fk...
+            form.save() # do this only if not dish.id? or dish_id?
             formset.save()
+            # ... so save dish again after amounts are saved from the formset
+            dish.save()
             return redirect('dish_detail', dish.id)
     else:
         form = DishForm(instance=dish)
@@ -53,8 +57,12 @@ def meal_eating_form(request, meal_id=None):
         form = MealForm(request.POST, request.FILES, instance=meal)
         formset = MealFormSet(request.POST, request.FILES, instance=meal)
         if form.is_valid() and formset.is_valid():
-            form.save()
+            # meal can't calculate calories from eatings until they're saved...
+            # but eatings need meal to be there first for fk...
+            form.save() # do this only if not meal.id? or meal_id?
             formset.save()
+            # ... so save meal again after eatings are saved from the formset
+            meal.save()
             return redirect('meal_detail', meal.id)
     else:
         form = MealForm(instance=meal)

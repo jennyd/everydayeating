@@ -46,18 +46,26 @@ class Ingredient(Comestible):
 
 class Dish(Comestible):
     name = models.CharField(max_length=200)
+    # quantity has null=True because it doesn't use the default value when entered blank
+    # but it shouldn't be 0 for division reasons in calories calculations
+    # add something to validation?
+    # or make both blank=False and null=False?
     quantity = models.DecimalField(max_digits=8, decimal_places=2, blank=True, default=500, null=True)
     date_cooked = models.DateField("Cooked on:", default=datetime.date.today) # default...
+    calories = models.DecimalField(max_digits=8, decimal_places=2, null=True, editable=False)
 
     def __unicode__(self):
         return self.name+u" ("+unicode(self.date_cooked)+u")"
 
-    def get_dish_calories(self):
-        return sum(amount.calories for amount in self.contained_comestibles_set.all())
+# perhaps Dish also needs to update is_dish when saving, since defaults seem to be broken with South...
 
-    calories = property(get_dish_calories)
-
-# perhaps Dish also needs a custom save method for is_dish, since defaults seem to be broken with South...
+    def save(self, *args, **kwargs):
+        # Calculate calories for the dish if it already exists
+        # New dish needs to be saved again after amounts are created to calculate calories
+        if self.id: # if this dish already exists
+            self.calories = sum(amount.calories for amount in self.contained_comestibles_set.all())
+        # Call the "real" save() method.
+        super(Dish, self).save(*args, **kwargs)
 
     class Meta:
         verbose_name_plural = "dishes"
@@ -73,20 +81,18 @@ class Amount(models.Model):
     containing_dish = models.ForeignKey(Dish, related_name='contained_comestibles_set')
     contained_comestible = models.ForeignKey(Comestible, related_name='containing_dishes_set')
     quantity = models.DecimalField(max_digits=8, decimal_places=2, blank=True, default=0, null=True)
+    calories = models.DecimalField(max_digits=8, decimal_places=2, null=True, editable=False)
 
     def __unicode__(self):
         return unicode(self.contained_comestible)
-
-    def get_amount_calories(self):
-        return self.quantity * self.contained_comestible.child.calories / self.contained_comestible.child.quantity
-
-    calories = property(get_amount_calories)
 
     def save(self, *args, **kwargs):
         if self.contained_comestible.is_dish and self.contained_comestible.dish == self.containing_dish:
             return u"A dish cannot contain itself" # allows following amounts to be saved correctly, but no notification to user...
 #            raise Exception, u"A dish cannot contain itself" # fails obviously, but following allowable amounts aren't saved
         else:
+            # Calculate calories for the dish
+            self.calories = self.quantity * self.contained_comestible.child.calories / self.contained_comestible.child.quantity
             super(Amount, self).save(*args, **kwargs) # Call the "real" save() method.
 
 #    class Meta:
@@ -108,14 +114,18 @@ class Meal(models.Model):
     date = models.DateField("On:", default=datetime.date.today)
     time = models.TimeField("at:")  # make defaults for each name choice...
     comestibles = models.ManyToManyField(Comestible, through='Eating', editable=False)
+    calories = models.DecimalField(max_digits=8, decimal_places=2, null=True, editable=False)
 
     def __unicode__(self):
         return self.name+u" on "+unicode(self.date)
 
-    def get_meal_calories(self):
-        return sum(eating.calories for eating in Eating.objects.filter(meal=self))
-
-    calories = property(get_meal_calories)
+    def save(self, *args, **kwargs):
+        # Calculate calories for the meal if it already has eatings
+        # New meal needs to be saved again after eatings are created to calculate calories
+        if self.id: # if this meal already exists
+           self.calories = sum(eating.calories for eating in Eating.objects.filter(meal=self))
+        # Call the "real" save() method.
+        super(Meal, self).save(*args, **kwargs)
 
     class Meta:
         ordering = ['date', 'time']
@@ -130,14 +140,16 @@ class Eating(models.Model):
     comestible = models.ForeignKey(Comestible)
     meal = models.ForeignKey(Meal)
     quantity = models.DecimalField("the quantity eaten", max_digits=8, decimal_places=2, blank=True, default=0, null=True)
+    calories = models.DecimalField(max_digits=8, decimal_places=2, null=True, editable=False)
 
     def __unicode__(self):
         return unicode(self.comestible)
 
-    def get_eating_calories(self):
-        return self.quantity * self.comestible.child.calories / self.comestible.child.quantity
-
-    calories = property(get_eating_calories)
+    def save(self, *args, **kwargs):
+        # Calculate calories for the eating
+        self.calories = self.quantity * self.comestible.child.calories / self.comestible.child.quantity
+        # Call the "real" save() method.
+        super(Eating, self).save(*args, **kwargs)
 
 #    class Meta:
 #        order_with_respect_to = 'meal'
