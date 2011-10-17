@@ -93,11 +93,14 @@ def get_avg_week_calories(week_start_date):
     while day < (week_start_date + datetime.timedelta(weeks=1)):
         # FIXME this queries the database many times more than necessary
         day_calories = get_sum_day_calories(day)
-        if day_calories != 0:
+        if day_calories != 0: # could check if there actually are any meals instead...
             total_calories += day_calories
             day_count += 1
         day += datetime.timedelta(days=1)
-    return total_calories / day_count
+    if day_count:
+        return total_calories / day_count
+    else:
+        return 0
 
 def get_week_starts_in_month(month_start_date):
     """
@@ -142,9 +145,10 @@ class MealMonthArchiveView(MonthArchiveView):
     def get_context_data(self, **kwargs):
         # Call the base implementation first to get a context
         context = super(MealMonthArchiveView, self).get_context_data(**kwargs)
-        # Add in week date list
+        # Add in week list: a list of dictionaries with date and calories keys
         month_start_date = self.get_dated_items()[2]['month']
-        context['week_list'] = get_week_starts_in_month(month_start_date)
+        week_start_list = get_week_starts_in_month(month_start_date)
+        context['week_list'] = [{'date' : date, 'calories': get_avg_week_calories(date)} for date in week_start_list]
         return context
 
 class MealWeekArchiveView(WeekArchiveView):
