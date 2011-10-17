@@ -162,11 +162,19 @@ def update_on_ingredient_save(sender, **kwargs):
     ingredient = kwargs['instance']
 #    print >> sys.stderr, "Instance: ingredient", ingredient
     for amount in Amount.objects.filter(contained_comestible__id=ingredient.id):
-#        print >> sys.stderr, "Updating amount", amount, "in", amount.containing_dish, amount.calories
+#        print >> sys.stderr, "Updating amount", amount, "in", amount.containing_dish, amount.calories, "calories"
         amount.save()
     for eating in Eating.objects.filter(comestible__id=ingredient.id):
 #        print >> sys.stderr, "Updating eating", eating, "in", eating.meal, eating.calories
         eating.save()
+
+@receiver(post_save, sender=Amount)
+def update_on_amount_save(sender, **kwargs):
+    amount = kwargs['instance']
+    dish = amount.containing_dish
+#    print >> sys.stderr, "Instance: amount", amount
+#    print >> sys.stderr, "Updating dish", dish, dish.calories, "calories"
+    dish.save()
 
 
 #################################
