@@ -1,7 +1,7 @@
 from django.shortcuts import HttpResponse, HttpResponseRedirect, render_to_response, get_object_or_404, redirect
 from django.template import RequestContext
 from django.http import Http404
-from django.views.generic import WeekArchiveView, DayArchiveView # new class-based generic views
+from django.views.generic import MonthArchiveView, WeekArchiveView, DayArchiveView # new class-based generic views
 from django.forms.models import modelformset_factory, inlineformset_factory
 from food.models import Ingredient, Dish, DishForm, Amount, Meal, MealForm, Eating
 import datetime, sys
@@ -121,6 +121,21 @@ def get_week_starts_in_month(month_start_date):
         week_date_list.append(week_start)
         week_start += datetime.timedelta(weeks=1)
     return week_date_list
+
+class MealMonthArchiveView(MonthArchiveView):
+
+    model = Meal
+    date_field = "date"
+    allow_future = True
+    month_format = '%m'
+
+    def get_context_data(self, **kwargs):
+        # Call the base implementation first to get a context
+        context = super(MealMonthArchiveView, self).get_context_data(**kwargs)
+        # Add in week date list
+        month_start_date = self.get_dated_items()[2]['month']
+        context['week_list'] = get_week_starts_in_month(month_start_date)
+        return context
 
 class MealWeekArchiveView(WeekArchiveView):
 

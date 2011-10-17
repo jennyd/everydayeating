@@ -7,6 +7,12 @@
 
     <h3>{{ month|date:'F Y' }}</h3>
 
+    <h3>Weekly index</h3>
+
+    {% for week in week_list %}
+        <a href="{% url meal_archive_week week.year week|date:'W' %}">Week beginning {{ week|date:'jS F Y' }}</a></br>
+    {% endfor %}
+
     <p>{% for date in date_list %}
         <a href="{% url meal_archive_day date.year date|date:'m' date.day %}">{{ date|date:'l jS F' }} </a>:</br>
         <table>
