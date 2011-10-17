@@ -5,6 +5,8 @@
 
     <h2>Meals</h2>
 
+    <h3>Yearly index</h3>
+
     <p>{% for date in date_list %}
         <a href="{% url meal_archive_year date.year %}">{{ date.year }}</a></br>
     {% endfor %}
