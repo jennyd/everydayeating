@@ -174,12 +174,13 @@ def update_on_ingredient_save(sender, **kwargs):
 def update_on_amount_save(sender, **kwargs):
     amount = kwargs['instance']
     dish = amount.containing_dish
-    print >> sys.stderr, "Updating dish", dish, dish.calories, "calories"
+    print >> sys.stderr, "Instance: amount", amount, "; updating dish", dish, dish.calories, "calories"
     dish.save()
 
 @receiver(post_save, sender=Dish)
 def update_on_dish_save(sender, **kwargs):
     dish = kwargs['instance']
+    print >> sys.stderr, "Instance: dish", dish
     for amount in Amount.objects.filter(contained_comestible__id=dish.id):
         print >> sys.stderr, "Updating amount", amount, "in", amount.containing_dish, amount.calories, "calories"
         amount.save()
@@ -193,7 +194,7 @@ def update_on_dish_save(sender, **kwargs):
 def update_on_eating_save(sender, **kwargs):
     eating = kwargs['instance']
     meal = eating.meal
-    print >> sys.stderr, "Updating meal", meal, meal.calories, "calories"
+    print >> sys.stderr, "Instance: eating", eating, "; updating meal", meal, meal.calories, "calories"
     meal.save()
 
 #################################
