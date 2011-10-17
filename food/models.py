@@ -168,6 +168,8 @@ def update_on_ingredient_save(sender, **kwargs):
         print >> sys.stderr, "Updating eating", eating, "in", eating.meal, eating.calories
         eating.save()
 
+# This is triggered for each amount when saving the formset
+# Perhaps create a new signal for the formset to do it only once?
 @receiver(post_save, sender=Amount)
 def update_on_amount_save(sender, **kwargs):
     amount = kwargs['instance']
@@ -185,6 +187,8 @@ def update_on_dish_save(sender, **kwargs):
         print >> sys.stderr, "Updating eating", eating, "in", eating.meal, eating.calories
         eating.save()
 
+# This is triggered for each eating when saving the formset
+# Perhaps create a new signal for the formset to do it only once?
 @receiver(post_save, sender=Eating)
 def update_on_eating_save(sender, **kwargs):
     eating = kwargs['instance']
