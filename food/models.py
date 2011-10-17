@@ -1,6 +1,8 @@
-import datetime
+import datetime, sys
 from django.db import models
 from django.forms import ModelForm
+from django.db.models.signals import post_save
+from django.dispatch import receiver
 
 
 
@@ -153,6 +155,18 @@ class Eating(models.Model):
 
 #    class Meta:
 #        order_with_respect_to = 'meal'
+
+
+@receiver(post_save, sender=Ingredient)
+def update_on_ingredient_save(sender, **kwargs):
+    ingredient = kwargs['instance']
+#    print >> sys.stderr, "Instance: ingredient", ingredient
+    for amount in Amount.objects.filter(contained_comestible__id=ingredient.id):
+#        print >> sys.stderr, "Updating amount", amount, "in", amount.containing_dish, amount.calories
+        amount.save()
+    for eating in Eating.objects.filter(comestible__id=ingredient.id):
+#        print >> sys.stderr, "Updating eating", eating, "in", eating.meal, eating.calories
+        eating.save()
 
 
 #################################
