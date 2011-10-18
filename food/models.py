@@ -1,7 +1,8 @@
 import datetime, sys
+
 from django.db import models
 from django.forms import ModelForm
-from django.db.models.signals import post_save
+from django.db.models.signals import post_save, post_delete
 from django.dispatch import receiver
 
 
@@ -157,6 +158,8 @@ class Eating(models.Model):
 #        order_with_respect_to = 'meal'
 
 
+# Signal receivers update related objects in order to recalculate their calories when something changes
+
 @receiver(post_save, sender=Ingredient)
 def update_on_ingredient_save(sender, **kwargs):
     ingredient = kwargs['instance']
@@ -196,6 +199,38 @@ def update_on_eating_save(sender, **kwargs):
     meal = eating.meal
     print >> sys.stderr, "Instance: eating", eating, "; updating meal", meal, meal.calories, "calories"
     meal.save()
+
+# All ForeignKey and OneToOne fields have on_delete=CASCADE by default, so:
+#     ingredient deleted --> comestible deleted --> amounts deleted (via contained_comestible FK)
+#     dish deleted       --> comestible deleted --> amounts deleted (via contained_comestible FK or containing_dish FK)
+#     ingredient deleted --> comestible deleted --> eatings deleted (via comestible FK)
+#     dish deleted       --> comestible deleted --> eatings deleted (via comestible FK or meal FK)
+# ... so we only need to deal here with amounts and eatings being deleted (both directly from the big formsets and after cascading).
+
+@receiver(post_delete, sender=Amount)
+def update_on_amount_delete(sender, **kwargs):
+    amount = kwargs['instance']
+    # amounts can be deleted as a cascading result of their containing dish having been deleted
+    # so a deleted amount won't always have a containing dish to update
+    try:
+        dish = amount.containing_dish
+        print >> sys.stderr, "Instance deleted: amount (can't get name); updating containing_dish", dish, dish.calories, "calories"
+        dish.save()
+    except Dish.DoesNotExist:
+        print >> sys.stderr, "Instance deleted: amount (can't get name); containing dish has already been deleted"
+
+@receiver(post_delete, sender=Eating)
+def update_on_eating_delete(sender, **kwargs):
+    eating = kwargs['instance']
+    # eatings can be deleted as a cascading result of their meal having been deleted
+    # so a deleted eating won't always have a meal to update
+    try:
+        meal = eating.meal
+        print >> sys.stderr, "Instance deleted: eating (can't get name); updating meal", meal, meal.calories, "calories"
+        meal.save()
+    except Meal.DoesNotExist:
+        print >> sys.stderr, "Instance deleted: eating (can't get name); meal has already been deleted"
+
 
 #################################
 
