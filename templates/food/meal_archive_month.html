@@ -10,8 +10,10 @@
     <h3>Weekly index</h3>
 
     {% for week in week_list %}
-        <a href="{% url meal_archive_week week.date.year week.date|date:'W' %}">Week beginning {{ week.date|date:'jS F Y' }}</a> {{ week.calories }} calories per day</br>
+        <a href="{% url meal_archive_week week.date.year week.date|date:'W' %}">Week beginning {{ week.date|date:'jS F Y' }}</a> {{ week.calories|floatformat:0|intcomma }} calories per day</br>
     {% endfor %}
+
+    <h3>Daily index</h3>
 
     <p>{% for date in date_list %}
         <a href="{% url meal_archive_day date.year date|date:'m' date.day %}">{{ date|date:'l jS F' }} </a>:</br>
