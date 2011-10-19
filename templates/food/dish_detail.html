@@ -39,4 +39,24 @@
     </br>
     <a href="{% url dish_edit dish.id %}">Edit this dish</a><p/>
 
+    <h3>Dishes containing this dish</h3>
+
+    <p>
+    {% for amount in dish.comestible.containing_dishes_set.all %}
+        <a href="{% url dish_detail amount.containing_dish.id %}">{{ amount.containing_dish }}</a> ({{ amount.quantity }} {{ amount.contained_comestible.unit }})</br>
+    {% empty %}
+        This dish isn't in any dishes.
+    {% endfor %}
+    </p>
+
+    <h3>Meals containing this dish</h3>
+
+    <p>
+    {% for eating in dish.comestible.eating_set.all %}
+        <a href="{% url meal_detail eating.meal.id %}">{{ eating.meal|capfirst }}</a> ({{ eating.quantity }} {{ eating.comestible.unit }})</br>
+    {% empty %}
+        This dish isn't in any meals.
+    {% endfor %}
+    </p>
+
 {% endblock content %}

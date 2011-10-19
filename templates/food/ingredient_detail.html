@@ -4,15 +4,36 @@
 {% block content %}
 
     <h1>{{ ingredient.name }}</h1>
-    <ul>
+
+    <p>
     {% if ingredient.unit == "items" %}
         There are {{ ingredient.calories|intcomma }} calories in {{ingredient.quantity|apnumber|intcomma }} {{ ingredient.name }}.
     {% else %}
         There are {{ ingredient.calories|intcomma }} calories in {{ingredient.quantity|intcomma }} {{ ingredient.unit }} of {{ ingredient.name }}.
     {% endif %}
-    </ul>
+    </p>
 
-    <a href="{% url ingredient_edit ingredient.id %}">Edit this ingredient</a>
+    <a href="{% url ingredient_edit ingredient.id %}">Edit this ingredient</a></br>
     <a href="{% url ingredient_delete ingredient.id %}">Delete this ingredient</a>
+
+    <h3>Dishes containing this ingredient</h3>
+
+    <p>
+    {% for amount in ingredient.comestible.containing_dishes_set.all %}
+        <a href="{% url dish_detail amount.containing_dish.id %}">{{ amount.containing_dish }}</a> ({{ amount.quantity }} {{ amount.contained_comestible.unit }})</br>
+    {% empty %}
+        This ingredient isn't in any dishes.
+    {% endfor %}
+    </p>
+
+    <h3>Meals containing this ingredient</h3>
+
+    <p>
+    {% for eating in ingredient.comestible.eating_set.all %}
+        <a href="{% url meal_detail eating.meal.id %}">{{ eating.meal|capfirst }}</a> ({{ eating.quantity }} {{ eating.comestible.unit }})</br>
+    {% empty %}
+        This ingredient isn't in any meals.
+    {% endfor %}
+    </p>
 
 {% endblock content %}
