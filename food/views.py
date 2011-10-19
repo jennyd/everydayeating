@@ -146,12 +146,23 @@ class MealMonthArchiveView(MonthArchiveView):
     month_format = '%m'
 
     def get_context_data(self, **kwargs):
+
         # Call the base implementation first to get a context
         context = super(MealMonthArchiveView, self).get_context_data(**kwargs)
+
         # Add in week list: a list of dictionaries with date and calories keys
         month_start_date = self.get_dated_items()[2]['month']
         week_start_list = get_week_starts_in_month(month_start_date)
-        context['week_list'] = [{'date' : date, 'calories': get_avg_week_calories(date)} for date in week_start_list]
+
+        # Only need to get date_list here to sort it (it's in reverse order by default)
+        queryset = self.get_dated_items()[1]
+        date_list = self.get_date_list(queryset, 'day')
+        date_list.sort() # into chronological order
+
+        context.update({
+            'week_list': [{'date' : date, 'calories': get_avg_week_calories(date)} for date in week_start_list],
+            'date_list': date_list,
+        })
         return context
 
 class MealWeekArchiveView(WeekArchiveView):
@@ -188,12 +199,17 @@ class MealWeekArchiveView(WeekArchiveView):
             return previous_week
 
     def get_context_data(self, **kwargs):
+
         # Call the base implementation first to get a context
         context = super(MealWeekArchiveView, self).get_context_data(**kwargs)
+
         # Add in calories avg for the week, date list, next and previous weeks
         week_start_date = self.get_dated_items()[2]['week']
+
         queryset = self.get_dated_items()[1]
         date_list = self.get_date_list(queryset, 'day')
+        date_list.sort() # into chronological order
+
         context.update({
             'avg_week_calories': get_avg_week_calories(week_start_date),
             'date_list': date_list,
