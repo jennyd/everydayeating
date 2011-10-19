@@ -60,6 +60,7 @@ class Dish(Comestible):
     # or make both blank=False and null=False?
     quantity = models.DecimalField(max_digits=8, decimal_places=2, blank=True, default=500, null=True)
     date_cooked = models.DateField("Cooked on:", default=datetime.date.today) # default...
+    recipe_url = models.URLField("Link to the recipe for this dish", blank=True, null=True)
     calories = models.DecimalField(max_digits=8, decimal_places=2, null=True, editable=False)
 
     def __unicode__(self):

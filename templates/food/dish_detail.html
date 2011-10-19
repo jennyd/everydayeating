@@ -11,7 +11,9 @@
         {{ dish.quantity|intcomma }}{{ dish.unit }} of
     {% endif %}
      {{ dish.name }}, cooked: {{ dish.date_cooked|naturalday }}.
-    ({{ dish.calories|floatformat:0|intcomma }} calories)<p/>
+    ({{ dish.calories|floatformat:0|intcomma }} calories)</br>
+    <a href="{{ dish.recipe_url }}">Link to recipe</a>
+    <p/>
     
     Ingredients:
         <table>
