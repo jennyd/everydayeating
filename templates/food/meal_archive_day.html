@@ -9,18 +9,36 @@
 
     <h3>{{ day|date:'jS F Y' }}</h3>
 
-    <table>
-        {% for meal in meal_list %}
-            <tr>
-            <td><a href="{% url meal_detail meal.id %}">{{ meal.name }}</a></td>
-            <td>{{ meal.date|naturalday }}</td>
-            <td>at</td>
-            <td>{{ meal.time }}</td>
-            <td>({{ meal.calories|floatformat:0|intcomma }} calories)</td>
-            <td><a href="{% url meal_delete meal.id %}">Delete</a></td>
-            </tr>
-        {% endfor %}
-    </table><br />
+    {% for meal in meal_list %}
+        <b><a href="{% url meal_detail meal.id %}">{{ meal.name|capfirst }}</a>, {{ meal.date|naturalday }} at {{ meal.time }} ({{ meal.calories|floatformat:0|intcomma }} calories)</b>
+        <a href="{% url meal_delete meal.id %}">Delete</a>
+        <table>
+            {% for eating in meal.eating_set.all %}
+                <tr>
+                    <td>
+                        {% if eating.comestible.is_dish %}
+                            <a href="{% url dish_detail eating.comestible.id %}">{{ eating.comestible }}</a>
+                        {% else %}
+                            <a href="{% url ingredient_detail eating.comestible.id %}">{{ eating.comestible }}</a>
+                        {% endif %}
+                    </td>
+                    <td>
+                        {% if eating.comestible.unit == "items" %}
+                            {{ eating.quantity|intcomma }}
+                        {% else %}
+                            {{ eating.quantity|intcomma }}{{ eating.comestible.unit }}
+                        {% endif %}
+                    </td>
+                    <td>
+                        ({{ eating.calories|floatformat:0|intcomma }} calories)
+                    </td>
+                </tr>
+            {% empty %}
+                Don't skip meals!
+            {% endfor %}
+       </table><br />
+    {% endfor %}
+
     <a href="{% url meal_add %}">Add a new meal</a></br>
     {% if previous_day %}
         <a href="{% url meal_archive_day previous_day.year previous_day|date:'m' previous_day.day %}"><-- {{ previous_day|date:'jS F Y' }}</a>
