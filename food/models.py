@@ -39,6 +39,11 @@ class Ingredient(Comestible):
     def __unicode__(self):
         return self.name
 
+    def get_comestible(self):
+        return self.comestible_ptr
+
+    comestible = property(get_comestible)
+
     def save(self, *args, **kwargs):
         self.is_dish = False # so that the related comestible knows this is an ingredient (default=True)
         super(Ingredient, self).save(*args, **kwargs) # Call the "real" save() method.
@@ -59,6 +64,11 @@ class Dish(Comestible):
 
     def __unicode__(self):
         return self.name+u" ("+unicode(self.date_cooked)+u")"
+
+    def get_comestible(self):
+        return self.comestible_ptr
+
+    comestible = property(get_comestible)
 
 # perhaps Dish also needs to update is_dish when saving, since defaults seem to be broken with South...
 
