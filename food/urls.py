@@ -1,6 +1,7 @@
 from django.conf.urls.defaults import *
-from food.views import ingredient_manage, dish_amounts_form, meal_eating_form, MealMonthArchiveView, MealWeekArchiveView, MealDayArchiveView
 from django.views.generic import TemplateView, ListView, CreateView, DetailView, UpdateView, DeleteView, ArchiveIndexView, YearArchiveView
+
+from food.views import ingredient_manage, dish_amounts_form, meal_eating_form, MealMonthArchiveView, MealWeekArchiveView, MealDayArchiveView
 from food.models import Ingredient, Dish, Amount, Meal, Eating
 
 # Uncomment the next two lines to enable the admin:

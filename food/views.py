@@ -1,10 +1,12 @@
+import datetime, sys
+
 from django.shortcuts import HttpResponse, HttpResponseRedirect, render_to_response, get_object_or_404, redirect
 from django.template import RequestContext
 from django.http import Http404
 from django.views.generic import MonthArchiveView, WeekArchiveView, DayArchiveView # new class-based generic views
 from django.forms.models import modelformset_factory, inlineformset_factory
+
 from food.models import Ingredient, Dish, DishForm, Amount, Meal, MealForm, Eating
-import datetime, sys
 
 def ingredient_manage(request):
     IngredientFormSet = modelformset_factory(Ingredient, extra=3)
@@ -213,7 +215,6 @@ class MealDayArchiveView(DayArchiveView):
         # Add in calories sum for the day
         day = self.get_dated_items()[2]['day']
         context['day_calories'] = get_sum_day_calories(day)
-        context['type_day'] = type(day)
         return context
 
 
