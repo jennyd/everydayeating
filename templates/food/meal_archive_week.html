@@ -5,22 +5,29 @@
 
     <h2>Meals</h2>
 
-    {{ week }}: Average {{ avg_week_calories|floatformat:0|intcomma }} calories per day
-
     <h3>Week beginning {{ week|date:'jS F Y' }}</h3>
 
-    <table>
-        {% for meal in meal_list %}
-            <tr>
-            <td><a href="{% url meal_detail meal.id %}">{{ meal.name }}</a></td>
-            <td>{{ meal.date|naturalday }}</td>
-            <td>at</td>
-            <td>{{ meal.time }}</td>
-            <td>({{ meal.calories|floatformat:0|intcomma }} calories)</td>
-            <td><a href="{% url meal_delete meal.id %}">Delete</a></td>
-            </tr>
-        {% endfor %}
-    </table><br />
+    Average {{ avg_week_calories|floatformat:0|intcomma }} calories per day
+
+    <p>{% for date in date_list %}
+        <a href="{% url meal_archive_day date.year date|date:'m' date.day %}">{{ date|date:'l jS F' }} </a>:</br>
+        <table>
+            {% for meal in meal_list %}
+                {% if date.date == meal.date %}
+                    <tr>
+                    <td><a href="{% url meal_detail meal.id %}">{{ meal.name }}</a></td>
+                    <td>{{ meal.date|naturalday }}</td>
+                    <td>at</td>
+                    <td>{{ meal.time }}</td>
+                    <td>({{ meal.calories|floatformat:0|intcomma }} calories)</td>
+                    <td><a href="{% url meal_delete meal.id %}">Delete</a></td>
+                    </tr>
+                {% endif %}
+            {% endfor %}
+        </table><br />
+    {% endfor %}
+    </p>
+
     <a href="{% url meal_add %}">Add a new meal</a></br>
     {% if previous_month %}
         <a href="{% url meal_archive_month previous_month.year previous_month|date:'m' %}"><-- {{ previous_month|date:'F Y' }}</a>

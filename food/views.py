@@ -162,7 +162,10 @@ class MealWeekArchiveView(WeekArchiveView):
         context = super(MealWeekArchiveView, self).get_context_data(**kwargs)
         # Add in calories avg for the week
         week_start_date = self.get_dated_items()[2]['week']
+        queryset = self.get_dated_items()[1]
+        date_list = self.get_date_list(queryset, 'day')
         context['avg_week_calories'] = get_avg_week_calories(week_start_date)
+        context['date_list'] = date_list
         return context
 
 class MealDayArchiveView(DayArchiveView):
