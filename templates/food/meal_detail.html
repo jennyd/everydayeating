@@ -3,7 +3,7 @@
 
 {% block content %}
 
-    <h1>{{ meal.name|capfirst }}, {{ meal.date|naturalday }} at {{ meal.time }}</h1>
+    <h1>{{ meal.user }}'s {{ meal.name }}, {{ meal.date|naturalday }} at {{ meal.time }}</h1>
     ({{ meal.calories|floatformat:0|intcomma }} calories)</br>
     <ul>
     {% for eating in meal.eating_set.all %}

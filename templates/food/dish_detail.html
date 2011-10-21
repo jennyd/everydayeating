@@ -6,11 +6,22 @@
     <h1>{{ dish.name }}</h1>
     <p>
     {% if dish.unit == "items" %}
-        {{ dish.quantity|apnumber|intcomma }}
+        {{ dish.quantity|apnumber|intcomma }} {{ dish.name }}{{ dish.quantity|pluralize }},
     {% else %}
-        {{ dish.quantity|intcomma }}{{ dish.unit }} of
+        {{ dish.quantity|intcomma }}{{ dish.unit }},
     {% endif %}
-     {{ dish.name }}, cooked: {{ dish.date_cooked|naturalday }}.
+    cooked: {{ dish.date_cooked|naturalday }} by
+    {% for cook in dish.cooks.all %}
+        {% if dish.cooks.all|length >= 3 and forloop.revcounter >= 3 %}
+            {{ cook.username }},
+        {% else %}
+            {% if dish.cooks.all|length >= 2 and forloop.last %}
+                and {{ cook.username }}
+            {% else %}
+                {{ cook.username }}
+            {% endif %}
+        {% endif %}
+    {% endfor %}
     ({{ dish.calories|floatformat:0|intcomma }} calories)</br>
     <a href="{{ dish.recipe_url }}">Link to recipe</a>
     <p/>
