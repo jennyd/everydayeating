@@ -4,6 +4,7 @@ from django.db import models
 from django.forms import ModelForm
 from django.db.models.signals import post_save, post_delete
 from django.dispatch import receiver
+from django.contrib.auth.models import User
 
 
 
@@ -127,6 +128,7 @@ class Meal(models.Model):
     name = models.CharField(max_length=16, choices=NAME_CHOICES)
     date = models.DateField("On:", default=datetime.date.today)
     time = models.TimeField("at:")  # make defaults for each name choice...
+    user = models.ForeignKey(User, related_name='meals')
     comestibles = models.ManyToManyField(Comestible, through='Eating', editable=False)
     calories = models.DecimalField(max_digits=8, decimal_places=2, null=True, editable=False)
 
