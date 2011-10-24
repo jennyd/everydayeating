@@ -152,7 +152,7 @@ class Meal(models.Model):
     date = models.DateField("On:", default=datetime.date.today)
     time = models.TimeField("at:")  # make defaults for each name choice...
     user = models.ForeignKey(User, related_name='meals')
-    comestibles = models.ManyToManyField(Comestible, through='Eating',
+    comestibles = models.ManyToManyField(Comestible, through='Portion',
                                          editable=False)
     calories = models.DecimalField(max_digits=8, decimal_places=2, null=True,
                                    editable=False)
@@ -161,12 +161,12 @@ class Meal(models.Model):
         return self.name+u" on "+unicode(self.date)
 
     def save(self, *args, **kwargs):
-        # Calculate calories for the meal if it already has eatings
-        # New meal needs to be saved again after eatings are created to
+        # Calculate calories for the meal if it already has portions
+        # New meal needs to be saved again after portions are created to
         # calculate calories
         if self.id: # (if this meal already exists)
-           self.calories = sum(eating.calories for eating in
-                               Eating.objects.filter(meal=self))
+           self.calories = sum(portion.calories for portion in
+                               Portion.objects.filter(meal=self))
         # Call the "real" save() method
         super(Meal, self).save(*args, **kwargs)
 
@@ -198,6 +198,30 @@ class Eating(models.Model):
                          self.comestible.child.quantity)
         # Call the "real" save() method
         super(Eating, self).save(*args, **kwargs)
+
+#    class Meta:
+#        order_with_respect_to = 'meal'
+
+
+class Portion(models.Model):
+    comestible = models.ForeignKey(Comestible)
+    meal = models.ForeignKey(Meal)
+    quantity = models.DecimalField("the quantity eaten", max_digits=8,
+                                   decimal_places=2, blank=True, default=0,
+                                   null=True)
+    calories = models.DecimalField(max_digits=8, decimal_places=2, null=True,
+                                   editable=False)
+
+    def __unicode__(self):
+        return unicode(self.comestible)
+
+    def save(self, *args, **kwargs):
+        # Calculate calories for the portion
+        self.calories = (self.quantity *
+                         self.comestible.child.calories /
+                         self.comestible.child.quantity)
+        # Call the "real" save() method
+        super(Portion, self).save(*args, **kwargs)
 
 #    class Meta:
 #        order_with_respect_to = 'meal'
