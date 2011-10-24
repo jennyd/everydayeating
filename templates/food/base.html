@@ -5,10 +5,23 @@
 
 {% block links %}
 
+    <p>
+    {% if user.is_authenticated %}
+        {{ user.username }}
+    {% else %}
+        Not logged in
+    {% endif %}
+    </br>
+    <a href="{% url login %}">Log in</a></br>
+    <a href="{% url logout %}">Log out</a></br>
+    </p>
+
+    <p>
     <a href="{% url food_index %}">Food</a></br>
     <a href="{% url ingredient_list %}">Ingredients</a></br>
     <a href="{% url dish_list %}">Dishes</a></br>
     <a href="{% url meal_archive %}">Meals</a>
+    </p>
 
 {% endblock links %}
 

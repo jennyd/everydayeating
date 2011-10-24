@@ -1,4 +1,5 @@
 from django.conf.urls.defaults import *
+from django.contrib.auth.views import login, logout
 from django.views.generic import TemplateView, ListView, CreateView, DetailView, UpdateView, DeleteView, ArchiveIndexView, YearArchiveView
 
 from food.views import ingredient_manage, dish_amounts_form, meal_eating_form, MealMonthArchiveView, MealWeekArchiveView, MealDayArchiveView
@@ -21,6 +22,8 @@ urlpatterns = patterns('food.views',
 
 urlpatterns += patterns('',
     url(r'^$', TemplateView.as_view( template_name='food/food_index.html' ), name="food_index"),
+    url(r'^login/$', 'django.contrib.auth.views.login', { 'template_name': 'food/login.html' }, name="login"),
+    url(r'^logout/$', 'django.contrib.auth.views.logout', { 'next_page': '/food/' }, name="logout"),
 
     url(r'^ingredients/$', ListView.as_view( model=Ingredient ), name="ingredient_list"),
     url(r'^ingredients/add/$', CreateView.as_view( model=Ingredient, success_url="/food/ingredients/" ), name="ingredient_add"),
