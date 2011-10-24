@@ -25,9 +25,9 @@ def ingredient_manage(request):
 
 def dish_amounts_form(request, dish_id=None):
     DishFormSet = inlineformset_factory(Dish, Amount,
-                                        # Shouldn't need fk_name any more -
-                                        # only one fk to Dish now
-                                        fk_name="containing_dish", extra=6)
+            # I think fk_name shouldn't be needed any more, since Amount
+            #  now has only one fk to Dish, but it does need to be here...
+            fk_name="containing_dish", extra=6)
     if dish_id:
         dish = Dish.objects.get(pk=dish_id)
     else:
