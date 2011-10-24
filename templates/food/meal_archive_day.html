@@ -13,24 +13,24 @@
         <b><a href="{% url meal_detail meal.id %}">{{ meal.name|capfirst }}</a>, {{ meal.date|naturalday }} at {{ meal.time }} ({{ meal.calories|floatformat:0|intcomma }} calories)</b>
         <a href="{% url meal_delete meal.id %}">Delete</a>
         <table>
-            {% for eating in meal.eating_set.all %}
+            {% for portion in meal.portion_set.all %}
                 <tr>
                     <td>
-                        {% if eating.comestible.is_dish %}
-                            <a href="{% url dish_detail eating.comestible.id %}">{{ eating.comestible }}</a>
+                        {% if portion.comestible.is_dish %}
+                            <a href="{% url dish_detail portion.comestible.id %}">{{ portion.comestible }}</a>
                         {% else %}
-                            <a href="{% url ingredient_detail eating.comestible.id %}">{{ eating.comestible }}</a>
+                            <a href="{% url ingredient_detail portion.comestible.id %}">{{ portion.comestible }}</a>
                         {% endif %}
                     </td>
                     <td>
-                        {% if eating.comestible.unit == "items" %}
-                            {{ eating.quantity|intcomma }}
+                        {% if portion.comestible.unit == "items" %}
+                            {{ portion.quantity|intcomma }}
                         {% else %}
-                            {{ eating.quantity|intcomma }}{{ eating.comestible.unit }}
+                            {{ portion.quantity|intcomma }}{{ portion.comestible.unit }}
                         {% endif %}
                     </td>
                     <td>
-                        ({{ eating.calories|floatformat:0|intcomma }} calories)
+                        ({{ portion.calories|floatformat:0|intcomma }} calories)
                     </td>
                 </tr>
             {% empty %}

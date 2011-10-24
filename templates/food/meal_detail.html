@@ -6,18 +6,18 @@
     <h1>{{ meal.user }}'s {{ meal.name }}, {{ meal.date|naturalday }} at {{ meal.time }}</h1>
     ({{ meal.calories|floatformat:0|intcomma }} calories)</br>
     <ul>
-    {% for eating in meal.eating_set.all %}
-        {% if eating.comestible.unit == "items" %}
-            {{ eating.quantity|intcomma }}
+    {% for portion in meal.portion_set.all %}
+        {% if portion.comestible.unit == "items" %}
+            {{ portion.quantity|intcomma }}
         {% else %}
-            {{ eating.quantity|intcomma }}{{ eating.comestible.unit }} of 
+            {{ portion.quantity|intcomma }}{{ portion.comestible.unit }} of
         {% endif %}
-        {% if eating.comestible.is_dish %}
-            <a href="{% url dish_detail eating.comestible.id %}">{{ eating.comestible }}</a>
+        {% if portion.comestible.is_dish %}
+            <a href="{% url dish_detail portion.comestible.id %}">{{ portion.comestible }}</a>
         {% else %}
-            <a href="{% url ingredient_detail eating.comestible.id %}">{{ eating.comestible }}</a>
+            <a href="{% url ingredient_detail portion.comestible.id %}">{{ portion.comestible }}</a>
         {% endif %}
-        ({{ eating.calories|floatformat:0|intcomma }} calories)</br>
+        ({{ portion.calories|floatformat:0|intcomma }} calories)</br>
     {% empty %}
         Don't skip meals!
     {% endfor %}

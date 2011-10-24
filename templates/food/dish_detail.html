@@ -65,8 +65,8 @@
     <h3>Meals containing this dish</h3>
 
     <p>
-    {% for eating in dish.comestible.eating_set.all %}
-        <a href="{% url meal_detail eating.meal.id %}">{{ eating.meal|capfirst }}</a> ({{ eating.quantity }} {{ eating.comestible.unit }})</br>
+    {% for portion in dish.comestible.portion_set.all %}
+        <a href="{% url meal_detail portion.meal.id %}">{{ portion.meal|capfirst }}</a> ({{ portion.quantity }} {{ portion.comestible.unit }})</br>
     {% empty %}
         This dish isn't in any meals.
     {% endfor %}

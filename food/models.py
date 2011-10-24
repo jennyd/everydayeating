@@ -230,6 +230,8 @@ class Portion(models.Model):
 # Signal receivers update related objects in order to recalculate their
 # calories when something changes
 
+############################ Eating ##################################
+
 @receiver(post_save, sender=Ingredient)
 def update_on_ingredient_save(sender, **kwargs):
     ingredient = kwargs['instance']
@@ -319,6 +321,99 @@ def update_on_eating_delete(sender, **kwargs):
     except Meal.DoesNotExist:
         print >> sys.stderr, (
             "Instance deleted: eating (can't get name); meal has already been deleted"
+        )
+
+############################ Portion ##################################
+
+@receiver(post_save, sender=Ingredient)
+def update_on_ingredient_save(sender, **kwargs):
+    ingredient = kwargs['instance']
+    print >> sys.stderr, "Instance: ingredient", ingredient
+    for amount in Amount.objects.filter(contained_comestible__id=ingredient.id):
+        print >> sys.stderr, ("Updating amount", amount, "in",
+                              amount.containing_dish, amount.calories,
+                              "calories")
+        amount.save()
+    for portion in Portion.objects.filter(comestible__id=ingredient.id):
+        print >> sys.stderr, ("Updating portion", portion, "in", portion.meal,
+                              portion.calories)
+        portion.save()
+
+# This is triggered for each amount when saving the formset
+# Perhaps create a new signal for the formset to do it only once?
+@receiver(post_save, sender=Amount)
+def update_on_amount_save(sender, **kwargs):
+    amount = kwargs['instance']
+    dish = amount.containing_dish
+    print >> sys.stderr, ("Instance: amount", amount, "; updating dish", dish,
+                          dish.calories, "calories")
+    dish.save()
+
+@receiver(post_save, sender=Dish)
+def update_on_dish_save(sender, **kwargs):
+    dish = kwargs['instance']
+    print >> sys.stderr, "Instance: dish", dish
+    for amount in Amount.objects.filter(contained_comestible__id=dish.id):
+        print >> sys.stderr, ("Updating amount", amount, "in",
+                              amount.containing_dish, amount.calories,
+                              "calories")
+        amount.save()
+    for portion in Portion.objects.filter(comestible__id=dish.id):
+        print >> sys.stderr, ("Updating portion", portion, "in", portion.meal,
+                              portion.calories)
+        portion.save()
+
+# This is triggered for each portion when saving the formset
+# Perhaps create a new signal for the formset to do it only once?
+@receiver(post_save, sender=Portion)
+def update_on_portion_save(sender, **kwargs):
+    portion = kwargs['instance']
+    meal = portion.meal
+    print >> sys.stderr, ("Instance: portion", portion, "; updating meal", meal,
+                          meal.calories, "calories")
+    meal.save()
+
+# All ForeignKey and OneToOne fields have on_delete=CASCADE by default, so:
+#     ingredient deleted --> comestible deleted --> amounts deleted (via contained_comestible FK)
+#     dish deleted       --> comestible deleted --> amounts deleted (via contained_comestible FK or containing_dish FK)
+#     ingredient deleted --> comestible deleted --> portions deleted (via comestible FK)
+#     dish deleted       --> comestible deleted --> portions deleted (via comestible FK or meal FK)
+# ... so we only need to deal here with amounts and portions being deleted (both
+# directly from the big formsets and after cascading).
+
+@receiver(post_delete, sender=Amount)
+def update_on_amount_delete(sender, **kwargs):
+    amount = kwargs['instance']
+    # amounts can be deleted as a cascading result of their containing
+    # dish having been deleted, so a deleted amount won't always have a
+    # containing dish to update
+    try:
+        dish = amount.containing_dish
+        print >> sys.stderr, (
+            "Instance deleted: amount (can't get name); updating containing_dish",
+            dish, dish.calories, "calories"
+        )
+        dish.save()
+    except Dish.DoesNotExist:
+        print >> sys.stderr, (
+            "Instance deleted: amount (can't get name); containing dish has already been deleted"
+        )
+
+@receiver(post_delete, sender=Portion)
+def update_on_portion_delete(sender, **kwargs):
+    portion = kwargs['instance']
+    # portions can be deleted as a cascading result of their meal having been
+    # deleted, so a deleted portion won't always have a meal to update
+    try:
+        meal = portion.meal
+        print >> sys.stderr, (
+            "Instance deleted: portion (can't get name); updating meal", meal,
+            meal.calories, "calories"
+        )
+        meal.save()
+    except Meal.DoesNotExist:
+        print >> sys.stderr, (
+            "Instance deleted: portion (can't get name); meal has already been deleted"
         )
 
 

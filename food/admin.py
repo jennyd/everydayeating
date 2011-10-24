@@ -1,4 +1,4 @@
-from food.models import Ingredient, Dish, Amount, Meal, Eating
+from food.models import Ingredient, Dish, Amount, Meal, Portion
 from django.contrib import admin
 
 class IngredientAdmin(admin.ModelAdmin):

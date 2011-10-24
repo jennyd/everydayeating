@@ -29,8 +29,8 @@
     <h3>Meals containing this ingredient</h3>
 
     <p>
-    {% for eating in ingredient.comestible.eating_set.all %}
-        <a href="{% url meal_detail eating.meal.id %}">{{ eating.meal|capfirst }}</a> ({{ eating.quantity }} {{ eating.comestible.unit }})</br>
+    {% for portion in ingredient.comestible.portion_set.all %}
+        <a href="{% url meal_detail portion.meal.id %}">{{ portion.meal|capfirst }}</a> ({{ portion.quantity }} {{ portion.comestible.unit }})</br>
     {% empty %}
         This ingredient isn't in any meals.
     {% endfor %}
