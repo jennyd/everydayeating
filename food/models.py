@@ -78,6 +78,7 @@ class Dish(Comestible):
     quantity = models.DecimalField(max_digits=8, decimal_places=2, blank=True,
                                    default=500, null=True)
     date_cooked = models.DateField("Cooked on:", default=datetime.date.today)
+    household = models.ForeignKey(Household, related_name='dishes')
     cooks = models.ManyToManyField(User, related_name='cooked_dishes')
     recipe_url = models.URLField("Link to the recipe for this dish", blank=True,
                                  null=True)
@@ -162,6 +163,7 @@ class Meal(models.Model):
     name = models.CharField(max_length=16, choices=NAME_CHOICES)
     date = models.DateField("On:", default=datetime.date.today)
     time = models.TimeField("at:")  # make defaults for each name choice...
+    household = models.ForeignKey(Household, related_name='meals')
     user = models.ForeignKey(User, related_name='meals')
     comestibles = models.ManyToManyField(Comestible, through='Portion',
                                          editable=False)
