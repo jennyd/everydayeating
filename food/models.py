@@ -9,6 +9,17 @@ from django.contrib.auth.models import User
 
 
 
+class Household(models.Model):
+    # Should name be unique? Perhaps for publishing recipes...
+    name = models.CharField(max_length=200)
+    # Not sure about related_name here:
+    admin = models.ForeignKey(User, related_name='is_admin')
+    # Use is_active to allow people to rearrange households?
+    # is_active = models.BooleanField(default=True)
+
+# Also need an Invitation model
+
+
 UNIT_CHOICES = (
         ('g', 'grams'),
         ('ml', 'millilitres'),
