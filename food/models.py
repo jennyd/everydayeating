@@ -95,7 +95,7 @@ class Dish(Comestible):
     comestible = property(get_comestible)
 
     def get_remaining_quantity(self):
-        used_quantity = self.portion_set.aggregate(Sum('quantity'))['quantity__sum']
+        used_quantity = sum(p.quantity for p in self.portion_set.all())
         return self.quantity - used_quantity
 
 # perhaps Dish also needs to update is_dish when saving, since defaults seem to
