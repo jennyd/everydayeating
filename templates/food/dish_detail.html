@@ -62,14 +62,15 @@
     {% endfor %}
     </p>
 
-    <h3>Meals containing this dish</h3>
+    <h3>Portions of this dish</h3>
 
     <p>
     {% for portion in dish.comestible.portion_set.all %}
-        <a href="{% url meal_detail portion.meal.id %}">{{ portion.meal|capfirst }}</a> ({{ portion.quantity }} {{ portion.comestible.unit }})</br>
+        {{ portion.quantity }}{{ portion.comestible.unit }} for <a href="{% url meal_detail portion.meal.id %}">{{ portion.meal|capfirst }}</a></br>
     {% empty %}
-        This dish isn't in any meals.
+        This dish doesn't have any portions yet.</br>
     {% endfor %}
+    {{ dish.get_remaining_quantity|floatformat:0|intcomma }}{{ dish.unit }} not yet assigned to portions
     </p>
 
 {% endblock content %}

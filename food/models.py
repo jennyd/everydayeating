@@ -2,6 +2,7 @@ import datetime
 import sys
 
 from django.db import models
+from django.db.models import Sum
 from django.db.models.signals import post_save, post_delete
 from django.dispatch import receiver
 from django.forms import ModelForm
@@ -92,6 +93,10 @@ class Dish(Comestible):
         return self.comestible_ptr
 
     comestible = property(get_comestible)
+
+    def get_remaining_quantity(self):
+        used_quantity = self.portion_set.aggregate(Sum('quantity'))['quantity__sum']
+        return self.quantity - used_quantity
 
 # perhaps Dish also needs to update is_dish when saving, since defaults seem to
 # be broken with South...
