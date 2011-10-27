@@ -1,6 +1,7 @@
 import datetime
 import sys
 
+from django import forms
 from django.shortcuts import HttpResponse, HttpResponseRedirect, render_to_response, get_object_or_404, redirect
 from django.template import RequestContext
 from django.http import Http404
@@ -83,6 +84,50 @@ def meal_portion_form(request, meal_id=None):
         "meal": meal,},
         context_instance=RequestContext(request) # needed for csrf token
     )
+
+class DishMultiplyForm(forms.Form):
+    OPERATION_CHOICES = (
+        ('multiply', 'multiply'),
+        ('divide', 'divide'),
+    )
+    operation = forms.ChoiceField(choices=OPERATION_CHOICES, initial='multiply')
+    factor = forms.DecimalField()
+
+def dish_multiply(request, dish_id):
+    # form for entry/selection of multiplication factor for amounts
+    dish = Dish.objects.get(pk=dish_id) # select_related?
+    if request.method == 'POST': # If the form has been submitted...
+        form = DishMultiplyForm(request.POST) # A form bound to the POST data
+        if form.is_valid(): # All validation rules pass
+            # Process the data in form.cleaned_data
+            factor = form.cleaned_data['factor']
+            operation = form.cleaned_data['operation']
+            if operation == u'multiply':
+                dish.quantity = dish.quantity * factor
+            else:
+                dish.quantity = dish.quantity / factor
+            dish.save()
+            for amount in dish.contained_comestibles_set.all():
+                if operation == u'multiply':
+                    amount.quantity = amount.quantity * factor
+                else:
+                    amount.quantity = amount.quantity / factor
+                amount.save()
+            return redirect('dish_detail', dish.id) # Redirect after POST
+    else:
+        form = DishMultiplyForm() # An unbound form
+#        print >> sys.stderr, form
+
+    return render_to_response('food/dish_multiply.html', {
+        'form': form,
+        'dish': dish,},
+        context_instance=RequestContext(request) # needed for csrf token
+    )
+
+def dish_duplicate(dish):
+    # form for entry of date for new instance of the dish
+    # create copy of dish with same amounts, cooked on the given date
+    pass
 
 def get_sum_day_calories(day):
     """

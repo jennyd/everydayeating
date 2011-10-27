@@ -1,0 +1,21 @@
+{% extends "food/base.html" %}
+
+{% block content %}
+
+    <h2>{{ dish.name }}, cooked on {{ dish.date_cooked }}</h2>
+
+    <form action="." method="post">{% csrf_token %}
+
+    <p>
+    <select name="operation" id="id_operation">
+        <option value="multiply" selected="selected">Multiply</option>
+        <option value="divide">Divide</option>
+    </select>
+    dish and ingredient quantities by <input type="text" name="factor" id="id_factor" />{{ form.factor.errors }}
+    </p>
+
+    <input type="submit" value="Submit" />
+    </form>
+    <a href="{% url dish_detail dish.id %}">Cancel</a>
+
+{% endblock content %}
