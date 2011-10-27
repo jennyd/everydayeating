@@ -192,28 +192,28 @@ class MealForm(ModelForm):
         model = Meal
 
 
-class Eating(models.Model):
-    comestible = models.ForeignKey(Comestible)
-    meal = models.ForeignKey(Meal)
-    quantity = models.DecimalField("the quantity eaten", max_digits=8,
-                                   decimal_places=2, blank=True, default=0,
-                                   null=True)
-    calories = models.DecimalField(max_digits=8, decimal_places=2, null=True,
-                                   editable=False)
+#class Eating(models.Model):
+#    comestible = models.ForeignKey(Comestible)
+#    meal = models.ForeignKey(Meal)
+#    quantity = models.DecimalField("the quantity eaten", max_digits=8,
+#                                   decimal_places=2, blank=True, default=0,
+#                                   null=True)
+#    calories = models.DecimalField(max_digits=8, decimal_places=2, null=True,
+#                                   editable=False)
 
-    def __unicode__(self):
-        return unicode(self.comestible)
+#    def __unicode__(self):
+#        return unicode(self.comestible)
 
-    def save(self, *args, **kwargs):
-        # Calculate calories for the eating
-        self.calories = (self.quantity *
-                         self.comestible.child.calories /
-                         self.comestible.child.quantity)
-        # Call the "real" save() method
-        super(Eating, self).save(*args, **kwargs)
+#    def save(self, *args, **kwargs):
+#        # Calculate calories for the eating
+#        self.calories = (self.quantity *
+#                         self.comestible.child.calories /
+#                         self.comestible.child.quantity)
+#        # Call the "real" save() method
+#        super(Eating, self).save(*args, **kwargs)
 
-#    class Meta:
-#        order_with_respect_to = 'meal'
+##    class Meta:
+##        order_with_respect_to = 'meal'
 
 
 class Portion(models.Model):
