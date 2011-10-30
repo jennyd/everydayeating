@@ -86,6 +86,7 @@ def meal_portion_form(request, meal_id=None):
     )
 
 class DishMultiplyForm(forms.Form):
+    # form for entry/selection of multiplication factor for amounts
     OPERATION_CHOICES = (
         ('multiply', 'multiply'),
         ('divide', 'divide'),
@@ -94,7 +95,6 @@ class DishMultiplyForm(forms.Form):
     factor = forms.DecimalField()
 
 def dish_multiply(request, dish_id):
-    # form for entry/selection of multiplication factor for amounts
     dish = Dish.objects.get(pk=dish_id) # select_related?
     if request.method == 'POST': # If the form has been submitted...
         form = DishMultiplyForm(request.POST) # A form bound to the POST data
