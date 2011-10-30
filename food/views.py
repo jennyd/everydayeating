@@ -124,10 +124,59 @@ def dish_multiply(request, dish_id):
         context_instance=RequestContext(request) # needed for csrf token
     )
 
-def dish_duplicate(dish):
+class DishDuplicateForm(forms.Form):
     # form for entry of date for new instance of the dish
+    date = forms.DateField(initial=datetime.date.today, label='Cook this dish again on')
+
+def dish_duplicate(request, dish_id):
     # create copy of dish with same amounts, cooked on the given date
-    pass
+    old_dish = Dish.objects.get(pk=dish_id) # select_related?
+    if request.method == 'POST': # If the form has been submitted...
+        form = DishDuplicateForm(request.POST) # A form bound to the POST data
+        if form.is_valid(): # All validation rules pass
+            # Process the data in form.cleaned_data
+            date = form.cleaned_data['date']
+            # Create a new instance of the old dish using the given date
+            new_dish = old_dish
+            print >> sys.stderr, "new_dish.contained_comestibles is:", new_dish.contained_comestibles_set, "of type", type(new_dish.contained_comestibles_set)
+            # Set all these to None to allow force insert
+            new_dish.comestible.pk = None
+            # This isn't needed - id=pk for Comestible?
+            # new_dish.comestible.id = None
+            new_dish.pk = None
+            new_dish.id = None
+            new_dish.date_cooked = date
+            print >> sys.stderr, 'New_dish pre-save:', new_dish, new_dish.pk, new_dish.comestible.pk
+            new_dish.save(force_insert=True)
+
+            print >> sys.stderr, "id of new_dish after saving is:", id(new_dish)
+            # new_dish = Dish.objects.get(pk=new_dish.id)
+            print >> sys.stderr, "after saving anew, new_dish.contained_comestibles is:", new_dish.contained_comestibles_set, "of type", type(new_dish.contained_comestibles_set)
+
+            print >> sys.stderr, 'New_dish post-save:', new_dish, new_dish.id
+            # Shouldn't have to get this again, I hope...
+            old_dish = Dish.objects.get(pk=dish_id) # select_related?
+            print >> sys.stderr, 'Old_dish, get again:', old_dish, old_dish.id
+            # Create new amount instances for the new dish
+            for old_amount in old_dish.contained_comestibles_set.all():
+                print >> sys.stderr, 'Old_amount:', old_amount, old_amount.id
+                new_amount = old_amount
+                new_amount.pk = None # to allow force insert
+                new_amount.containing_dish = new_dish
+                new_amount.save(force_insert=True)
+                print >> sys.stderr, 'New amount', new_amount, new_amount.id
+                print >> sys.stderr, new_dish.contained_comestibles_set.all()
+                print >> sys.stderr, new_amount.containing_dish.contained_comestibles_set.all()
+            return redirect('dish_detail', new_dish.id) # Redirect after POST
+    else:
+        form = DishDuplicateForm() # An unbound form
+#        print >> sys.stderr, form
+
+    return render_to_response('food/dish_duplicate.html', {
+        'form': form,
+        'dish': old_dish,},
+        context_instance=RequestContext(request) # needed for csrf token
+    )
 
 def get_sum_day_calories(day):
     """

@@ -265,8 +265,10 @@ def update_on_ingredient_save(sender, **kwargs):
 def update_on_amount_save(sender, **kwargs):
     amount = kwargs['instance']
     dish = amount.containing_dish
-    print >> sys.stderr, "Instance: amount", amount, "; updating dish", dish, dish.calories, "calories"
+    print >> sys.stderr, "Instance: amount", amount, amount.id, amount.calories, "calories; updating dish", dish, dish.calories, "calories"
     dish.save()
+    print >> sys.stderr, "Instance: amount", amount, amount.id, amount.calories, "calories; updated dish", dish, dish.calories, "calories"
+
 
 @receiver(post_save, sender=Dish)
 def update_on_dish_save(sender, **kwargs):
