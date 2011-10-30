@@ -98,6 +98,24 @@ class Dish(Comestible):
         used_quantity = sum(p.quantity for p in self.portion_set.all())
         return self.quantity - used_quantity
 
+    def clone(self):
+        """
+        Returns an unsaved instance the same as this one, but with no
+        amounts, no cooks and no primary key / id set.
+        """
+        result = Dish()
+        result.name = self.name
+        result.quantity = self.quantity
+        result.date_cooked = self.date_cooked
+        result.household = self.household
+        # We're ignoring 'cooks' because it's ManyToMany
+        result.recipe_url = self.recipe_url
+        result.calories = 0
+        # And now the fields from Comestible:
+        result.is_dish = self.is_dish
+        result.unit = self.unit
+        return result
+
 # perhaps Dish also needs to update is_dish when saving, since defaults seem to
 # be broken with South...
 
@@ -133,6 +151,15 @@ class Amount(models.Model):
 
     def __unicode__(self):
         return unicode(self.contained_comestible)
+
+    def clone(self):
+        result = Amount()
+        # the caller probably wants to change containing_dish afterwards
+        result.containing_dish = self.containing_dish
+        result.contained_comestible = self.contained_comestible
+        result.quantity = self.quantity
+        result.calories = self.calories
+        return result
 
     def save(self, *args, **kwargs):
         if (self.contained_comestible.is_dish and
@@ -267,8 +294,6 @@ def update_on_amount_save(sender, **kwargs):
     dish = amount.containing_dish
     print >> sys.stderr, "Instance: amount", amount, amount.id, amount.calories, "calories; updating dish", dish, dish.calories, "calories"
     dish.save()
-    print >> sys.stderr, "Instance: amount", amount, amount.id, amount.calories, "calories; updated dish", dish, dish.calories, "calories"
-
 
 @receiver(post_save, sender=Dish)
 def update_on_dish_save(sender, **kwargs):

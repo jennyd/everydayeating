@@ -137,36 +137,13 @@ def dish_duplicate(request, dish_id):
             # Process the data in form.cleaned_data
             date = form.cleaned_data['date']
             # Create a new instance of the old dish using the given date
-            new_dish = old_dish
-            print >> sys.stderr, "new_dish.contained_comestibles is:", new_dish.contained_comestibles_set, "of type", type(new_dish.contained_comestibles_set)
-            # Set all these to None to allow force insert
-            new_dish.comestible.pk = None
-            # This isn't needed - id=pk for Comestible?
-            # new_dish.comestible.id = None
-            new_dish.pk = None
-            new_dish.id = None
+            new_dish = old_dish.clone()
             new_dish.date_cooked = date
-            print >> sys.stderr, 'New_dish pre-save:', new_dish, new_dish.pk, new_dish.comestible.pk
-            new_dish.save(force_insert=True)
-
-            print >> sys.stderr, "id of new_dish after saving is:", id(new_dish)
-            # new_dish = Dish.objects.get(pk=new_dish.id)
-            print >> sys.stderr, "after saving anew, new_dish.contained_comestibles is:", new_dish.contained_comestibles_set, "of type", type(new_dish.contained_comestibles_set)
-
-            print >> sys.stderr, 'New_dish post-save:', new_dish, new_dish.id
-            # Shouldn't have to get this again, I hope...
-            old_dish = Dish.objects.get(pk=dish_id) # select_related?
-            print >> sys.stderr, 'Old_dish, get again:', old_dish, old_dish.id
-            # Create new amount instances for the new dish
+            new_dish.save()
             for old_amount in old_dish.contained_comestibles_set.all():
-                print >> sys.stderr, 'Old_amount:', old_amount, old_amount.id
-                new_amount = old_amount
-                new_amount.pk = None # to allow force insert
+                new_amount = old_amount.clone()
                 new_amount.containing_dish = new_dish
-                new_amount.save(force_insert=True)
-                print >> sys.stderr, 'New amount', new_amount, new_amount.id
-                print >> sys.stderr, new_dish.contained_comestibles_set.all()
-                print >> sys.stderr, new_amount.containing_dish.contained_comestibles_set.all()
+                new_amount.save()
             return redirect('dish_detail', new_dish.id) # Redirect after POST
     else:
         form = DishDuplicateForm() # An unbound form
