@@ -18,6 +18,10 @@ class Household(models.Model):
     # Use is_active to allow people to rearrange households?
     # is_active = models.BooleanField(default=True)
 
+    def __unicode__(self):
+        return self.name
+
+
 # Also need an Invitation model
 
 
