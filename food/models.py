@@ -12,14 +12,14 @@ from django.contrib.auth.models import User
 
 # Quantities for Ingredient and Dish must be greater than 0, to avoid
 # dividing by 0 in calories calculations for Amount and Portion. (They
-# both have positive default values, but those are only used in model
-# forms.)
+# both have positive default values, but those are only used as initial
+# values in model forms.)(check this...)
 def validate_positive(value):
     if value <= 0:
         raise ValidationError(u'Enter a number greater than 0')
 
 # Quantities for Amount and Portion can be 0 or more, to avoid having to enter
-# more exact quantities initially.
+# accurate quantities initially.
 # Calories for Ingredient can be 0, to allow e.g. Water
 def validate_positive_or_zero(value):
     if value < 0:
