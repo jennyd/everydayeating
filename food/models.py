@@ -153,6 +153,11 @@ class Amount(models.Model):
         return unicode(self.contained_comestible)
 
     def clone(self):
+        """
+        Returns an unsaved instance the same as this one (including
+        containing_dish; the caller probably needs to change this) and no
+        primary key / id set.
+        """
         result = Amount()
         # the caller probably wants to change containing_dish afterwards
         result.containing_dish = self.containing_dish
