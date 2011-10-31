@@ -99,7 +99,8 @@ class Dish(Comestible):
     # - add something to validation?
     # - or make both blank=False and null=False?
     quantity = models.DecimalField(max_digits=8, decimal_places=2, blank=True,
-                                   default=500, null=True)
+                                   default=500, null=True,
+                                   validators=[validate_positive])
     date_cooked = models.DateField("Cooked on:", default=datetime.date.today)
     household = models.ForeignKey(Household, related_name='dishes')
     cooks = models.ManyToManyField(User, related_name='cooked_dishes')
@@ -167,7 +168,8 @@ class Amount(models.Model):
     contained_comestible = models.ForeignKey(Comestible,
         related_name='containing_dishes_set') # shorten this, align better
     quantity = models.DecimalField(max_digits=8, decimal_places=2, blank=True,
-                                   default=0, null=True)
+                                   default=0, null=True,
+                                   validators=[validate_positive_or_zero])
     calories = models.DecimalField(max_digits=8, decimal_places=2, null=True,
                                    editable=False)
 
@@ -296,7 +298,8 @@ class Portion(models.Model):
     meal = models.ForeignKey(Meal)
     quantity = models.DecimalField("the quantity eaten", max_digits=8,
                                    decimal_places=2, blank=True, default=0,
-                                   null=True)
+                                   null=True,
+                                   validators=[validate_positive_or_zero])
     calories = models.DecimalField(max_digits=8, decimal_places=2, null=True,
                                    editable=False)
 
