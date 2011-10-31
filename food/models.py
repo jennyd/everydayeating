@@ -5,9 +5,25 @@ from django.db import models
 from django.db.models import Sum
 from django.db.models.signals import post_save, post_delete
 from django.dispatch import receiver
+from django.core.exceptions import ValidationError
 from django.forms import ModelForm
 from django.contrib.auth.models import User
 
+
+# Quantities for Ingredient and Dish must be greater than 0, to avoid
+# dividing by 0 in calories calculations for Amount and Portion. (They
+# both have positive default values, but those are only used in model
+# forms.)
+def validate_positive(value):
+    if value <= 0:
+        raise ValidationError(u'Enter a number greater than 0')
+
+# Quantities for Amount and Portion can be 0 or more, to avoid having to enter
+# more exact quantities initially.
+# Calories for Ingredient can be 0, to allow e.g. Water
+def validate_positive_or_zero(value):
+    if value < 0:
+        raise ValidationError(u'Enter a number not less than 0')
 
 
 class Household(models.Model):
@@ -52,8 +68,10 @@ class Comestible(models.Model):
 
 class Ingredient(Comestible):
     name = models.CharField(max_length=200, unique=True)
-    quantity = models.DecimalField(max_digits=8, decimal_places=2, default=100)
-    calories = models.DecimalField(max_digits=8, decimal_places=2)
+    quantity = models.DecimalField(max_digits=8, decimal_places=2, default=100,
+                                   validators=[validate_positive])
+    calories = models.DecimalField(max_digits=8, decimal_places=2,
+                                   validators=[validate_positive_or_zero])
 
     def __unicode__(self):
         return self.name
