@@ -14,11 +14,6 @@
 #             - should be validated by ModelForm, since portion.quantity is
 #               editable
 
-# validate_positive for all quantity fields & Ingredient.calories
-#    - other calories should also always be positive, but should only be
-#        calculated from quantities so shouldn't need to validate them
-#        separately
-
 # make most views login_required and restricted to user.household
 # and make household- and user-based views & templates
 
