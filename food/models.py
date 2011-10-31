@@ -214,6 +214,22 @@ class Meal(models.Model):
     def __unicode__(self):
         return self.name+u" on "+unicode(self.date)
 
+    def clone(self):
+        """
+        Returns an unsaved instance the same as this one, but with no
+        comestibles (and therefore no portions) and no primary key / id set.
+        """
+        result = Meal()
+        result.name = self.name
+        # the caller probably wants to change date afterwards
+        result.date = self.date
+        result.time = self.time
+        result.household = self.household
+        result.user = self.user
+        # We're ignoring 'comestibles' because it's ManyToMany
+        result.calories = self.calories
+        return result
+
     def save(self, *args, **kwargs):
         # Calculate calories for the meal if it already has portions
         # New meal needs to be saved again after portions are created to
@@ -268,6 +284,19 @@ class Portion(models.Model):
 
     def __unicode__(self):
         return unicode(self.comestible)
+
+    def clone(self):
+        """
+        Returns an unsaved instance the same as this one (including meal; the
+        caller probably needs to change this) and no primary key / id set.
+        """
+        result = Portion()
+        result.comestible = self.comestible
+        # the caller probably wants to change meal afterwards
+        result.meal = self.meal
+        result.quantity = self.quantity
+        result.calories = self.calories
+        return result
 
     def save(self, *args, **kwargs):
         # Calculate calories for the portion
