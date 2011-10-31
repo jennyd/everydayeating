@@ -2,7 +2,7 @@ from django.conf.urls.defaults import *
 from django.contrib.auth.views import login, logout
 from django.views.generic import TemplateView, ListView, CreateView, DetailView, UpdateView, DeleteView, ArchiveIndexView, YearArchiveView
 
-from food.views import ingredient_manage, dish_amounts_form, meal_portion_form, dish_multiply, dish_duplicate, MealMonthArchiveView, MealWeekArchiveView, MealDayArchiveView
+from food.views import ingredient_manage, dish_amounts_form, meal_portion_form, dish_multiply, dish_duplicate, meal_duplicate, MealMonthArchiveView, MealWeekArchiveView, MealDayArchiveView
 from food.models import Ingredient, Dish, Amount, Meal, Portion
 
 # Uncomment the next two lines to enable the admin:
@@ -20,6 +20,7 @@ urlpatterns = patterns('food.views',
 
     url(r'^meals/add/$', "meal_portion_form", name="meal_add"),
     url(r'^meals/(?P<meal_id>\d+)/edit/$', "meal_portion_form", name="meal_edit"),
+    url(r'^meals/(?P<meal_id>\d+)/duplicate/$', "meal_duplicate", name="meal_duplicate"),
 )
 
 urlpatterns += patterns('',

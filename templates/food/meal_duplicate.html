@@ -1,0 +1,14 @@
+{% extends "food/base.html" %}
+{% load humanize %}
+
+{% block content %}
+
+    <h2>{{ meal.user }}'s {{ meal.name }}, {{ meal.date|naturalday }} at {{ meal.time }}</h2>
+
+    <form action="." method="post">{% csrf_token %}
+    {{ form.as_p }}
+    <input type="submit" value="Submit" />
+    </form>
+    <a href="{% url meal_detail meal.id %}">Cancel</a>
+
+{% endblock content %}

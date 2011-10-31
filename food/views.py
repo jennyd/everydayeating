@@ -155,6 +155,46 @@ def dish_duplicate(request, dish_id):
         context_instance=RequestContext(request) # needed for csrf token
     )
 
+class MealDuplicateForm(forms.Form):
+    # form for entry of date for new instance of the meal
+    date = forms.DateField(initial=datetime.date.today, label='Eat this meal again on')
+    # also get new name? e.g. for lunch as dinner
+    # and another user? would make it easier to create the same meal for more
+    # than one user
+
+def meal_duplicate(request, meal_id):
+    # Creates a copy of meal with same portions, eaten on the given date.
+
+    # This creates new portions of the original dish, which shouldn't be
+    # allowed in general - if portion.comestible.is_dish, then it should ask
+    # whether to use an existing portion or create a new one, if the dish still
+    # has a remaining quantity, or whether to cook the dish again
+    old_meal = Meal.objects.get(pk=meal_id) # select_related?
+    if request.method == 'POST': # If the form has been submitted...
+        form = MealDuplicateForm(request.POST) # A form bound to the POST data
+        if form.is_valid(): # All validation rules pass
+            # Process the data in form.cleaned_data
+            date = form.cleaned_data['date']
+            # Create a new instance of the old meal using the given date
+            new_meal = old_meal.clone()
+            new_meal.date = date
+            new_meal.save()
+            for old_portion in old_meal.portion_set.all(): # use meal.comestibles?
+                new_portion = old_portion.clone()
+                new_portion.meal = new_meal
+                new_portion.save()
+            return redirect('meal_detail', new_meal.id) # Redirect after POST
+    else:
+        form = MealDuplicateForm() # An unbound form
+#        print >> sys.stderr, form
+
+    return render_to_response('food/meal_duplicate.html', {
+        'form': form,
+        'meal': old_meal,},
+        context_instance=RequestContext(request) # needed for csrf token
+    )
+
+
 def get_sum_day_calories(day):
     """
     Return the total calories in all meals on a date
