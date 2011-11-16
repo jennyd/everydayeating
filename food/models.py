@@ -319,6 +319,27 @@ class Portion(models.Model):
         result.calories = self.calories
         return result
 
+    def clean(self):
+        """
+        Ensures that if a portion is of a dish, its quantity is not greater
+        than the available quantity of the dish (the dish's remaining quantity
+        plus the portion's saved quantity, if it exists).
+        """
+        if self.comestible.is_dish:
+            remaining_quantity = self.comestible.dish.get_remaining_quantity()
+            # Check if this portion is already saved, and get the saved
+            # quantity if so.
+            if self.id:
+                saved_quantity = Portion.objects.get(pk=self.id).quantity
+            else:
+                saved_quantity = 0
+            # Compare the portion quantity to the available quantity of the dish
+            if remaining_quantity + saved_quantity - self.quantity < 0:
+                unit = self.comestible.dish.unit
+                remaining_quantity += saved_quantity
+                raise ValidationError, u"This portion's quantity is greater than the remaining quantity of the dish (%s %s)." % (remaining_quantity, unit)
+
+
     def save(self, *args, **kwargs):
         # Calculate calories for the portion
         self.calories = (self.quantity *
