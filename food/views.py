@@ -279,23 +279,6 @@ def get_week_starts_in_month(month_start_date):
     """
     Return a list of datetime objects representing the first day of every
     week containing a day of the month, given the month_start_date
-
-    >>> month_start_date = datetime.datetime(2011, 11, 1, 0, 0)
-    >>> get_week_starts_in_month(month_start_date)
-    [datetime.datetime(2011, 10, 31, 0, 0),
-     datetime.datetime(2011, 11, 7, 0, 0),
-     datetime.datetime(2011, 11, 14, 0, 0),
-     datetime.datetime(2011, 11, 21, 0, 0),
-     datetime.datetime(2011, 11, 28, 0, 0)]
-
-    >>> month_start_date = datetime.datetime(2011, 12, 1, 0, 0)
-    >>> get_week_starts_in_month(month_start_date)
-    [datetime.datetime(2011, 11, 28, 0, 0),
-     datetime.datetime(2011, 12, 5, 0, 0),
-     datetime.datetime(2011, 12, 12, 0, 0),
-     datetime.datetime(2011, 12, 19, 0, 0),
-     datetime.datetime(2011, 12, 26, 0, 0)]
-
     """
     week_start = month_start_date - datetime.timedelta(month_start_date.weekday())
     # Could use _month_bounds() (from dates generic views) here instead
