@@ -12,6 +12,7 @@
     <form action="." method="post">{% csrf_token %}
     {{ form.as_p }}
     {{ formset.management_form }}
+    {{ formset.non_form_errors }}
     {% for form in formset %}
         <li>{{ form }}</li>
     {% endfor %}

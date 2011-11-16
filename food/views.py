@@ -2,11 +2,12 @@ import datetime
 import sys
 
 from django import forms
+from django.core.exceptions import ValidationError
 from django.shortcuts import HttpResponse, HttpResponseRedirect, render_to_response, get_object_or_404, redirect
 from django.template import RequestContext
 from django.http import Http404
 from django.views.generic import MonthArchiveView, WeekArchiveView, DayArchiveView
-from django.forms.models import modelformset_factory, inlineformset_factory
+from django.forms.models import modelformset_factory, BaseInlineFormSet, inlineformset_factory
 
 from food.models import Ingredient, Dish, DishForm, Amount, Meal, MealForm, Portion
 
@@ -56,8 +57,59 @@ def dish_amounts_form(request, dish_id=None):
         context_instance=RequestContext(request) # needed for csrf token
     )
 
+class BaseMealInlineFormSet(BaseInlineFormSet):
+    def clean(self):
+        '''
+        Ensures that if there are multiple portions of a dish in a meal, their
+        total quantity is not greater than the available quantity of the dish
+        (the dish's remaining quantity plus the portions' saved quantities, if
+        they exist).
+        '''
+        super(BaseInlineFormSet, self).clean()
+        if any(self.errors):
+            # Don't bother validating the formset unless each form is valid on
+            # its own
+            return
+        # Make a list of dicts containing the comestible and quantity from each
+        # (not deleted) form in the formset, and the portion's saved quantity
+        # (set to 0 if it isn't yet saved)
+        portions = []
+        for form in self.forms:
+            if (form not in self.deleted_forms) and form.cleaned_data:
+                portion = {'comestible' : form.cleaned_data['comestible'],
+                           'quantity': form.cleaned_data['quantity']}
+                try:
+                    saved_portion = Portion.objects.get(pk=form.instance.id)
+                    portion['saved_quantity'] = saved_portion.quantity
+                except Portion.DoesNotExist:
+                    portion['saved_quantity'] = 0
+                portions.append(portion)
+        # Make a list of dicts containing each comestible only once with its
+        # combined quantities and saved quantities
+        unique_portions = []
+        while portions:
+            portion = portions.pop()
+            for p in portions:
+                if p['comestible'] == portion['comestible']:
+                    portion['quantity'] += p['quantity']
+                    portion['saved_quantity'] += p['saved_quantity']
+                    portions.remove(p)
+            unique_portions.append(portion)
+        for p in unique_portions:
+            # Compare the portion quantity to the available quantity of the dish
+            # (mostly copied from Portion.clean()...)
+            if p['comestible'].is_dish:
+                dish = p['comestible'].dish
+                remaining_quantity = dish.get_remaining_quantity()
+                if (remaining_quantity + p['saved_quantity'] - p['quantity']) < 0:
+                    unit = dish.unit
+                    remaining_quantity += p['saved_quantity']
+                    raise ValidationError, u"The remaining quantity of %s (%s %s) is less than the total quantity of it in this meal." % (dish, remaining_quantity, unit)
+
+
 def meal_portion_form(request, meal_id=None):
-    MealFormSet = inlineformset_factory(Meal, Portion, extra=6)
+    MealFormSet = inlineformset_factory(Meal, Portion, extra=6,
+                                        formset=BaseMealInlineFormSet)
     if meal_id:
         meal = Meal.objects.get(pk=meal_id)
     else:
