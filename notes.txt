@@ -6,13 +6,14 @@
 #         never be less than 0
 #     - portions are created/edited by:
 #         - meal_portion_form view, using inline formset
-#             - should be validated by ModelForm, since portion.quantity is
-#               editable
+#             - portion.quantity is validated by ModelForm, since it's editable
 #         - meal_duplicate, using portion.clone() then portion.save()
 #             - not automatically validated on save - where to add validation?
-#         - dish_portions (not yet written), perhaps using inline formset?
+#         - dish_portions view (not yet written), perhaps using inline formset?
 #             - should be validated by ModelForm, since portion.quantity is
 #               editable
+#     - also needs to validate when dish.quantity changes, and ask whether to
+#         edit portions if they exceed the new dish.quantity
 
 # make most views login_required and restricted to user.household
 # and make household- and user-based views & templates
@@ -22,6 +23,10 @@
 # convert a portion of a dish to an amount in another dish
 
 # convert some portions from a meal to a new dish with amounts
+
+# prevent a dish having the same name as an ingredient
+
+# tests...
 
 ##########################################################
 #### planned apps
