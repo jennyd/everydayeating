@@ -122,7 +122,7 @@ INSTALLED_APPS = (
     # 'django.contrib.admindocs',
     'django.contrib.humanize',
     'south',
-    'django_pdb',
+#    'django_pdb',
     'food',
 )
 
