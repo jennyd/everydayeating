@@ -84,10 +84,6 @@ class FoodViewsTestCase(TestCase):
         self.assertTemplateUsed(response, 'food/ingredient_list.html')
         self.assertTemplateUsed(response, 'food/base.html')
         self.assertTrue('ingredient_list' in response.context)
-#        print response.templates
-#        for template in response.templates:
-#            print template.name
-#        print response.context
 
     def test_dish_list(self):
         response = self.client.get(reverse('dish_list'))
@@ -96,10 +92,6 @@ class FoodViewsTestCase(TestCase):
         self.assertTemplateUsed(response, 'food/dish_list.html')
         self.assertTemplateUsed(response, 'food/base.html')
         self.assertTrue('dish_list' in response.context)
-#        print response.templates
-#        for template in response.templates:
-#            print template.name
-#        print response.context
 
     def test_meal_list(self):
         response = self.client.get(reverse('meal_list'))
@@ -108,10 +100,6 @@ class FoodViewsTestCase(TestCase):
         self.assertTemplateUsed(response, 'food/meal_list.html')
         self.assertTemplateUsed(response, 'food/base.html')
         self.assertTrue('meal_list' in response.context)
-#        print response.templates
-#        for template in response.templates:
-#            print template.name
-#        print response.context
 
 
 class DateViewsTestCase(TestCase):
