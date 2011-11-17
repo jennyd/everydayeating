@@ -116,19 +116,21 @@ class FoodViewsTestCase(TestCase):
 
         # Try to add bad ingredients
 
-        # Send an invalid quantity value
+        # Send invalid quantity and calories values
         # Why doesn't this raise a ValidationError?
         response = self.client.post(reverse('ingredient_add'),
                                     data={'name': 'Test ingredient bad',
-                                          'quantity': -100,
+                                          'quantity': 0,
                                           'unit': 'g',
-                                          'calories': 75})
+                                          'calories': -75})
         self.assertEqual(response.status_code, 200)
         self.assertEqual(len(response.templates), 2)
         self.assertTemplateUsed(response, 'food/ingredient_form.html')
         self.assertTemplateUsed(response, 'food/base.html')
         self.assertTrue(u'Enter a number greater than 0' in
                                 response.context['form']['quantity'].errors)
+        self.assertTrue(u'Enter a number not less than 0' in
+                                response.context['form']['calories'].errors)
         self.assertRaises(ObjectDoesNotExist, Ingredient.objects.get,
                                 name='Test ingredient bad')
 
