@@ -30,6 +30,30 @@ class FoodViewsTestCase(TestCase):
 #            print template.name
 #        print response.context
 
+    def test_dish_list(self):
+        response = self.client.get(reverse('dish_list'))
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(len(response.templates), 2)
+        self.assertEqual(response.templates[0].name, 'food/dish_list.html')
+        self.assertEqual(response.templates[1].name, 'food/base.html')
+        self.assertTrue('dish_list' in response.context)
+#        print response.templates
+#        for template in response.templates:
+#            print template.name
+#        print response.context
+
+    def test_meal_list(self):
+        response = self.client.get(reverse('meal_list'))
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(len(response.templates), 2)
+        self.assertEqual(response.templates[0].name, 'food/meal_list.html')
+        self.assertEqual(response.templates[1].name, 'food/base.html')
+        self.assertTrue('meal_list' in response.context)
+#        print response.templates
+#        for template in response.templates:
+#            print template.name
+#        print response.context
+
 
 class DateViewsTestCase(TestCase):
     def test_get_week_starts_in_month(self):
