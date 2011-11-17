@@ -11,8 +11,8 @@ class FoodViewsTestCase(TestCase):
         response = self.client.get(reverse('food_index'))
         self.assertEqual(response.status_code, 200)
         self.assertEqual(len(response.templates), 2)
-        self.assertEqual(response.templates[0].name, 'food/food_index.html')
-        self.assertEqual(response.templates[1].name, 'food/base.html')
+        self.assertTemplateUsed(response, 'food/food_index.html')
+        self.assertTemplateUsed(response, 'food/base.html')
 #        print response.templates
 #        for template in response.templates:
 #            print template.name
@@ -22,8 +22,8 @@ class FoodViewsTestCase(TestCase):
         response = self.client.get(reverse('ingredient_list'))
         self.assertEqual(response.status_code, 200)
         self.assertEqual(len(response.templates), 2)
-        self.assertEqual(response.templates[0].name, 'food/ingredient_list.html')
-        self.assertEqual(response.templates[1].name, 'food/base.html')
+        self.assertTemplateUsed(response, 'food/ingredient_list.html')
+        self.assertTemplateUsed(response, 'food/base.html')
         self.assertTrue('ingredient_list' in response.context)
 #        print response.templates
 #        for template in response.templates:
@@ -34,8 +34,8 @@ class FoodViewsTestCase(TestCase):
         response = self.client.get(reverse('dish_list'))
         self.assertEqual(response.status_code, 200)
         self.assertEqual(len(response.templates), 2)
-        self.assertEqual(response.templates[0].name, 'food/dish_list.html')
-        self.assertEqual(response.templates[1].name, 'food/base.html')
+        self.assertTemplateUsed(response, 'food/dish_list.html')
+        self.assertTemplateUsed(response, 'food/base.html')
         self.assertTrue('dish_list' in response.context)
 #        print response.templates
 #        for template in response.templates:
@@ -46,8 +46,8 @@ class FoodViewsTestCase(TestCase):
         response = self.client.get(reverse('meal_list'))
         self.assertEqual(response.status_code, 200)
         self.assertEqual(len(response.templates), 2)
-        self.assertEqual(response.templates[0].name, 'food/meal_list.html')
-        self.assertEqual(response.templates[1].name, 'food/base.html')
+        self.assertTemplateUsed(response, 'food/meal_list.html')
+        self.assertTemplateUsed(response, 'food/base.html')
         self.assertTrue('meal_list' in response.context)
 #        print response.templates
 #        for template in response.templates:
