@@ -28,6 +28,8 @@
 
 # tests...
 
+# add a comment field to Amount, for e.g. preparation instructions
+
 ##########################################################
 #### planned apps
 
