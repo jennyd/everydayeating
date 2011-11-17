@@ -1,16 +1,14 @@
 import datetime
 
 from django.core.urlresolvers import reverse
-from django.test.client import Client
-from django.utils import unittest # to make sure it's using the new unittest2
+from django.test import TestCase
 
 from food.views import get_week_starts_in_month
 
 
-class FoodViewsTestCase(unittest.TestCase):
+class FoodViewsTestCase(TestCase):
     def test_food_index(self):
-        c = Client()
-        response = c.get(reverse('food_index'))
+        response = self.client.get(reverse('food_index'))
         self.assertEqual(response.status_code, 200)
         self.assertEqual(len(response.templates), 2)
         self.assertEqual(response.templates[0].name, 'food/food_index.html')
@@ -21,7 +19,7 @@ class FoodViewsTestCase(unittest.TestCase):
 #        print response.context
 
 
-class DateViewsTestCase(unittest.TestCase):
+class DateViewsTestCase(TestCase):
     def test_get_week_starts_in_month(self):
         # A normal month:
         month_start_date = datetime.datetime(2011, 11, 1, 0, 0)
