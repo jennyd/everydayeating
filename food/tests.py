@@ -1,9 +1,29 @@
 import datetime
 
+from django.core.exceptions import ValidationError
 from django.core.urlresolvers import reverse
 from django.test import TestCase
 
+from food.models import validate_positive, validate_positive_or_zero
 from food.views import get_week_starts_in_month
+
+
+class ValidatorsTestCase(TestCase):
+    def test_validate_positive(self):
+        validate_positive(1)
+        self.assertRaises(ValidationError, validate_positive, 0)
+        self.assertRaises(ValidationError, validate_positive, -1)
+#        # This would be helpful if there were more than one point in the
+#        # function where the exception could be raised, but it's not necessary
+#        # here.
+#        with self.assertRaises(ValidationError) as context:
+#            validate_positive(0)
+#            self.assertEqual(context.exception.message, u'Enter a number greater than 0')
+
+    def test_validate_positive_or_zero(self):
+        validate_positive_or_zero(1)
+        validate_positive_or_zero(0)
+        self.assertRaises(ValidationError, validate_positive, -1)
 
 
 class FoodViewsTestCase(TestCase):
