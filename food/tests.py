@@ -18,6 +18,18 @@ class FoodViewsTestCase(TestCase):
 #            print template.name
 #        print response.context
 
+    def test_ingredient_list(self):
+        response = self.client.get(reverse('ingredient_list'))
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(len(response.templates), 2)
+        self.assertEqual(response.templates[0].name, 'food/ingredient_list.html')
+        self.assertEqual(response.templates[1].name, 'food/base.html')
+        self.assertTrue('ingredient_list' in response.context)
+#        print response.templates
+#        for template in response.templates:
+#            print template.name
+#        print response.context
+
 
 class DateViewsTestCase(TestCase):
     def test_get_week_starts_in_month(self):
