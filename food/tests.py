@@ -134,6 +134,23 @@ class FoodViewsTestCase(TestCase):
         self.assertRaises(ObjectDoesNotExist, Ingredient.objects.get,
                                 name='Test ingredient bad')
 
+    def test_ingredient_detail(self):
+        ingredient = Ingredient.objects.create(name = 'Test ingredient',
+                                               quantity = 100,
+                                               unit = 'g',
+                                               calories = 75)
+        response = self.client.get(reverse('ingredient_detail', kwargs={'pk': ingredient.id}))
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(len(response.templates), 2)
+        self.assertTemplateUsed(response, 'food/ingredient_detail.html')
+        self.assertTemplateUsed(response, 'food/base.html')
+        self.assertTrue('ingredient' in response.context)
+
+        # Try to display an ingredient which doesn't exist
+        response = self.client.get(reverse('ingredient_detail', kwargs={'pk': 9999999999}))
+        self.assertEqual(response.status_code, 404)
+        self.assertTemplateUsed(response, '404.html')
+
     def test_dish_list(self):
         response = self.client.get(reverse('dish_list'))
         self.assertEqual(response.status_code, 200)
