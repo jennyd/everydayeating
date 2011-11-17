@@ -114,9 +114,7 @@ class FoodViewsTestCase(TestCase):
         # is_dish should be set to False on save (default True)
         self.assertFalse(ingredient.is_dish)
 
-        # Try to add bad ingredients
-
-        # Send invalid quantity and calories values
+        # Try to add an ingredient with invalid quantity and calories values
         # Why doesn't this raise a ValidationError?
         response = self.client.post(reverse('ingredient_add'),
                                     data={'name': 'Test ingredient bad',
@@ -139,7 +137,8 @@ class FoodViewsTestCase(TestCase):
                                                quantity = 100,
                                                unit = 'g',
                                                calories = 75)
-        response = self.client.get(reverse('ingredient_detail', kwargs={'pk': ingredient.id}))
+        response = self.client.get(reverse('ingredient_detail',
+                                           kwargs={'pk': ingredient.id}))
         self.assertEqual(response.status_code, 200)
         self.assertEqual(len(response.templates), 2)
         self.assertTemplateUsed(response, 'food/ingredient_detail.html')
@@ -147,7 +146,65 @@ class FoodViewsTestCase(TestCase):
         self.assertTrue('ingredient' in response.context)
 
         # Try to display an ingredient which doesn't exist
-        response = self.client.get(reverse('ingredient_detail', kwargs={'pk': 9999999999}))
+        fake_pk = 9999999999
+        response = self.client.get(reverse('ingredient_detail',
+                                           kwargs={'pk': fake_pk}))
+        self.assertEqual(response.status_code, 404)
+        self.assertTemplateUsed(response, '404.html')
+
+    def test_ingredient_edit(self):
+        ingredient = Ingredient.objects.create(name = 'Test ingredient',
+                                               quantity = 100,
+                                               unit = 'g',
+                                               calories = 75)
+        response = self.client.get(reverse('ingredient_edit',
+                                           kwargs={'pk': ingredient.id}))
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(len(response.templates), 2)
+        self.assertTemplateUsed(response, 'food/ingredient_form.html')
+        self.assertTemplateUsed(response, 'food/base.html')
+        self.assertTrue('ingredient' in response.context)
+        self.assertTrue('form' in response.context)
+        # Is this necessary? The form is created by the generic view anyway...
+        self.assertIsInstance(response.context['form'], ModelForm)
+
+        # Edit an ingredient correctly
+        response = self.client.post(reverse('ingredient_edit',
+                                           kwargs={'pk': ingredient.id}),
+                                    data={'name': 'Test ingredient',
+                                          'quantity': 100,
+                                          'unit': 'g',
+                                          'calories': 5},
+                                    follow=True)
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(len(response.templates), 2)
+        # Redirects to ingredient_list
+        self.assertTemplateUsed(response, 'food/ingredient_list.html')
+        self.assertTemplateUsed(response, 'food/base.html')
+        ingredient = Ingredient.objects.get(pk=ingredient.id)
+        self.assertEqual(ingredient.calories, 5)
+
+        # Try to edit an ingredient with invalid quantity and calories values
+        # Why doesn't this raise a ValidationError?
+        response = self.client.post(reverse('ingredient_edit',
+                                           kwargs={'pk': ingredient.id}),
+                                    data={'quantity': 0,
+                                          'calories': -75},
+                                    follow=True)
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(len(response.templates), 2)
+        self.assertTemplateUsed(response, 'food/ingredient_form.html')
+        self.assertTemplateUsed(response, 'food/base.html')
+        self.assertTrue(u'Enter a number greater than 0' in
+                                response.context['form']['quantity'].errors)
+        self.assertTrue(u'Enter a number not less than 0' in
+                                response.context['form']['calories'].errors)
+
+        # Try to edit an ingredient which doesn't exist
+        fake_pk = 9999999999
+        self.assertRaises(ObjectDoesNotExist, Ingredient.objects.get, pk=fake_pk)
+        response = self.client.get(reverse('ingredient_edit',
+                                           kwargs={'pk': pk}))
         self.assertEqual(response.status_code, 404)
         self.assertTemplateUsed(response, '404.html')
 
