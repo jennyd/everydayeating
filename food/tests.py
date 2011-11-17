@@ -1,11 +1,12 @@
 import datetime
 
-from django.core.exceptions import ValidationError
+from django.core.exceptions import ValidationError, ObjectDoesNotExist
 from django.core.urlresolvers import reverse
 from django.contrib.auth.models import User
+from django.forms.models import ModelForm
 from django.test import TestCase
 
-from food.models import validate_positive, validate_positive_or_zero
+from food.models import validate_positive, validate_positive_or_zero, Ingredient
 from food.views import get_week_starts_in_month
 
 
@@ -84,6 +85,82 @@ class FoodViewsTestCase(TestCase):
         self.assertTemplateUsed(response, 'food/ingredient_list.html')
         self.assertTemplateUsed(response, 'food/base.html')
         self.assertTrue('ingredient_list' in response.context)
+
+    def test_ingredient_add(self):
+        response = self.client.get(reverse('ingredient_add'))
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(len(response.templates), 2)
+        self.assertTemplateUsed(response, 'food/ingredient_form.html')
+        self.assertTemplateUsed(response, 'food/base.html')
+        self.assertTrue('form' in response.context)
+        # Is this helpful? It only uses the generic view anyway...
+        self.assertIsInstance(response.context['form'], ModelForm)
+
+        # Add a good ingredient
+        response = self.client.post(reverse('ingredient_add'),
+                                    data={'name': 'Test ingredient good',
+                                          'quantity': 100,
+                                          'unit': 'g',
+                                          'calories': 75},
+                                    follow=True)
+#        print response.redirect_chain
+        # Add more here to check redirects?
+        # Redirects to ingredient_list
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(len(response.templates), 2)
+        self.assertTemplateUsed(response, 'food/ingredient_list.html')
+        self.assertTemplateUsed(response, 'food/base.html')
+        ingredient = Ingredient.objects.get(name='Test ingredient good')
+        # is_dish should be set to False on save (default True)
+        self.assertFalse(ingredient.is_dish)
+
+        #### Try to add bad ingredients (this should all be fine, since this
+        #### is all from the generic view)
+        # Send no POST data
+        response = self.client.post(reverse('ingredient_add'),
+                                    data={})
+        # Only checking one form field here
+        self.assertTrue(u'This field is required.' in
+                                response.context['form']['name'].errors)
+        self.assertRaises(ObjectDoesNotExist, Ingredient.objects.get,
+                                name='Test ingredient bad')
+
+        # Send incomplete POST data
+        response = self.client.post(reverse('ingredient_add'),
+                                    data={'name': 'Test ingredient bad',
+                                          'unit': 'g',
+                                          'calories': 75})
+        self.assertTrue(u'This field is required.' in
+                                response.context['form']['quantity'].errors)
+        self.assertRaises(ObjectDoesNotExist, Ingredient.objects.get,
+                                name='Test ingredient bad')
+
+        # Send an invalid unit choice
+        response = self.client.post(reverse('ingredient_add'),
+                                    data={'name': 'Test ingredient bad',
+                                          'quantity': 100,
+                                          'unit': 'foo',
+                                          'calories': 75})
+        self.assertTrue(u'Select a valid choice. foo is not one of the available choices.' in
+                                response.context['form']['unit'].errors)
+        self.assertRaises(ObjectDoesNotExist, Ingredient.objects.get,
+                                name='Test ingredient bad')
+
+        # Send an invalid quantity value
+        # Why doesn't this raise a ValidationError?
+        response = self.client.post(reverse('ingredient_add'),
+                                    data={'name': 'Test ingredient bad',
+                                          'quantity': -100,
+                                          'unit': 'g',
+                                          'calories': 75})
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(len(response.templates), 2)
+        self.assertTemplateUsed(response, 'food/ingredient_form.html')
+        self.assertTemplateUsed(response, 'food/base.html')
+        self.assertTrue(u'Enter a number greater than 0' in
+                                response.context['form']['quantity'].errors)
+        self.assertRaises(ObjectDoesNotExist, Ingredient.objects.get,
+                                name='Test ingredient bad')
 
     def test_dish_list(self):
         response = self.client.get(reverse('dish_list'))
