@@ -93,7 +93,7 @@ class FoodViewsTestCase(TestCase):
         self.assertTemplateUsed(response, 'food/ingredient_form.html')
         self.assertTemplateUsed(response, 'food/base.html')
         self.assertTrue('form' in response.context)
-        # Is this helpful? It only uses the generic view anyway...
+        # Is this necessary? The form is created by the generic view anyway...
         self.assertIsInstance(response.context['form'], ModelForm)
 
         # Add a good ingredient
@@ -114,37 +114,7 @@ class FoodViewsTestCase(TestCase):
         # is_dish should be set to False on save (default True)
         self.assertFalse(ingredient.is_dish)
 
-        #### Try to add bad ingredients (this should all be fine, since this
-        #### is all from the generic view)
-        # Send no POST data
-        response = self.client.post(reverse('ingredient_add'),
-                                    data={})
-        # Only checking one form field here
-        self.assertTrue(u'This field is required.' in
-                                response.context['form']['name'].errors)
-        self.assertRaises(ObjectDoesNotExist, Ingredient.objects.get,
-                                name='Test ingredient bad')
-
-        # Send incomplete POST data
-        response = self.client.post(reverse('ingredient_add'),
-                                    data={'name': 'Test ingredient bad',
-                                          'unit': 'g',
-                                          'calories': 75})
-        self.assertTrue(u'This field is required.' in
-                                response.context['form']['quantity'].errors)
-        self.assertRaises(ObjectDoesNotExist, Ingredient.objects.get,
-                                name='Test ingredient bad')
-
-        # Send an invalid unit choice
-        response = self.client.post(reverse('ingredient_add'),
-                                    data={'name': 'Test ingredient bad',
-                                          'quantity': 100,
-                                          'unit': 'foo',
-                                          'calories': 75})
-        self.assertTrue(u'Select a valid choice. foo is not one of the available choices.' in
-                                response.context['form']['unit'].errors)
-        self.assertRaises(ObjectDoesNotExist, Ingredient.objects.get,
-                                name='Test ingredient bad')
+        # Try to add bad ingredients
 
         # Send an invalid quantity value
         # Why doesn't this raise a ValidationError?
