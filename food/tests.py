@@ -2,6 +2,7 @@ import datetime
 
 from django.core.exceptions import ValidationError
 from django.core.urlresolvers import reverse
+from django.contrib.auth.models import User
 from django.test import TestCase
 
 from food.models import validate_positive, validate_positive_or_zero
@@ -37,6 +38,44 @@ class FoodViewsTestCase(TestCase):
 #        for template in response.templates:
 #            print template.name
 #        print response.context
+
+    def test_login(self):
+        # Create a user first.
+        user = User.objects.create_user('jenny', 'jenny@example.com', 'jenny')
+#        self.client.login(username='jenny', password='jenny')
+#        self.client.logout()
+        response = self.client.get(reverse('login'))
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(len(response.templates), 2)
+        self.assertTemplateUsed(response, 'food/login.html')
+        self.assertTemplateUsed(response, 'food/base.html')
+        # Not sure if it's necessary to check these - should all be provided by
+        # django.contrib.auth.views.login
+        self.assertTrue('csrf_token' in response.context)
+        self.assertTrue('form' in response.context)
+
+        response = self.client.post(reverse('login'),
+                                    data={'username': 'jenny',
+                                          'password': 'jenny'},
+                                    follow=False)
+        self.assertEqual(response.status_code, 302)
+        self.assertEqual(len(response.templates), 0)
+        response = self.client.post(reverse('login'),
+                                    data={'username': 'jenny',
+                                          'password': 'jenny'},
+                                    follow=True)
+#        print response.redirect_chain
+        # Redirects through a 404 here...
+        #### This isn't complete - login and logout aren't being done as shown
+        #### in the documentation - fix it first
+
+#        self.assertTemplateUsed(response, 'food/login.html')
+#        self.assertTemplateUsed(response, 'food/base.html')
+
+    def test_logout(self):
+        #### This isn't complete - login and logout aren't being done as shown
+        #### in the documentation - fix it first
+        pass
 
     def test_ingredient_list(self):
         response = self.client.get(reverse('ingredient_list'))
