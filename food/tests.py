@@ -104,7 +104,7 @@ class FoodViewsTestCase(TestCase):
                                           'calories': 75},
                                     follow=True)
 #        print response.redirect_chain
-        # Add more here to check redirects?
+        # FIXME Add more here to check redirects?
         # Redirects to ingredient_list
         self.assertEqual(response.status_code, 200)
         self.assertEqual(len(response.templates), 2)
@@ -115,7 +115,6 @@ class FoodViewsTestCase(TestCase):
         self.assertFalse(ingredient.is_dish)
 
         # Try to add an ingredient with invalid quantity and calories values
-        # Why doesn't this raise a ValidationError?
         response = self.client.post(reverse('ingredient_add'),
                                     data={'name': 'Test ingredient bad',
                                           'quantity': 0,
@@ -185,7 +184,6 @@ class FoodViewsTestCase(TestCase):
         self.assertEqual(ingredient.calories, 5)
 
         # Try to edit an ingredient with invalid quantity and calories values
-        # Why doesn't this raise a ValidationError?
         response = self.client.post(reverse('ingredient_edit',
                                            kwargs={'pk': ingredient.id}),
                                     data={'quantity': 0,
@@ -199,6 +197,7 @@ class FoodViewsTestCase(TestCase):
                                 response.context['form']['quantity'].errors)
         self.assertTrue(u'Enter a number not less than 0' in
                                 response.context['form']['calories'].errors)
+        # FIXME Check that the ingredient still has its initial values
 
         # Try to edit an ingredient which doesn't exist
         fake_pk = 9999999999
