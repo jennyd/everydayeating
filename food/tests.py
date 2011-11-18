@@ -6,7 +6,7 @@ from django.contrib.auth.models import User
 from django.forms.models import ModelForm
 from django.test import TestCase
 
-from food.models import validate_positive, validate_positive_or_zero, Ingredient
+from food.models import validate_positive, validate_positive_or_zero, Comestible, Ingredient
 from food.views import get_week_starts_in_month
 
 
@@ -242,6 +242,122 @@ class FoodViewsTestCase(TestCase):
                                            kwargs={'pk': fake_pk}))
         self.assertEqual(response.status_code, 404)
         self.assertTemplateUsed(response, '404.html')
+
+    def test_ingredient_manage(self):
+        ingredient_one = Ingredient.objects.create(name = 'Test ingredient 1',
+                                               quantity = 100,
+                                               unit = 'g',
+                                               calories = 75)
+        ingredient_two = Ingredient.objects.create(name = 'Test ingredient 2',
+                                               quantity = 100,
+                                               unit = 'ml',
+                                               calories = 828)
+        response = self.client.get(reverse('ingredient_manage'))
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(len(response.templates), 2)
+        self.assertTemplateUsed(response, 'food/ingredient_manage.html')
+        self.assertTemplateUsed(response, 'food/base.html')
+        self.assertTrue('formset' in response.context)
+        # FIXME what is this formset?
+        # self.assertIsInstance(response.context['formset'], #### )
+        # FIXME Check that it's using RequestContext
+
+        # Edit an ingredient correctly
+        response = self.client.post(reverse('ingredient_manage'),
+                                    data={'form-TOTAL_FORMS': 5,
+                                          'form-INITIAL_FORMS': 2,
+                                          'form-0-comestible_ptr': ingredient_one.id,
+                                          'form-0-name': 'Test ingredient 1',
+                                          'form-0-quantity': 100,
+                                          'form-0-unit': 'g',
+                                          'form-0-calories': 5, # was 75
+                                          'form-1-comestible_ptr': ingredient_two.id,
+                                          'form-1-name': 'Test ingredient 2',
+                                          'form-1-quantity': 100,
+                                          'form-1-unit': 'ml',
+                                          'form-1-calories': 828,
+                                          # Leave the default values for these
+                                          # fields unchanged
+                                          'form-2-quantity': 100,
+                                          'form-2-unit': 'g',
+                                          'form-3-quantity': 100,
+                                          'form-3-unit': 'g',
+                                          'form-4-quantity': 100,
+                                          'form-4-unit': 'g'},
+                                    follow=True)
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(len(response.templates), 2)
+        # Redirects to ingredient_list
+        self.assertTemplateUsed(response, 'food/ingredient_list.html')
+        self.assertTemplateUsed(response, 'food/base.html')
+        ingredient = Ingredient.objects.get(pk=ingredient_one.id)
+        self.assertEqual(ingredient.calories, 5)
+
+        # Try to edit an ingredient with invalid quantity and calories values
+        response = self.client.post(reverse('ingredient_manage'),
+                                    data={'form-TOTAL_FORMS': 5,
+                                          'form-INITIAL_FORMS': 2,
+                                          'form-0-comestible_ptr': ingredient_one.id,
+                                          'form-0-name': 'Test ingredient 1',
+                                          'form-0-quantity': 0, # was 100
+                                          'form-0-unit': 'g',
+                                          'form-0-calories': -75, # was 5
+                                          'form-1-comestible_ptr': ingredient_two.id,
+                                          'form-1-name': 'Test ingredient 2',
+                                          'form-1-quantity': 100,
+                                          'form-1-unit': 'ml',
+                                          'form-1-calories': 828,
+                                          # Leave the default values for these
+                                          # fields unchanged
+                                          'form-2-quantity': 100,
+                                          'form-2-unit': 'g',
+                                          'form-3-quantity': 100,
+                                          'form-3-unit': 'g',
+                                          'form-4-quantity': 100,
+                                          'form-4-unit': 'g'},
+                                    follow=True)
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(len(response.templates), 2)
+        self.assertTemplateUsed(response, 'food/ingredient_manage.html')
+        self.assertTemplateUsed(response, 'food/base.html')
+        self.assertTrue(u'Enter a number greater than 0' in
+                                response.context['formset'][0]['quantity'].errors)
+        self.assertTrue(u'Enter a number not less than 0' in
+                                response.context['formset'][0]['calories'].errors)
+        # FIXME Check that the ingredient still has its initial values
+
+        # Try to send a comestible_ptr which doesn't exist
+        fake_pk = 9999999999
+        self.assertRaises(ObjectDoesNotExist, Ingredient.objects.get,
+                                                      pk=fake_pk)
+        self.assertRaises(ObjectDoesNotExist, Comestible.objects.get,
+                                                      pk=fake_pk)
+        response = self.client.post(reverse('ingredient_manage'),
+                                    data={'form-TOTAL_FORMS': 5,
+                                          'form-INITIAL_FORMS': 2,
+                                          'form-0-comestible_ptr': ingredient_one.id,
+                                          'form-0-name': 'Test ingredient 1',
+                                          'form-0-quantity': 100,
+                                          'form-0-unit': 'g',
+                                          'form-0-calories': 5,
+                                          'form-1-comestible_ptr': fake_pk,
+                                          'form-1-name': 'Test ingredient 2',
+                                          'form-1-quantity': 100,
+                                          'form-1-unit': 'ml',
+                                          'form-1-calories': 828,
+                                          # Leave the default values for these
+                                          # fields unchanged
+                                          'form-2-quantity': 100,
+                                          'form-2-unit': 'g',
+                                          'form-3-quantity': 100,
+                                          'form-3-unit': 'g',
+                                          'form-4-quantity': 100,
+                                          'form-4-unit': 'g'},
+                                    follow=True)
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(len(response.templates), 2)
+        self.assertTemplateUsed(response, 'food/ingredient_manage.html')
+        self.assertTemplateUsed(response, 'food/base.html')
 
     def test_dish_list(self):
         response = self.client.get(reverse('dish_list'))
