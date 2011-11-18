@@ -202,9 +202,44 @@ class FoodViewsTestCase(TestCase):
 
         # Try to edit an ingredient which doesn't exist
         fake_pk = 9999999999
-        self.assertRaises(ObjectDoesNotExist, Ingredient.objects.get, pk=fake_pk)
+        self.assertRaises(ObjectDoesNotExist, Ingredient.objects.get,
+                                                      pk=fake_pk)
         response = self.client.get(reverse('ingredient_edit',
-                                           kwargs={'pk': pk}))
+                                           kwargs={'pk': fake_pk}))
+        self.assertEqual(response.status_code, 404)
+        self.assertTemplateUsed(response, '404.html')
+
+    def test_ingredient_delete(self):
+        ingredient = Ingredient.objects.create(name = 'Test ingredient',
+                                               quantity = 100,
+                                               unit = 'g',
+                                               calories = 75)
+        response = self.client.get(reverse('ingredient_delete',
+                                           kwargs={'pk': ingredient.id}))
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(len(response.templates), 2)
+        self.assertTemplateUsed(response, 'food/ingredient_confirm_delete.html')
+        self.assertTemplateUsed(response, 'food/base.html')
+        self.assertTrue('ingredient' in response.context)
+
+        # Delete an ingredient
+        response = self.client.post(reverse('ingredient_delete',
+                                           kwargs={'pk': ingredient.id}),
+                                    follow=True)
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(len(response.templates), 2)
+        # Redirects to ingredient_list
+        self.assertTemplateUsed(response, 'food/ingredient_list.html')
+        self.assertTemplateUsed(response, 'food/base.html')
+        self.assertRaises(ObjectDoesNotExist, Ingredient.objects.get,
+                                        pk=ingredient.id)
+
+        # Try to delete an ingredient which doesn't exist
+        fake_pk = 9999999999
+        self.assertRaises(ObjectDoesNotExist, Ingredient.objects.get,
+                                                      pk=fake_pk)
+        response = self.client.get(reverse('ingredient_delete',
+                                           kwargs={'pk': fake_pk}))
         self.assertEqual(response.status_code, 404)
         self.assertTemplateUsed(response, '404.html')
 
