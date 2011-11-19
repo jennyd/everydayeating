@@ -6,7 +6,7 @@ from django.contrib.auth.models import User
 from django.forms.models import ModelForm
 from django.test import TestCase
 
-from food.models import validate_positive, validate_positive_or_zero, Comestible, Ingredient
+from food.models import validate_positive, validate_positive_or_zero, Household, Comestible, Ingredient, Dish, Amount
 from food.views import get_week_starts_in_month
 
 
@@ -77,6 +77,9 @@ class FoodViewsTestCase(TestCase):
         #### This isn't complete - login and logout aren't being done as shown
         #### in the documentation - fix it first
         pass
+
+################################################################################
+# Ingredient views tests
 
     def test_ingredient_list(self):
         response = self.client.get(reverse('ingredient_list'))
@@ -357,6 +360,10 @@ class FoodViewsTestCase(TestCase):
         self.assertEqual(len(response.templates), 2)
         self.assertTemplateUsed(response, 'food/ingredient_manage.html')
         self.assertTemplateUsed(response, 'food/base.html')
+        # FIXME Check errors here
+
+################################################################################
+# Dish views tests
 
     def test_dish_list(self):
         response = self.client.get(reverse('dish_list'))
@@ -365,6 +372,51 @@ class FoodViewsTestCase(TestCase):
         self.assertTemplateUsed(response, 'food/dish_list.html')
         self.assertTemplateUsed(response, 'food/base.html')
         self.assertTrue('dish_list' in response.context)
+
+    def test_dish_detail(self):
+        # Create a user, household, ingredients, dish & amounts
+        test_user = User.objects.create(username = 'testuser',
+                                        password = 'testpassword')
+        test_household = Household.objects.create(name = 'Test household',
+                                             admin = test_user)
+        ingredient_one = Ingredient.objects.create(name = 'Test ingredient 1',
+                                               quantity = 100,
+                                               unit = 'g',
+                                               calories = 75)
+        ingredient_two = Ingredient.objects.create(name = 'Test ingredient 2',
+                                               quantity = 100,
+                                               unit = 'ml',
+                                               calories = 828)
+        dish = Dish.objects.create(name = 'Test dish',
+                                   quantity = 500,
+                                   date_cooked = datetime.date.today(),
+                                   household = test_household,
+                                   recipe_url = u'http://www.example.com/recipeurl/',
+                                   unit = 'g')
+        dish.cooks.add(test_user)
+        dish.contained_comestibles_set.create(contained_comestible = ingredient_one,
+                                              quantity = 50)
+        dish.contained_comestibles_set.create(contained_comestible = ingredient_two,
+                                              quantity = 150)
+
+        response = self.client.get(reverse('dish_detail',
+                                           kwargs={'pk': dish.id}))
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(len(response.templates), 2)
+        self.assertTemplateUsed(response, 'food/dish_detail.html')
+        self.assertTemplateUsed(response, 'food/base.html')
+        self.assertTrue('dish' in response.context)
+
+        # Try to display a dish which doesn't exist
+        fake_pk = 9999999999
+        self.assertRaises(ObjectDoesNotExist, Dish.objects.get, pk=fake_pk)
+        response = self.client.get(reverse('dish_detail',
+                                           kwargs={'pk': fake_pk}))
+        self.assertEqual(response.status_code, 404)
+        self.assertTemplateUsed(response, '404.html')
+
+################################################################################
+# Meal views tests
 
     def test_meal_list(self):
         response = self.client.get(reverse('meal_list'))
