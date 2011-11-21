@@ -415,6 +415,63 @@ class FoodViewsTestCase(TestCase):
         self.assertEqual(response.status_code, 404)
         self.assertTemplateUsed(response, '404.html')
 
+    def test_dish_delete(self):
+        # Create a user, household, ingredients, dish & amounts
+        test_user = User.objects.create(username = 'testuser',
+                                        password = 'testpassword')
+        test_household = Household.objects.create(name = 'Test household',
+                                             admin = test_user)
+        ingredient_one = Ingredient.objects.create(name = 'Test ingredient 1',
+                                               quantity = 100,
+                                               unit = 'g',
+                                               calories = 75)
+        ingredient_two = Ingredient.objects.create(name = 'Test ingredient 2',
+                                               quantity = 100,
+                                               unit = 'ml',
+                                               calories = 828)
+        dish = Dish.objects.create(name = 'Test dish',
+                                   quantity = 500,
+                                   date_cooked = datetime.date.today(),
+                                   household = test_household,
+                                   recipe_url = u'http://www.example.com/recipeurl/',
+                                   unit = 'g')
+        dish.cooks.add(test_user)
+        dish.contained_comestibles_set.create(contained_comestible = ingredient_one,
+                                              quantity = 50)
+        dish.contained_comestibles_set.create(contained_comestible = ingredient_two,
+                                              quantity = 150)
+
+        response = self.client.get(reverse('dish_delete',
+                                           kwargs={'pk': dish.id}))
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(len(response.templates), 2)
+        self.assertTemplateUsed(response, 'food/dish_confirm_delete.html')
+        self.assertTemplateUsed(response, 'food/base.html')
+        self.assertTrue('dish' in response.context)
+
+        # Delete a dish (and its amounts via cascade)
+        response = self.client.post(reverse('dish_delete',
+                                           kwargs={'pk': dish.id}),
+                                    follow=True)
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(len(response.templates), 2)
+        # Redirects to dish_list
+        self.assertTemplateUsed(response, 'food/dish_list.html')
+        self.assertTemplateUsed(response, 'food/base.html')
+        self.assertRaises(ObjectDoesNotExist, Dish.objects.get,
+                                        pk=dish.id)
+        self.assertRaises(ObjectDoesNotExist, Amount.objects.get,
+                                        containing_dish=dish.id)
+
+        # Try to delete a dish which doesn't exist
+        fake_pk = 9999999999
+        self.assertRaises(ObjectDoesNotExist, Dish.objects.get,
+                                                      pk=fake_pk)
+        response = self.client.get(reverse('dish_delete',
+                                           kwargs={'pk': fake_pk}))
+        self.assertEqual(response.status_code, 404)
+        self.assertTemplateUsed(response, '404.html')
+
 ################################################################################
 # Meal views tests
 
