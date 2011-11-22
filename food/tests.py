@@ -472,6 +472,95 @@ class FoodViewsTestCase(TestCase):
         self.assertEqual(response.status_code, 404)
         self.assertTemplateUsed(response, '404.html')
 
+    def test_dish_add(self):
+        # Create a user, household and ingredients
+        # Use setUp for this instead of fixtures?
+        test_user = User.objects.create(username = 'testuser',
+                                        password = 'testpassword')
+        test_household = Household.objects.create(name = 'Test household',
+                                             admin = test_user)
+        ingredient_one = Ingredient.objects.create(name = 'Test ingredient 1',
+                                               quantity = 100,
+                                               unit = 'g',
+                                               calories = 75)
+        ingredient_two = Ingredient.objects.create(name = 'Test ingredient 2',
+                                               quantity = 100,
+                                               unit = 'ml',
+                                               calories = 828)
+
+        response = self.client.get(reverse('dish_add'))
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(len(response.templates), 2)
+        self.assertTemplateUsed(response, 'food/dish_edit.html')
+        self.assertTemplateUsed(response, 'food/base.html')
+        self.assertTrue('form' in response.context)
+        self.assertTrue('formset' in response.context)
+        # Is this necessary?
+        self.assertIsInstance(response.context['form'], ModelForm)
+        # self.assertIsInstance(response.context['formset'], # ???? )
+
+        # Add a good dish with amounts
+        response = self.client.post(reverse('dish_add'),
+                                    data={'name': 'Test dish',
+                                          'quantity': 500,
+                                          'date_cooked': datetime.date.today(),
+                                          'household': test_household.id,
+                                          'recipe_url': u'http://www.example.com/recipeurl/',
+                                          'cooks': test_user.id,
+                                          'unit': 'g',
+                                          'contained_comestibles_set-TOTAL_FORMS': 6,
+                                          'contained_comestibles_set-INITIAL_FORMS': 0,
+                                          'contained_comestibles_set-0-contained_comestible': 1,
+                                          'contained_comestibles_set-0-quantity': 50,
+                                          # Leave the default values for these
+                                          # fields unchanged
+                                          'contained_comestibles_set-1-quantity': 0,
+                                          'contained_comestibles_set-2-quantity': 0,
+                                          'contained_comestibles_set-3-quantity': 0,
+                                          'contained_comestibles_set-4-quantity': 0,
+                                          'contained_comestibles_set-5-quantity': 0},
+                                    follow=True)
+#        print response.redirect_chain
+        # FIXME Add more here to check redirects?
+        # Redirects to dish_detail
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(len(response.templates), 2)
+        self.assertTemplateUsed(response, 'food/dish_detail.html')
+        self.assertTemplateUsed(response, 'food/base.html')
+        # Check dish & amounts created correctly
+
+        # Try to add a dish and an amount with invalid quantity values
+        response = self.client.post(reverse('dish_add'),
+                                    data={'name': 'Test dish bad',
+                                          'quantity': 0,
+                                          'date_cooked': datetime.date.today(),
+                                          'household': test_household.id,
+                                          'recipe_url': u'http://www.example.com/recipeurl/',
+                                          'cooks': test_user.id,
+                                          'unit': 'g',
+                                          'contained_comestibles_set-TOTAL_FORMS': 6,
+                                          'contained_comestibles_set-INITIAL_FORMS': 0,
+                                          'contained_comestibles_set-MAX_NUM_FORMS': '',
+                                          'contained_comestibles_set-0-contained_comestible': 1,
+                                          'contained_comestibles_set-0-quantity': -1,
+                                          # Leave the default values for these
+                                          # fields unchanged
+                                          'contained_comestibles_set-1-quantity': 0,
+                                          'contained_comestibles_set-2-quantity': 0,
+                                          'contained_comestibles_set-3-quantity': 0,
+                                          'contained_comestibles_set-4-quantity': 0,
+                                          'contained_comestibles_set-5-quantity': 0})
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(len(response.templates), 2)
+        self.assertTemplateUsed(response, 'food/dish_edit.html')
+        self.assertTemplateUsed(response, 'food/base.html')
+        self.assertTrue(u'Enter a number greater than 0' in
+                                response.context['form']['quantity'].errors)
+        self.assertTrue(u'Enter a number not less than 0' in
+                                response.context['formset'][0]['quantity'].errors)
+        self.assertRaises(ObjectDoesNotExist, Dish.objects.get,
+                                name='Test dish bad')
+
 ################################################################################
 # Meal views tests
 
