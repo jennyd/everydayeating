@@ -85,6 +85,10 @@ STATICFILES_FINDERS = (
 # Make this unique, and don't share it with anybody.
 SECRET_KEY = '0_frzdvlq&b%vho$!7zatuk1wdtir48)t&!qr^h@9itub-qv=n'
 
+# This is needed for django.core.context_processors.debug to add sql_queries
+# into a RequestContext.
+INTERNAL_IPS = ('127.0.0.1',)
+
 # List of callables that know how to import templates from various sources.
 TEMPLATE_LOADERS = (
     'django.template.loaders.filesystem.Loader',
