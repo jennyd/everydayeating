@@ -10,6 +10,8 @@ from food.models import validate_positive, validate_positive_or_zero, Household,
 from food.views import get_week_starts_in_month
 
 
+fake_pk = 9999999999
+
 class ValidatorsTestCase(TestCase):
     def test_validate_positive(self):
         validate_positive(1)
@@ -148,7 +150,6 @@ class FoodViewsTestCase(TestCase):
         self.assertTrue('ingredient' in response.context)
 
         # Try to display an ingredient which doesn't exist
-        fake_pk = 9999999999
         response = self.client.get(reverse('ingredient_detail',
                                            kwargs={'pk': fake_pk}))
         self.assertEqual(response.status_code, 404)
@@ -203,7 +204,6 @@ class FoodViewsTestCase(TestCase):
         # FIXME Check that the ingredient still has its initial values
 
         # Try to edit an ingredient which doesn't exist
-        fake_pk = 9999999999
         self.assertRaises(ObjectDoesNotExist, Ingredient.objects.get,
                                                       pk=fake_pk)
         response = self.client.get(reverse('ingredient_edit',
@@ -237,7 +237,6 @@ class FoodViewsTestCase(TestCase):
                                         pk=ingredient.id)
 
         # Try to delete an ingredient which doesn't exist
-        fake_pk = 9999999999
         self.assertRaises(ObjectDoesNotExist, Ingredient.objects.get,
                                                       pk=fake_pk)
         response = self.client.get(reverse('ingredient_delete',
@@ -329,7 +328,6 @@ class FoodViewsTestCase(TestCase):
         # FIXME Check that the ingredient still has its initial values
 
         # Try to send a comestible_ptr which doesn't exist
-        fake_pk = 9999999999
         self.assertRaises(ObjectDoesNotExist, Ingredient.objects.get,
                                                       pk=fake_pk)
         self.assertRaises(ObjectDoesNotExist, Comestible.objects.get,
@@ -408,7 +406,6 @@ class FoodViewsTestCase(TestCase):
         self.assertTrue('dish' in response.context)
 
         # Try to display a dish which doesn't exist
-        fake_pk = 9999999999
         self.assertRaises(ObjectDoesNotExist, Dish.objects.get, pk=fake_pk)
         response = self.client.get(reverse('dish_detail',
                                            kwargs={'pk': fake_pk}))
@@ -464,7 +461,6 @@ class FoodViewsTestCase(TestCase):
                                         containing_dish=dish.id)
 
         # Try to delete a dish which doesn't exist
-        fake_pk = 9999999999
         self.assertRaises(ObjectDoesNotExist, Dish.objects.get,
                                                       pk=fake_pk)
         response = self.client.get(reverse('dish_delete',
