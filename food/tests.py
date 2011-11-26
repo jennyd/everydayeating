@@ -556,6 +556,106 @@ class FoodViewsTestCase(TestCase):
         self.assertRaises(ObjectDoesNotExist, Dish.objects.get,
                                 name='Test dish bad')
 
+    def test_dish_edit(self):
+        # Create a user, household, ingredients, dish & amounts
+        test_user = User.objects.create(username = 'testuser',
+                                        password = 'testpassword')
+        test_household = Household.objects.create(name = 'Test household',
+                                             admin = test_user)
+        ingredient_one = Ingredient.objects.create(name = 'Test ingredient 1',
+                                               quantity = 100,
+                                               unit = 'g',
+                                               calories = 75)
+        ingredient_two = Ingredient.objects.create(name = 'Test ingredient 2',
+                                               quantity = 100,
+                                               unit = 'ml',
+                                               calories = 828)
+        dish = Dish.objects.create(name = 'Test dish',
+                                   quantity = 500,
+                                   date_cooked = datetime.date.today(),
+                                   household = test_household,
+                                   recipe_url = u'http://www.example.com/recipeurl/',
+                                   unit = 'g')
+        dish.cooks.add(test_user)
+        dish.contained_comestibles_set.create(contained_comestible = ingredient_one,
+                                              quantity = 50)
+        dish.contained_comestibles_set.create(contained_comestible = ingredient_two,
+                                              quantity = 150)
+
+        response = self.client.get(reverse('dish_edit', kwargs={'dish_id': dish.id}))
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(len(response.templates), 2)
+        self.assertTemplateUsed(response, 'food/dish_edit.html')
+        self.assertTemplateUsed(response, 'food/base.html')
+        self.assertTrue('form' in response.context)
+        self.assertTrue('formset' in response.context)
+        # Is this necessary?
+        self.assertIsInstance(response.context['form'], ModelForm)
+        # self.assertIsInstance(response.context['formset'], # ???? )
+
+        # Edit a dish correctly
+        response = self.client.post(reverse('dish_edit',
+                                            kwargs={'dish_id': dish.id}),
+                                    data={'name': 'Test dish',
+                                          'quantity': 400, # was 500
+                                          'date_cooked': datetime.date.today(),
+                                          'household': test_household.id,
+                                          'recipe_url': u'http://www.example.com/recipeurl/',
+                                          'cooks': test_user.id,
+                                          'unit': 'ml', # was 'g'
+                                          'contained_comestibles_set-TOTAL_FORMS': 6,
+                                          'contained_comestibles_set-INITIAL_FORMS': 0,
+                                          'contained_comestibles_set-0-contained_comestible': 1,
+                                          'contained_comestibles_set-0-quantity': 50,
+                                          'contained_comestibles_set-1-contained_comestible': 2,
+                                          'contained_comestibles_set-1-quantity': 180, # was 150
+                                          # Leave the default values for these
+                                          # fields unchanged
+                                          'contained_comestibles_set-2-quantity': 0,
+                                          'contained_comestibles_set-3-quantity': 0,
+                                          'contained_comestibles_set-4-quantity': 0,
+                                          'contained_comestibles_set-5-quantity': 0},
+                                    follow=True)
+#        print response.redirect_chain
+        # FIXME Add more here to check redirects?
+        # Redirects to dish_detail
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(len(response.templates), 2)
+        self.assertTemplateUsed(response, 'food/dish_detail.html')
+        self.assertTemplateUsed(response, 'food/base.html')
+        # Check dish & amounts edited correctly
+
+        # Try to edit a dish and an amount with invalid quantity values
+        response = self.client.post(reverse('dish_edit',
+                                            kwargs={'dish_id': dish.id}),
+                                    data={'name': 'Test dish',
+                                          'quantity': 0, # was 500, then edited to 400
+                                          'date_cooked': datetime.date.today(),
+                                          'household': test_household.id,
+                                          'recipe_url': u'http://www.example.com/recipeurl/',
+                                          'cooks': test_user.id,
+                                          'unit': 'ml', # was 'g', then edited to 'ml'
+                                          'contained_comestibles_set-TOTAL_FORMS': 6,
+                                          'contained_comestibles_set-INITIAL_FORMS': 0,
+                                          'contained_comestibles_set-0-contained_comestible': 1,
+                                          'contained_comestibles_set-0-quantity': 50,
+                                          'contained_comestibles_set-1-contained_comestible': 2,
+                                          'contained_comestibles_set-1-quantity': -100, # was 150, then edited to 180
+                                          # Leave the default values for these
+                                          # fields unchanged
+                                          'contained_comestibles_set-2-quantity': 0,
+                                          'contained_comestibles_set-3-quantity': 0,
+                                          'contained_comestibles_set-4-quantity': 0,
+                                          'contained_comestibles_set-5-quantity': 0})
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(len(response.templates), 2)
+        self.assertTemplateUsed(response, 'food/dish_edit.html')
+        self.assertTemplateUsed(response, 'food/base.html')
+        self.assertTrue(u'Enter a number greater than 0' in
+                                response.context['form']['quantity'].errors)
+        self.assertTrue(u'Enter a number not less than 0' in
+                                response.context['formset'][1]['quantity'].errors)
+
 ################################################################################
 # Meal views tests
 
