@@ -536,7 +536,6 @@ class FoodViewsTestCase(TestCase):
                                           'unit': 'g',
                                           'contained_comestibles_set-TOTAL_FORMS': 6,
                                           'contained_comestibles_set-INITIAL_FORMS': 0,
-                                          'contained_comestibles_set-MAX_NUM_FORMS': '',
                                           'contained_comestibles_set-0-contained_comestible': 1,
                                           'contained_comestibles_set-0-quantity': -1,
                                           # Leave the default values for these
