@@ -31,7 +31,10 @@ def dish_amounts_form(request, dish_id=None):
             #  now has only one fk to Dish, but it does need to be here...
             fk_name="containing_dish", extra=6)
     if dish_id:
-        dish = Dish.objects.get(pk=dish_id)
+        try:
+            dish = Dish.objects.get(pk=dish_id)
+        except Dish.DoesNotExist:
+            raise Http404
     else:
         dish = Dish()
     if request.method == 'POST':
@@ -111,7 +114,10 @@ def meal_portion_form(request, meal_id=None):
     MealFormSet = inlineformset_factory(Meal, Portion, extra=6,
                                         formset=BaseMealInlineFormSet)
     if meal_id:
-        meal = Meal.objects.get(pk=meal_id)
+        try:
+            meal = Meal.objects.get(pk=meal_id)
+        except Meal.DoesNotExist:
+            raise Http404
     else:
         meal = Meal()
     if request.method == 'POST':
@@ -147,7 +153,10 @@ class DishMultiplyForm(forms.Form):
     factor = forms.DecimalField()
 
 def dish_multiply(request, dish_id):
-    dish = Dish.objects.get(pk=dish_id) # select_related?
+    try:
+        dish = Dish.objects.get(pk=dish_id) # select_related?
+    except Dish.DoesNotExist:
+        raise Http404
     if request.method == 'POST': # If the form has been submitted...
         form = DishMultiplyForm(request.POST) # A form bound to the POST data
         if form.is_valid(): # All validation rules pass
@@ -182,7 +191,10 @@ class DishDuplicateForm(forms.Form):
 
 def dish_duplicate(request, dish_id):
     # create copy of dish with same amounts, cooked on the given date
-    old_dish = Dish.objects.get(pk=dish_id) # select_related?
+    try:
+        old_dish = Dish.objects.get(pk=dish_id) # select_related?
+    except Dish.DoesNotExist:
+        raise Http404
     if request.method == 'POST': # If the form has been submitted...
         form = DishDuplicateForm(request.POST) # A form bound to the POST data
         if form.is_valid(): # All validation rules pass
@@ -221,7 +233,10 @@ def meal_duplicate(request, meal_id):
     # allowed in general - if portion.comestible.is_dish, then it should ask
     # whether to use an existing portion or create a new one, if the dish still
     # has a remaining quantity, or whether to cook the dish again
-    old_meal = Meal.objects.get(pk=meal_id) # select_related?
+    try:
+        old_meal = Meal.objects.get(pk=meal_id) # select_related?
+    except Meal.DoesNotExist:
+        raise Http404
     if request.method == 'POST': # If the form has been submitted...
         form = MealDuplicateForm(request.POST) # A form bound to the POST data
         if form.is_valid(): # All validation rules pass
