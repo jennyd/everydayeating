@@ -656,6 +656,13 @@ class FoodViewsTestCase(TestCase):
         self.assertTrue(u'Enter a number not less than 0' in
                                 response.context['formset'][1]['quantity'].errors)
 
+        # Try to edit a dish which doesn't exist
+        self.assertRaises(ObjectDoesNotExist, Dish.objects.get,
+                                                      pk=fake_pk)
+        response = self.client.get(reverse('dish_edit', kwargs={'dish_id': fake_pk}))
+        self.assertEqual(response.status_code, 404)
+        self.assertTemplateUsed(response, '404.html')
+
 ################################################################################
 # Meal views tests
 
