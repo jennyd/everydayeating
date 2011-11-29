@@ -9,7 +9,7 @@ from django.http import Http404
 from django.views.generic import MonthArchiveView, WeekArchiveView, DayArchiveView
 from django.forms.models import modelformset_factory, BaseInlineFormSet, inlineformset_factory
 
-from food.models import Ingredient, Dish, DishForm, Amount, Meal, MealForm, Portion
+from food.models import validate_positive, Ingredient, Dish, DishForm, Amount, Meal, MealForm, Portion
 
 def ingredient_manage(request):
     IngredientFormSet = modelformset_factory(Ingredient, extra=3)
@@ -150,7 +150,7 @@ class DishMultiplyForm(forms.Form):
         ('divide', 'divide'),
     )
     operation = forms.ChoiceField(choices=OPERATION_CHOICES, initial='multiply')
-    factor = forms.DecimalField()
+    factor = forms.DecimalField(validators=[validate_positive])
 
 def dish_multiply(request, dish_id):
     try:
