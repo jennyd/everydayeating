@@ -269,7 +269,9 @@ def get_sum_day_calories(day):
     # FIXME poor little database sobs in the corner
     # This should use an existing queryset instead
     meals = Meal.objects.filter(date=day)
-    return sum(meal.calories for meal in meals)
+    # meal.calories can be None if the meal is new and has no portions, so in
+    # this case use 0 instead
+    return sum((meal.calories or 0) for meal in meals)
 
 def get_avg_week_calories(week_start_date):
     """
