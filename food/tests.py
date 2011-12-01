@@ -6,7 +6,7 @@ from django.contrib.auth.models import User
 from django.forms.models import ModelForm
 from django.test import TestCase
 
-from food.models import validate_positive, validate_positive_or_zero, Household, Comestible, Ingredient, Dish, Amount
+from food.models import validate_positive, validate_positive_or_zero, Household, Comestible, Ingredient, Dish, Amount, Meal, Portion
 from food.views import DishMultiplyForm, DishDuplicateForm, get_week_starts_in_month
 
 
@@ -845,6 +845,63 @@ class FoodViewsTestCase(TestCase):
 
 ################################################################################
 # Meal views tests
+
+    def test_meal_archive(self):
+        # 404 if there aren't any meals
+        self.assertFalse(Meal.objects.all()) # no meals yet
+        response = self.client.get(reverse('meal_archive'))
+        self.assertEqual(response.status_code, 404)
+        self.assertEqual(len(response.templates), 1)
+        self.assertTemplateUsed(response, '404.html')
+
+        # Create a user, household and meal (without portions)
+        test_user = User.objects.create(username = 'testuser',
+                                        password = 'testpassword')
+        test_household = Household.objects.create(name = 'Test household',
+                                                  admin = test_user)
+        meal = Meal.objects.create(name = 'breakfast',
+                                   date = datetime.date(2011, 12, 01),
+                                   time = datetime.time(7, 30),
+                                   household = test_household,
+                                   user = test_user)
+
+        response = self.client.get(reverse('meal_archive'))
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(len(response.templates), 2)
+        self.assertTemplateUsed(response, 'food/meal_archive.html')
+        self.assertTemplateUsed(response, 'food/base.html')
+        self.assertTrue('date_list' in response.context)
+        self.assertTrue('latest' in response.context)
+
+    def test_meal_archive_year(self):
+        # 404 if there aren't any meals
+        self.assertFalse(Meal.objects.all()) # no meals yet
+        response = self.client.get(reverse('meal_archive_year',
+                                           kwargs={'year': 2011}))
+        self.assertEqual(response.status_code, 404)
+        self.assertEqual(len(response.templates), 1)
+        self.assertTemplateUsed(response, '404.html')
+
+        # Create a user, household and meal (without portions)
+        test_user = User.objects.create(username = 'testuser',
+                                        password = 'testpassword')
+        test_household = Household.objects.create(name = 'Test household',
+                                                  admin = test_user)
+        meal = Meal.objects.create(name = 'breakfast',
+                                   date = datetime.date(2011, 12, 01),
+                                   time = datetime.time(7, 30),
+                                   household = test_household,
+                                   user = test_user)
+
+        response = self.client.get(reverse('meal_archive_year',
+                                           kwargs={'year': 2011}))
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(len(response.templates), 2)
+        self.assertTemplateUsed(response, 'food/meal_archive_year.html')
+        self.assertTemplateUsed(response, 'food/base.html')
+        self.assertTrue('year' in response.context)
+        self.assertTrue('date_list' in response.context)
+        self.assertTrue('meal_list' in response.context)
 
     def test_meal_list(self):
         response = self.client.get(reverse('meal_list'))
