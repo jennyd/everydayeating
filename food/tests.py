@@ -847,7 +847,7 @@ class FoodViewsTestCase(TestCase):
 # Meal views tests
 
     def test_meal_archive(self):
-        # 404 if there aren't any meals
+        # 404 if there aren't any meals at all
         self.assertFalse(Meal.objects.all()) # no meals yet
         response = self.client.get(reverse('meal_archive'))
         self.assertEqual(response.status_code, 404)
@@ -874,8 +874,8 @@ class FoodViewsTestCase(TestCase):
         self.assertTrue('latest' in response.context)
 
     def test_meal_archive_year(self):
-        # 404 if there aren't any meals
-        self.assertFalse(Meal.objects.all()) # no meals yet
+        # 404 if there aren't any meals in the given year
+        self.assertFalse(Meal.objects.filter(date__year=2011)) # no meals in this year
         response = self.client.get(reverse('meal_archive_year',
                                            kwargs={'year': 2011}))
         self.assertEqual(response.status_code, 404)
