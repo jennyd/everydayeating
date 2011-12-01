@@ -903,6 +903,41 @@ class FoodViewsTestCase(TestCase):
         self.assertTrue('date_list' in response.context)
         self.assertTrue('meal_list' in response.context)
 
+    def test_meal_archive_month(self):
+        # 404 if there aren't any meals in the given month
+        self.assertFalse(Meal.objects.filter(date__year=2011, date__month=1)) # no meals in this month
+        response = self.client.get(reverse('meal_archive_month',
+                                           kwargs={'year': 2011,
+                                                   # month needs leading zero
+                                                   'month': '01'}))
+        self.assertEqual(response.status_code, 404)
+        self.assertEqual(len(response.templates), 1)
+        self.assertTemplateUsed(response, '404.html')
+
+        # Create a user, household and meal (without portions)
+        test_user = User.objects.create(username = 'testuser',
+                                        password = 'testpassword')
+        test_household = Household.objects.create(name = 'Test household',
+                                                  admin = test_user)
+        meal = Meal.objects.create(name = 'breakfast',
+                                   date = datetime.date(2011, 01, 01),
+                                   time = datetime.time(7, 30),
+                                   household = test_household,
+                                   user = test_user)
+
+        response = self.client.get(reverse('meal_archive_month',
+                                           kwargs={'year': 2011,
+                                                   'month': '01'}))
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(len(response.templates), 2)
+        self.assertTemplateUsed(response, 'food/meal_archive_month.html')
+        self.assertTemplateUsed(response, 'food/base.html')
+        self.assertTrue('meal_list' in response.context)
+        self.assertTrue('date_list' in response.context)
+        self.assertTrue('week_list' in response.context)
+        self.assertTrue('previous_month' in response.context)
+        self.assertTrue('next_month' in response.context)
+
     def test_meal_list(self):
         response = self.client.get(reverse('meal_list'))
         self.assertEqual(response.status_code, 200)
