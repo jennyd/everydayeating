@@ -860,7 +860,7 @@ class FoodViewsTestCase(TestCase):
         test_household = Household.objects.create(name = 'Test household',
                                                   admin = test_user)
         meal = Meal.objects.create(name = 'breakfast',
-                                   date = datetime.date(2011, 12, 01),
+                                   date = datetime.date(2011, 01, 01),
                                    time = datetime.time(7, 30),
                                    household = test_household,
                                    user = test_user)
@@ -888,7 +888,7 @@ class FoodViewsTestCase(TestCase):
         test_household = Household.objects.create(name = 'Test household',
                                                   admin = test_user)
         meal = Meal.objects.create(name = 'breakfast',
-                                   date = datetime.date(2011, 12, 01),
+                                   date = datetime.date(2011, 01, 01),
                                    time = datetime.time(7, 30),
                                    household = test_household,
                                    user = test_user)
