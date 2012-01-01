@@ -938,6 +938,12 @@ class FoodViewsTestCase(TestCase):
         self.assertTrue('previous_month' in response.context)
         self.assertTrue('next_month' in response.context)
 
+    def test_meal_archive_week(self):
+        pass
+
+    def test_meal_archive_day(self):
+        pass
+
     def test_meal_list(self):
         response = self.client.get(reverse('meal_list'))
         self.assertEqual(response.status_code, 200)
@@ -946,8 +952,29 @@ class FoodViewsTestCase(TestCase):
         self.assertTemplateUsed(response, 'food/base.html')
         self.assertTrue('meal_list' in response.context)
 
+    def test_meal_detail(self):
+        pass
+
+    def test_meal_delete(self):
+        pass
+
+    def test_meal_add(self):
+        pass
+
+    def test_meal_edit(self):
+        pass
+
+    def test_meal_duplicate(self):
+        pass
+
 
 class DateViewsTestCase(TestCase):
+    def test_get_sum_day_calories(self):
+        pass
+
+    def test_get_avg_week_calories(self):
+        pass
+
     def test_get_week_starts_in_month(self):
         # A normal month:
         month_start_date = datetime.datetime(2011, 11, 1, 0, 0)
@@ -968,4 +995,7 @@ class DateViewsTestCase(TestCase):
                             datetime.datetime(2011, 12, 19, 0, 0),
                             datetime.datetime(2011, 12, 26, 0, 0)]
         self.assertEqual(test_week_date_list, expected_results)
+
+    def test_week_bounds(self):
+        pass
 
