@@ -7,7 +7,7 @@ from django.forms.models import ModelForm
 from django.test import TestCase
 
 from food.models import validate_positive, validate_positive_or_zero, Household, Comestible, Ingredient, Dish, Amount, Meal, Portion
-from food.views import DishMultiplyForm, DishDuplicateForm, get_week_starts_in_month
+from food.views import DishMultiplyForm, DishDuplicateForm, get_sum_day_calories, get_week_starts_in_month
 
 
 fake_pk = 9999999999
@@ -970,7 +970,36 @@ class FoodViewsTestCase(TestCase):
 
 class DateViewsTestCase(TestCase):
     def test_get_sum_day_calories(self):
-        pass
+        day = datetime.date(2012, 01, 01)
+        day_calories = get_sum_day_calories(day)
+        # No meals for this date yet, so 0 calories
+        self.assertEqual(0, day_calories)
+        # Create a user, household and some meals (without portions) for this date
+        test_user = User.objects.create(username = 'testuser',
+                                        password = 'testpassword')
+        test_household = Household.objects.create(name = 'Test household',
+                                                  admin = test_user)
+        Meal.objects.create(name = 'breakfast',
+                            date = day,
+                            time = datetime.time(7, 30),
+                            household = test_household,
+                            user = test_user,
+                            calories = 500)
+        Meal.objects.create(name = 'lunch',
+                            date = day,
+                            time = datetime.time(12, 30),
+                            household = test_household,
+                            user = test_user,
+                            calories = 650)
+        Meal.objects.create(name = 'dinner',
+                            date = day,
+                            time = datetime.time(19, 30),
+                            household = test_household,
+                            user = test_user,
+                            calories = 850)
+        day_calories = get_sum_day_calories(day)
+        self.assertEqual(2000, day_calories)
+        # test for number of database queries
 
     def test_get_avg_week_calories(self):
         pass
