@@ -7,7 +7,7 @@ from django.forms.models import ModelForm
 from django.test import TestCase
 
 from food.models import validate_positive, validate_positive_or_zero, Household, Comestible, Ingredient, Dish, Amount, Meal, Portion
-from food.views import DishMultiplyForm, DishDuplicateForm, get_sum_day_calories, get_week_starts_in_month
+from food.views import DishMultiplyForm, DishDuplicateForm, get_sum_day_calories, get_avg_week_calories, get_week_starts_in_month
 
 
 fake_pk = 9999999999
@@ -1002,7 +1002,50 @@ class DateViewsTestCase(TestCase):
         # test for number of database queries
 
     def test_get_avg_week_calories(self):
-        pass
+        day = datetime.date(2012, 01, 02) # Monday - must be week start ATM...
+        avg_calories = get_avg_week_calories(day)
+        # No meals for this week yet, so 0 calories
+        self.assertEqual(0, avg_calories)
+        # Create a user, household and some meals (without portions) for this
+        # date and other days in the same week
+        test_user = User.objects.create(username = 'testuser',
+                                        password = 'testpassword')
+        test_household = Household.objects.create(name = 'Test household',
+                                                  admin = test_user)
+        Meal.objects.create(name = 'breakfast',
+                            date = day,
+                            time = datetime.time(7, 30),
+                            household = test_household,
+                            user = test_user,
+                            calories = 500)
+        Meal.objects.create(name = 'lunch',
+                            date = day,
+                            time = datetime.time(12, 30),
+                            household = test_household,
+                            user = test_user,
+                            calories = 650)
+        Meal.objects.create(name = 'dinner',
+                            date = day,
+                            time = datetime.time(19, 30),
+                            household = test_household,
+                            user = test_user,
+                            calories = 850)
+        Meal.objects.create(name = 'breakfast',
+                            date = day + datetime.timedelta(days=1), # Tuesday
+                            time = datetime.time(7, 30),
+                            household = test_household,
+                            user = test_user,
+                            calories = 500)
+        Meal.objects.create(name = 'breakfast',
+                            date = day + datetime.timedelta(days=3), # Thursday
+                            time = datetime.time(7, 30),
+                            household = test_household,
+                            user = test_user,
+                            calories = 500)
+        avg_calories = get_avg_week_calories(day)
+        self.assertEqual(1000, avg_calories)
+        # test for number of database queries here? depends entirely on
+        # get_sum_day_calories so should perhaps only test it there
 
     def test_get_week_starts_in_month(self):
         # A normal month:
