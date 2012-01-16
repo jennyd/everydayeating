@@ -1069,5 +1069,7 @@ class DateViewsTestCase(TestCase):
         self.assertEqual(test_week_date_list, expected_results)
 
     def test_week_bounds(self):
+        # can't import _week_bounds here;
+        # test it through MealWeekArchiveView instead
         pass
 
