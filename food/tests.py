@@ -1203,7 +1203,138 @@ class FoodViewsTestCase(TestCase):
         self.assertTemplateUsed(response, '404.html')
 
     def test_meal_add(self):
-        pass
+        # Create a user, household, ingredients, dish & amounts
+        test_user = User.objects.create(username = 'testuser',
+                                        password = 'testpassword')
+        test_household = Household.objects.create(name = 'Test household',
+                                             admin = test_user)
+        ingredient_one = Ingredient.objects.create(name = 'Test ingredient 1',
+                                               quantity = 100,
+                                               unit = 'g',
+                                               calories = 75)
+        ingredient_two = Ingredient.objects.create(name = 'Test ingredient 2',
+                                               quantity = 100,
+                                               unit = 'ml',
+                                               calories = 828)
+        dish = Dish.objects.create(name = 'Test dish',
+                                   quantity = 500,
+                                   date_cooked = datetime.date.today(),
+                                   household = test_household,
+                                   recipe_url = u'http://www.example.com/recipeurl/',
+                                   unit = 'g')
+        dish.cooks.add(test_user)
+        dish.contained_comestibles_set.create(contained_comestible = ingredient_one,
+                                              quantity = 50)
+        dish.contained_comestibles_set.create(contained_comestible = ingredient_two,
+                                              quantity = 150)
+
+        response = self.client.get(reverse('meal_add'))
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(len(response.templates), 2)
+        self.assertTemplateUsed(response, 'food/meal_edit.html')
+        self.assertTemplateUsed(response, 'food/base.html')
+        self.assertTrue('form' in response.context)
+        self.assertTrue('formset' in response.context)
+        # Is this necessary?
+        self.assertIsInstance(response.context['form'], ModelForm)
+        # self.assertIsInstance(response.context['formset'], # ???? )
+
+        # Add a good meal with portions
+        response = self.client.post(reverse('meal_add'),
+                                    data={'name': 'breakfast',
+                                          'date': datetime.date.today(),
+                                          'time': datetime.time(7, 30),
+                                          'household': test_household.id,
+                                          'user': test_user.id,
+                                          'portion_set-TOTAL_FORMS': 6,
+                                          'portion_set-INITIAL_FORMS': 0,
+                                          'portion_set-0-comestible': ingredient_one.id,
+                                          'portion_set-0-quantity': 50,
+                                          'portion_set-1-comestible': dish.id,
+                                          'portion_set-1-quantity': 100,
+                                          # Leave the default values for these
+                                          # fields unchanged
+                                          'portion_set-2-quantity': 0,
+                                          'portion_set-3-quantity': 0,
+                                          'portion_set-4-quantity': 0,
+                                          'portion_set-5-quantity': 0},
+                                    follow=True)
+        # Redirects to meal_detail
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(len(response.templates), 2)
+        self.assertTemplateUsed(response, 'food/meal_detail.html')
+        self.assertTemplateUsed(response, 'food/base.html')
+        # Check meal & portions created correctly?
+
+        # Try to add a meal and portions with invalid quantity values
+        response = self.client.post(reverse('meal_add'),
+                                    data={'name': 'lunch',
+                                          'date': datetime.date.today(),
+                                          'time': datetime.time(12, 30),
+                                          'household': test_household.id,
+                                          'user': test_user.id,
+                                          'portion_set-TOTAL_FORMS': 6,
+                                          'portion_set-INITIAL_FORMS': 0,
+                                          'portion_set-0-comestible': ingredient_one.id,
+                                          'portion_set-0-quantity': -50,
+                                          'portion_set-1-comestible': dish.id,
+                                          # 100/500 of dish in breakfast
+                                          'portion_set-1-quantity': 400,
+                                          # Leave the default values for these
+                                          # fields unchanged
+                                          'portion_set-2-quantity': 0,
+                                          'portion_set-3-quantity': 0,
+                                          'portion_set-4-quantity': 0,
+                                          'portion_set-5-quantity': 0},
+                                      # follow=True
+                                      )
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(len(response.templates), 2)
+        self.assertTemplateUsed(response, 'food/meal_edit.html')
+        self.assertTemplateUsed(response, 'food/base.html')
+        self.assertTrue(u'Enter a number not less than 0' in
+                                response.context['formset'][0]['quantity'].errors)
+        self.assertRaises(ObjectDoesNotExist, Meal.objects.get,
+                                name='lunch')
+
+        # Try to add a meal and a portion of a dish with a quantity greater
+        # than the dish's remaining quantity
+        response = self.client.post(reverse('meal_add'),
+                                    data={'name': 'dinner',
+                                          'date': datetime.date.today(),
+                                          'time': datetime.time(19, 30),
+                                          'household': test_household.id,
+                                          'user': test_user.id,
+                                          'portion_set-TOTAL_FORMS': 6,
+                                          'portion_set-INITIAL_FORMS': 0,
+                                          'portion_set-0-comestible': ingredient_one.id,
+                                          'portion_set-0-quantity': 50,
+                                          'portion_set-1-comestible': dish.id,
+                                          # 100/500 of dish in breakfast
+                                          'portion_set-1-quantity': 1000,
+                                          # Leave the default values for these
+                                          # fields unchanged
+                                          'portion_set-2-quantity': 0,
+                                          'portion_set-3-quantity': 0,
+                                          'portion_set-4-quantity': 0,
+                                          'portion_set-5-quantity': 0},
+                                      # follow=True
+                                      )
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(len(response.templates), 2)
+        self.assertTemplateUsed(response, 'food/meal_edit.html')
+        self.assertTemplateUsed(response, 'food/base.html')
+
+#        print type(response.context['formset'].errors[1])
+#        print response.context['formset'].errors[1]
+#        print type(response.context['formset'][1].non_field_errors())
+#        print response.context['formset'][1].non_field_errors()[0]
+
+        expected_error = u"This portion's quantity is greater than the remaining quantity of the dish (400 g)."
+        self.assertTrue(expected_error in
+                            response.context['formset'][1].non_field_errors())
+        self.assertRaises(ObjectDoesNotExist, Meal.objects.get,
+                                name='dinner')
 
     def test_meal_edit(self):
         pass
