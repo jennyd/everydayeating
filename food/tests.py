@@ -1008,7 +1008,68 @@ class FoodViewsTestCase(TestCase):
                          response.context['next_week'])
 
     def test_meal_archive_day(self):
-        pass
+        # 404 if there aren't any meals on the given day
+        self.assertFalse(Meal.objects.filter(date__year=2011, date__month=1, date__day=1)) # no meals on this day
+        response = self.client.get(reverse('meal_archive_day',
+                                           kwargs={'year': 2011,
+                                                   # month needs leading zero
+                                                   'month': '01',
+                                                   # day needs leading zero
+                                                   'day': '01'}))
+        self.assertEqual(response.status_code, 404)
+        self.assertEqual(len(response.templates), 1)
+        self.assertTemplateUsed(response, '404.html')
+
+        # Create a user, household and meals (without portions)
+        test_user = User.objects.create(username = 'testuser',
+                                        password = 'testpassword')
+        test_household = Household.objects.create(name = 'Test household',
+                                                  admin = test_user)
+        meal = Meal.objects.create(name = 'breakfast',
+                                   date = datetime.date(2011, 01, 01),
+                                   time = datetime.time(7, 30),
+                                   household = test_household,
+                                   user = test_user)
+        # These are 2 months before/after, to check that it really is finding
+        # the previous/next days containing a meal
+        previous_day_meal = Meal.objects.create(name = 'breakfast',
+                                   date = datetime.date(2010, 11, 30),
+                                   time = datetime.time(7, 30),
+                                   household = test_household,
+                                   user = test_user)
+        next_day_meal = Meal.objects.create(name = 'breakfast',
+                                   date = datetime.date(2011, 03, 03),
+                                   time = datetime.time(7, 30),
+                                   household = test_household,
+                                   user = test_user)
+
+        response = self.client.get(reverse('meal_archive_day',
+                                           kwargs={'year': 2011,
+                                                   'month': '01',
+                                                   'day': '01'}))
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(len(response.templates), 2)
+        self.assertTemplateUsed(response, 'food/meal_archive_day.html')
+        self.assertTemplateUsed(response, 'food/base.html')
+        self.assertTrue('meal_list' in response.context)
+        self.assertTrue('date_list' in response.context)
+        # date_list is None - assertFalse?
+        self.assertTrue('day_calories' in response.context)
+        self.assertTrue('day' in response.context)
+        self.assertEqual(datetime.date(2011, 01, 01),
+                         response.context['day'])
+        self.assertTrue('previous_day' in response.context)
+        self.assertTrue('next_day' in response.context)
+        self.assertEqual(datetime.date(2010, 11, 30),
+                         response.context['previous_day'])
+        self.assertEqual(datetime.date(2011, 03, 03),
+                         response.context['next_day'])
+        self.assertTrue('previous_month' in response.context)
+        self.assertTrue('next_month' in response.context)
+        self.assertEqual(datetime.date(2010, 11, 01),
+                         response.context['previous_month'])
+        self.assertEqual(datetime.date(2011, 03, 01),
+                         response.context['next_month'])
 
     def test_meal_list(self):
         response = self.client.get(reverse('meal_list'))
