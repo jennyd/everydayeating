@@ -1129,7 +1129,78 @@ class FoodViewsTestCase(TestCase):
         self.assertTemplateUsed(response, '404.html')
 
     def test_meal_delete(self):
-        pass
+        # Create a user, household, ingredients, dish & amounts, meals & portions
+        test_user = User.objects.create(username = 'testuser',
+                                        password = 'testpassword')
+        test_household = Household.objects.create(name = 'Test household',
+                                             admin = test_user)
+        ingredient_one = Ingredient.objects.create(name = 'Test ingredient 1',
+                                               quantity = 100,
+                                               unit = 'g',
+                                               calories = 75)
+        ingredient_two = Ingredient.objects.create(name = 'Test ingredient 2',
+                                               quantity = 100,
+                                               unit = 'ml',
+                                               calories = 828)
+        dish = Dish.objects.create(name = 'Test dish',
+                                   quantity = 500,
+                                   date_cooked = datetime.date.today(),
+                                   household = test_household,
+                                   recipe_url = u'http://www.example.com/recipeurl/',
+                                   unit = 'g')
+        dish.cooks.add(test_user)
+        dish.contained_comestibles_set.create(contained_comestible = ingredient_one,
+                                              quantity = 50)
+        dish.contained_comestibles_set.create(contained_comestible = ingredient_two,
+                                              quantity = 150)
+        meal = Meal.objects.create(name = 'breakfast',
+                                   date = datetime.date.today(),
+                                   time = datetime.time(7, 30),
+                                   household = test_household,
+                                   user = test_user)
+        portion = Portion.objects.create(comestible = dish,
+                                         meal = meal,
+                                         quantity = 300)
+        # There needs to be a meal remaining after deleting one, so that the
+        # view it redirects to (meal_archive) doesn't go to 404
+        extra_meal = Meal.objects.create(name = 'lunch',
+                                   date = datetime.date.today(),
+                                   time = datetime.time(12, 30),
+                                   household = test_household,
+                                   user = test_user)
+        extra_portion = Portion.objects.create(comestible = dish,
+                                         meal = extra_meal,
+                                         quantity = 100)
+
+        response = self.client.get(reverse('meal_delete',
+                                           kwargs={'pk': meal.id}))
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(len(response.templates), 2)
+        self.assertTemplateUsed(response, 'food/meal_confirm_delete.html')
+        self.assertTemplateUsed(response, 'food/base.html')
+        self.assertTrue('meal' in response.context)
+
+        # Delete a meal (and its portion(s) via cascade)
+        response = self.client.post(reverse('meal_delete',
+                                           kwargs={'pk': meal.id}),
+                                    follow=True)
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(len(response.templates), 2)
+        # Redirects to meal_archive
+        self.assertTemplateUsed(response, 'food/meal_archive.html')
+        self.assertTemplateUsed(response, 'food/base.html')
+        self.assertRaises(ObjectDoesNotExist, Meal.objects.get,
+                                        pk=meal.id)
+        self.assertRaises(ObjectDoesNotExist, Portion.objects.get,
+                                        meal=meal.id)
+
+        # Try to delete a meal which doesn't exist
+        self.assertRaises(ObjectDoesNotExist, Meal.objects.get,
+                                                      pk=fake_pk)
+        response = self.client.get(reverse('meal_delete',
+                                           kwargs={'pk': fake_pk}))
+        self.assertEqual(response.status_code, 404)
+        self.assertTemplateUsed(response, '404.html')
 
     def test_meal_add(self):
         pass
