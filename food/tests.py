@@ -914,13 +914,25 @@ class FoodViewsTestCase(TestCase):
         self.assertEqual(len(response.templates), 1)
         self.assertTemplateUsed(response, '404.html')
 
-        # Create a user, household and meal (without portions)
+        # Create a user, household and meals (without portions)
         test_user = User.objects.create(username = 'testuser',
                                         password = 'testpassword')
         test_household = Household.objects.create(name = 'Test household',
                                                   admin = test_user)
         meal = Meal.objects.create(name = 'breakfast',
                                    date = datetime.date(2011, 01, 01),
+                                   time = datetime.time(7, 30),
+                                   household = test_household,
+                                   user = test_user)
+        # These are 2 months before/after, to check that it really is finding
+        # the previous/next months containing a meal
+        previous_month_meal = Meal.objects.create(name = 'breakfast',
+                                   date = datetime.date(2010, 11, 01),
+                                   time = datetime.time(7, 30),
+                                   household = test_household,
+                                   user = test_user)
+        next_month_meal = Meal.objects.create(name = 'breakfast',
+                                   date = datetime.date(2011, 03, 01),
                                    time = datetime.time(7, 30),
                                    household = test_household,
                                    user = test_user)
@@ -937,6 +949,10 @@ class FoodViewsTestCase(TestCase):
         self.assertTrue('week_list' in response.context)
         self.assertTrue('previous_month' in response.context)
         self.assertTrue('next_month' in response.context)
+        self.assertEqual(datetime.date(2010, 11, 1),
+                         response.context['previous_month'])
+        self.assertEqual(datetime.date(2011, 03, 01),
+                         response.context['next_month'])
 
     def test_meal_archive_week(self):
         pass
