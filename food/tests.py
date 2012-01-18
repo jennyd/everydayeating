@@ -955,7 +955,57 @@ class FoodViewsTestCase(TestCase):
                          response.context['next_month'])
 
     def test_meal_archive_week(self):
-        pass
+        # 404 if there aren't any meals in the given week
+
+        # Can't filter date on week - use a range from _week_bounds instead?
+        # self.assertFalse(Meal.objects.filter(date__year=2011, date__week=01)) # no meals in this week
+        response = self.client.get(reverse('meal_archive_week',
+                                           kwargs={'year': 2011,
+                                                   # week doesn't need leading zero
+                                                   'week': '1'}))
+        self.assertEqual(response.status_code, 404)
+        self.assertEqual(len(response.templates), 1)
+        self.assertTemplateUsed(response, '404.html')
+
+        # Create a user, household and meals (without portions)
+        test_user = User.objects.create(username = 'testuser',
+                                        password = 'testpassword')
+        test_household = Household.objects.create(name = 'Test household',
+                                                  admin = test_user)
+        meal = Meal.objects.create(name = 'breakfast',
+                                   date = datetime.date(2012, 01, 03), # Tuesday
+                                   time = datetime.time(7, 30),
+                                   household = test_household,
+                                   user = test_user)
+        # These are 2 weeks before/after, to check that it really is finding
+        # the previous/next weeks containing a meal
+        previous_week_meal = Meal.objects.create(name = 'breakfast',
+                                   date = datetime.date(2011, 12, 20), # Tuesday
+                                   time = datetime.time(7, 30),
+                                   household = test_household,
+                                   user = test_user)
+        next_week_meal = Meal.objects.create(name = 'breakfast',
+                                   date = datetime.date(2012, 01, 17), # Tuesday
+                                   time = datetime.time(7, 30),
+                                   household = test_household,
+                                   user = test_user)
+
+        response = self.client.get(reverse('meal_archive_week',
+                                           kwargs={'year': 2012,
+                                                   'week': '1'}))
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(len(response.templates), 2)
+        self.assertTemplateUsed(response, 'food/meal_archive_week.html')
+        self.assertTemplateUsed(response, 'food/base.html')
+        self.assertTrue('meal_list' in response.context)
+        self.assertTrue('date_list' in response.context)
+        self.assertTrue('avg_week_calories' in response.context)
+        self.assertTrue('previous_week' in response.context)
+        self.assertTrue('next_week' in response.context)
+        self.assertEqual(datetime.date(2011, 12, 19), # Monday
+                         response.context['previous_week'])
+        self.assertEqual(datetime.date(2012, 01, 16), # Monday
+                         response.context['next_week'])
 
     def test_meal_archive_day(self):
         pass
