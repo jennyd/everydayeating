@@ -1376,7 +1376,249 @@ class FoodViewsTestCase(TestCase):
                                 name='snack')
 
     def test_meal_edit(self):
-        pass
+        # Create a user, household, ingredients, dish & amounts, meal & portions
+        test_user = User.objects.create(username = 'testuser',
+                                        password = 'testpassword')
+        test_household = Household.objects.create(name = 'Test household',
+                                             admin = test_user)
+        ingredient_one = Ingredient.objects.create(name = 'Test ingredient 1',
+                                               quantity = 100,
+                                               unit = 'g',
+                                               calories = 75)
+        ingredient_two = Ingredient.objects.create(name = 'Test ingredient 2',
+                                               quantity = 100,
+                                               unit = 'ml',
+                                               calories = 828)
+        dish = Dish.objects.create(name = 'Test dish',
+                                   quantity = 500,
+                                   date_cooked = datetime.date.today(),
+                                   household = test_household,
+                                   recipe_url = u'http://www.example.com/recipeurl/',
+                                   unit = 'g')
+        dish.cooks.add(test_user)
+        dish.contained_comestibles_set.create(contained_comestible = ingredient_one,
+                                              quantity = 50)
+        dish.contained_comestibles_set.create(contained_comestible = ingredient_two,
+                                              quantity = 150)
+        meal = Meal.objects.create(name = 'breakfast',
+                                   date = datetime.date.today(),
+                                   time = datetime.time(7, 30),
+                                   household = test_household,
+                                   user = test_user)
+        portion_one = Portion.objects.create(comestible = dish,
+                                         meal = meal,
+                                         quantity = 100)
+        portion_two = Portion.objects.create(comestible = dish,
+                                         meal = meal,
+                                         quantity = 200)
+
+        response = self.client.get(reverse('meal_edit',
+                                           kwargs={'meal_id': meal.id}))
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(len(response.templates), 2)
+        self.assertTemplateUsed(response, 'food/meal_edit.html')
+        self.assertTemplateUsed(response, 'food/base.html')
+        self.assertTrue('form' in response.context)
+        self.assertTrue('formset' in response.context)
+        # Is this necessary?
+        self.assertIsInstance(response.context['form'], ModelForm)
+        # self.assertIsInstance(response.context['formset'], # ???? )
+
+        # Edit a meal and portions correctly
+        response = self.client.post(reverse('meal_edit',
+                                           kwargs={'meal_id': meal.id}),
+                                    data={'name': 'breakfast',
+                                          'date': datetime.date.today(),
+                                          'time': datetime.time(8, 30), # was 7:30
+                                          'household': test_household.id,
+                                          'user': test_user.id,
+                                          'portion_set-TOTAL_FORMS': 8,
+                                          'portion_set-INITIAL_FORMS': 2,
+
+# FIXME also add a new amount via the formset like this in test_dish_edit
+
+                                          # portion id needed when new portions
+                                          # are added into the formset
+                                          'portion_set-0-id': portion_one.id,
+                                          'portion_set-0-comestible': dish.id,
+                                          'portion_set-0-quantity': 50, # was 100
+                                          'portion_set-1-id': portion_two.id,
+                                          'portion_set-1-comestible': dish.id,
+                                          'portion_set-1-quantity': 100, # was 200
+                                          # new portion
+                                          'portion_set-2-comestible': ingredient_one.id,
+                                          'portion_set-2-quantity': 150,
+                                          # Leave the default values for these
+                                          # fields unchanged
+                                          'portion_set-3-quantity': 0,
+                                          'portion_set-4-quantity': 0,
+                                          'portion_set-5-quantity': 0,
+                                          'portion_set-6-quantity': 0,
+                                          'portion_set-7-quantity': 0},
+                                    follow=True)
+        # Redirects to meal_detail
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(len(response.templates), 2)
+        self.assertTemplateUsed(response, 'food/meal_detail.html')
+        self.assertTemplateUsed(response, 'food/base.html')
+        # Check meal & portions edited/created correctly
+        edited_meal = Meal.objects.get(name='breakfast')
+        edited_portion_one = Portion.objects.get(pk=portion_one.id)
+        edited_portion_two = Portion.objects.get(pk=portion_two.id)
+        portion_three = Portion.objects.get(pk=3)
+        self.assertEqual(edited_meal.time, datetime.time(8, 30))
+        self.assertEqual(edited_portion_one.quantity, 50)
+        self.assertEqual(edited_portion_two.quantity, 100)
+        self.assertEqual(portion_three.quantity, 150)
+        # Check dish's remaining quantity
+        updated_dish = Dish.objects.get(name='Test dish')
+        self.assertEqual(updated_dish.get_remaining_quantity(), 350)
+
+        # Try to edit a meal and portions using invalid quantity values
+        response = self.client.post(reverse('meal_edit',
+                                           kwargs={'meal_id': meal.id}),
+                                    data={'name': 'breakfast',
+                                          'date': datetime.date.today(),
+                                          'time': datetime.time(8, 30),
+                                          'household': test_household.id,
+                                          'user': test_user.id,
+                                          'portion_set-TOTAL_FORMS': 6,
+                                          'portion_set-INITIAL_FORMS': 0,
+                                          # Don't need portion id this time,
+                                          # since no new portions are added here
+                                          'portion_set-0-comestible': dish.id,
+                                          'portion_set-0-quantity': -50,
+                                          'portion_set-1-comestible': dish.id,
+                                          'portion_set-1-quantity': 100,
+                                          'portion_set-2-comestible': ingredient_one.id,
+                                          'portion_set-2-quantity': 150,
+                                          # Leave the default values for these
+                                          # fields unchanged
+                                          'portion_set-3-quantity': 0,
+                                          'portion_set-4-quantity': 0,
+                                          'portion_set-5-quantity': 0},
+                                    # follow=True
+                                    )
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(len(response.templates), 2)
+        self.assertTemplateUsed(response, 'food/meal_edit.html')
+        self.assertTemplateUsed(response, 'food/base.html')
+        self.assertTrue(u'Enter a number not less than 0' in
+                                response.context['formset'][0]['quantity'].errors)
+        # Check that meal & portions weren't changed
+        edited_meal = Meal.objects.get(name='breakfast')
+        edited_portion_one = Portion.objects.get(pk=portion_one.id)
+        edited_portion_two = Portion.objects.get(pk=portion_two.id)
+        edited_portion_three = Portion.objects.get(pk=portion_three.id)
+        self.assertEqual(edited_meal.time, datetime.time(8, 30))
+        self.assertEqual(edited_portion_one.quantity, 50)
+        self.assertEqual(edited_portion_two.quantity, 100)
+        self.assertEqual(edited_portion_three.quantity, 150)
+        # Check that dish's remaining quantity is still the same
+        updated_dish = Dish.objects.get(name='Test dish')
+        self.assertEqual(updated_dish.get_remaining_quantity(), 350)
+
+        # Try to edit a meal and a portion of a dish using a quantity greater
+        # than the dish's remaining quantity
+        response = self.client.post(reverse('meal_edit',
+                                           kwargs={'meal_id': meal.id}),
+                                    data={'name': 'breakfast',
+                                          'date': datetime.date.today(),
+                                          'time': datetime.time(8, 30),
+                                          'household': test_household.id,
+                                          'user': test_user.id,
+                                          'portion_set-TOTAL_FORMS': 6,
+                                          'portion_set-INITIAL_FORMS': 0,
+                                          # 150/500 of dish used already
+                                          'portion_set-0-comestible': dish.id,
+                                          'portion_set-0-quantity': 450, # was 50
+                                          'portion_set-1-comestible': dish.id,
+                                          'portion_set-1-quantity': 100, # was 100
+                                          'portion_set-2-comestible': ingredient_one.id,
+                                          'portion_set-2-quantity': 150,
+                                          # Leave the default values for these
+                                          # fields unchanged
+                                          'portion_set-3-quantity': 0,
+                                          'portion_set-4-quantity': 0,
+                                          'portion_set-5-quantity': 0},
+                                      # follow=True
+                                      )
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(len(response.templates), 2)
+        self.assertTemplateUsed(response, 'food/meal_edit.html')
+        self.assertTemplateUsed(response, 'food/base.html')
+
+#        print type(response.context['formset'].errors[0])
+#        print response.context['formset'].errors[0]
+#        print type(response.context['formset'][0].non_field_errors())
+#        print response.context['formset'][0].non_field_errors()[0]
+
+        expected_error = u"This portion's quantity is greater than the remaining quantity of the dish (350 g)."
+        self.assertTrue(expected_error in
+                            response.context['formset'][0].non_field_errors())
+        # Check that meal & portions weren't changed
+        edited_meal = Meal.objects.get(name='breakfast')
+        edited_portion_one = Portion.objects.get(pk=portion_one.id)
+        edited_portion_two = Portion.objects.get(pk=portion_two.id)
+        edited_portion_three = Portion.objects.get(pk=portion_three.id)
+        self.assertEqual(edited_meal.time, datetime.time(8, 30))
+        self.assertEqual(edited_portion_one.quantity, 50)
+        self.assertEqual(edited_portion_two.quantity, 100)
+        self.assertEqual(edited_portion_three.quantity, 150)
+        # Check that dish's remaining quantity is still the same
+        updated_dish = Dish.objects.get(name='Test dish')
+        self.assertEqual(updated_dish.get_remaining_quantity(), 350)
+
+        # Try to edit a meal and portions of a dish using a joint quantity (but
+        # not individual quantities) greater than the dish's remaining quantity
+        response = self.client.post(reverse('meal_edit',
+                                           kwargs={'meal_id': meal.id}),
+                                    data={'name': 'breakfast',
+                                          'date': datetime.date.today(),
+                                          'time': datetime.time(8, 30),
+                                          'household': test_household.id,
+                                          'user': test_user.id,
+                                          'portion_set-TOTAL_FORMS': 6,
+                                          'portion_set-INITIAL_FORMS': 0,
+                                          # 150/500 of dish used already
+                                          'portion_set-0-comestible': dish.id,
+                                          'portion_set-0-quantity': 250, # was 50
+                                          'portion_set-1-comestible': dish.id,
+                                          'portion_set-1-quantity': 300, # was 100
+                                          'portion_set-2-comestible': ingredient_one.id,
+                                          'portion_set-2-quantity': 150,
+                                          # Leave the default values for these
+                                          # fields unchanged
+                                          'portion_set-3-quantity': 0,
+                                          'portion_set-4-quantity': 0,
+                                          'portion_set-5-quantity': 0},
+                                      # follow=True
+                                      )
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(len(response.templates), 2)
+        self.assertTemplateUsed(response, 'food/meal_edit.html')
+        self.assertTemplateUsed(response, 'food/base.html')
+
+#        print type(response.context['formset'].errors)
+#        print response.context['formset'].errors
+#        print type(response.context['formset'].non_form_errors())
+#        print response.context['formset'].non_form_errors()
+
+        expected_error = u"The remaining quantity of Test dish (2012-01-19) (350 g) is less than the total quantity of it in this meal."
+        self.assertTrue(expected_error in
+                            response.context['formset'].non_form_errors())
+        # Check that meal & portions weren't changed
+        edited_meal = Meal.objects.get(name='breakfast')
+        edited_portion_one = Portion.objects.get(pk=portion_one.id)
+        edited_portion_two = Portion.objects.get(pk=portion_two.id)
+        edited_portion_three = Portion.objects.get(pk=portion_three.id)
+        self.assertEqual(edited_meal.time, datetime.time(8, 30))
+        self.assertEqual(edited_portion_one.quantity, 50)
+        self.assertEqual(edited_portion_two.quantity, 100)
+        self.assertEqual(edited_portion_three.quantity, 150)
+        # Check that dish's remaining quantity is still the same
+        updated_dish = Dish.objects.get(name='Test dish')
+        self.assertEqual(updated_dish.get_remaining_quantity(), 350)
 
     def test_meal_duplicate(self):
         pass
