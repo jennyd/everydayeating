@@ -7,7 +7,7 @@ from django.forms.models import ModelForm, BaseInlineFormSet
 from django.test import TestCase
 
 from food.models import validate_positive, validate_positive_or_zero, Household, Comestible, Ingredient, Dish, Amount, Meal, Portion
-from food.views import DishMultiplyForm, DishDuplicateForm, get_sum_day_calories, get_avg_week_calories, get_week_starts_in_month
+from food.views import BaseMealInlineFormSet, DishMultiplyForm, DishDuplicateForm, get_sum_day_calories, get_avg_week_calories, get_week_starts_in_month
 
 
 fake_pk = 9999999999
@@ -1273,7 +1273,7 @@ class FoodViewsTestCase(TestCase):
         self.assertTrue('formset' in response.context)
         # Is this necessary?
         self.assertIsInstance(response.context['form'], ModelForm)
-        # self.assertIsInstance(response.context['formset'], # ???? )
+        self.assertIsInstance(response.context['formset'], BaseMealInlineFormSet)
 
         # Add a good meal with portions
         response = self.client.post(reverse('meal_add'),
@@ -1458,7 +1458,7 @@ class FoodViewsTestCase(TestCase):
         self.assertTrue('formset' in response.context)
         # Is this necessary?
         self.assertIsInstance(response.context['form'], ModelForm)
-        # self.assertIsInstance(response.context['formset'], # ???? )
+        self.assertIsInstance(response.context['formset'], BaseMealInlineFormSet)
 
         # Edit a meal and portions correctly
         response = self.client.post(reverse('meal_edit',
