@@ -655,8 +655,8 @@ class FoodViewsTestCase(TestCase):
                                           'contained_comestibles_set-TOTAL_FORMS': 9,
                                           'contained_comestibles_set-INITIAL_FORMS': 3,
                                           # amount id needed here, apparently -
-                                          # because 2 amounts have the same meal
-                                          # and comestible?
+                                          # because 2 amounts have the same
+                                          # comestible?
                                           'contained_comestibles_set-0-id': amount_one.id,
                                           'contained_comestibles_set-0-contained_comestible': 1,
                                           'contained_comestibles_set-0-quantity': 50,
