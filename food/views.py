@@ -440,7 +440,7 @@ def _week_bounds(date):
 # This is copied directly from django/views/generic/dates.py, since it
 # can't be imported;
 # Probably a really bad idea to do this....
-def _get_next_prev_month(
+def _get_next_prev_month( # pragma: no cover
         generic_view,
         naive_result,
         is_previous,
@@ -478,7 +478,7 @@ def _get_next_prev_month(
 
     # If allow_empty is True the naive value will be valid
     if allow_empty:
-        result = naive_result
+        result = naive_result # pragma: no cover
 
     # Otherwise, we'll need to go to the database to look for an object
     # whose date_field is at least (greater than/less than) the given
@@ -501,21 +501,21 @@ def _get_next_prev_month(
         try:
             result = getattr(qs[0], date_field)
 #            print >> sys.stderr, "Result: ", result ##########################
-        except IndexError:
+        except IndexError: # pragma: no cover
             result = None
 
     # Convert datetimes to a dates
     if hasattr(result, 'date'):
-        result = result.date()
+        result = result.date() # pragma: no cover
 
     # For month views, we always want to have a date that's the first of the
     # month for consistency's sake.
     if result and use_first_day:
-        result = result.replace(day=1)
+        result = result.replace(day=1) # pragma: no cover
 
     # Check against future dates.
     if result and (allow_future or result < datetime.date.today()):
         return result
     else:
-        return None
+        return None # pragma: no cover
 
