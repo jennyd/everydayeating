@@ -1515,21 +1515,28 @@ class FoodViewsTestCase(TestCase):
                                           'time': datetime.time(8, 30),
                                           'household': test_household.id,
                                           'user': test_user.id,
-                                          'portion_set-TOTAL_FORMS': 6,
-                                          'portion_set-INITIAL_FORMS': 0,
-                                          # Don't need portion id this time,
-                                          # since no new portions are added here
+                                          'portion_set-TOTAL_FORMS': 9,
+                                          'portion_set-INITIAL_FORMS': 3,
+                                          # portion id needed here, apparently -
+                                          # because 2 portions have the same meal
+                                          # and comestible?
+                                          'portion_set-0-id': portion_one.id,
                                           'portion_set-0-comestible': dish.id,
                                           'portion_set-0-quantity': -50,
+                                          'portion_set-1-id': portion_two.id,
                                           'portion_set-1-comestible': dish.id,
                                           'portion_set-1-quantity': 100,
+                                          'portion_set-2-id': portion_three.id,
                                           'portion_set-2-comestible': ingredient_one.id,
                                           'portion_set-2-quantity': 150,
                                           # Leave the default values for these
                                           # fields unchanged
                                           'portion_set-3-quantity': 0,
                                           'portion_set-4-quantity': 0,
-                                          'portion_set-5-quantity': 0},
+                                          'portion_set-5-quantity': 0,
+                                          'portion_set-6-quantity': 0,
+                                          'portion_set-7-quantity': 0,
+                                          'portion_set-8-quantity': 0},
                                     # follow=True
                                     )
         self.assertEqual(response.status_code, 200)
@@ -1560,20 +1567,29 @@ class FoodViewsTestCase(TestCase):
                                           'time': datetime.time(8, 30),
                                           'household': test_household.id,
                                           'user': test_user.id,
-                                          'portion_set-TOTAL_FORMS': 6,
-                                          'portion_set-INITIAL_FORMS': 0,
+                                          'portion_set-TOTAL_FORMS': 9,
+                                          'portion_set-INITIAL_FORMS': 3,
+                                          # portion id needed here, apparently -
+                                          # because 2 portions have the same meal
+                                          # and comestible?
+                                          'portion_set-0-id': portion_one.id,
                                           # 150/500 of dish used already
                                           'portion_set-0-comestible': dish.id,
                                           'portion_set-0-quantity': 450, # was 50
+                                          'portion_set-1-id': portion_two.id,
                                           'portion_set-1-comestible': dish.id,
                                           'portion_set-1-quantity': 100, # was 100
+                                          'portion_set-2-id': portion_three.id,
                                           'portion_set-2-comestible': ingredient_one.id,
                                           'portion_set-2-quantity': 150,
                                           # Leave the default values for these
                                           # fields unchanged
                                           'portion_set-3-quantity': 0,
                                           'portion_set-4-quantity': 0,
-                                          'portion_set-5-quantity': 0},
+                                          'portion_set-5-quantity': 0,
+                                          'portion_set-6-quantity': 0,
+                                          'portion_set-7-quantity': 0,
+                                          'portion_set-8-quantity': 0},
                                       # follow=True
                                       )
         self.assertEqual(response.status_code, 200)
@@ -1611,20 +1627,29 @@ class FoodViewsTestCase(TestCase):
                                           'time': datetime.time(8, 30),
                                           'household': test_household.id,
                                           'user': test_user.id,
-                                          'portion_set-TOTAL_FORMS': 6,
-                                          'portion_set-INITIAL_FORMS': 0,
+                                          'portion_set-TOTAL_FORMS': 9,
+                                          'portion_set-INITIAL_FORMS': 3,
+                                          # portion id needed here, apparently -
+                                          # because 2 portions have the same meal
+                                          # and comestible?
+                                          'portion_set-0-id': portion_one.id,
                                           # 150/500 of dish used already
                                           'portion_set-0-comestible': dish.id,
                                           'portion_set-0-quantity': 250, # was 50
+                                          'portion_set-1-id': portion_two.id,
                                           'portion_set-1-comestible': dish.id,
                                           'portion_set-1-quantity': 300, # was 100
+                                          'portion_set-2-id': portion_three.id,
                                           'portion_set-2-comestible': ingredient_one.id,
                                           'portion_set-2-quantity': 150,
                                           # Leave the default values for these
                                           # fields unchanged
                                           'portion_set-3-quantity': 0,
                                           'portion_set-4-quantity': 0,
-                                          'portion_set-5-quantity': 0},
+                                          'portion_set-5-quantity': 0,
+                                          'portion_set-6-quantity': 0,
+                                          'portion_set-7-quantity': 0,
+                                          'portion_set-8-quantity': 0},
                                       # follow=True
                                       )
         self.assertEqual(response.status_code, 200)
