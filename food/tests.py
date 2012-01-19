@@ -387,7 +387,7 @@ class FoodViewsTestCase(TestCase):
                                                calories = 828)
         dish = Dish.objects.create(name = 'Test dish',
                                    quantity = 500,
-                                   date_cooked = datetime.date.today(),
+                                   date_cooked = datetime.date(2012, 01, 18),
                                    household = test_household,
                                    recipe_url = u'http://www.example.com/recipeurl/',
                                    unit = 'g')
@@ -428,7 +428,7 @@ class FoodViewsTestCase(TestCase):
                                                calories = 828)
         dish = Dish.objects.create(name = 'Test dish',
                                    quantity = 500,
-                                   date_cooked = datetime.date.today(),
+                                   date_cooked = datetime.date(2012, 01, 18),
                                    household = test_household,
                                    recipe_url = u'http://www.example.com/recipeurl/',
                                    unit = 'g')
@@ -499,7 +499,7 @@ class FoodViewsTestCase(TestCase):
         response = self.client.post(reverse('dish_add'),
                                     data={'name': 'Test dish',
                                           'quantity': 500,
-                                          'date_cooked': datetime.date.today(),
+                                          'date_cooked': datetime.date(2012, 01, 18),
                                           'household': test_household.id,
                                           'recipe_url': u'http://www.example.com/recipeurl/',
                                           'cooks': test_user.id,
@@ -529,7 +529,7 @@ class FoodViewsTestCase(TestCase):
         response = self.client.post(reverse('dish_add'),
                                     data={'name': 'Test dish bad',
                                           'quantity': 0,
-                                          'date_cooked': datetime.date.today(),
+                                          'date_cooked': datetime.date(2012, 01, 18),
                                           'household': test_household.id,
                                           'recipe_url': u'http://www.example.com/recipeurl/',
                                           'cooks': test_user.id,
@@ -572,7 +572,7 @@ class FoodViewsTestCase(TestCase):
                                                calories = 828)
         dish = Dish.objects.create(name = 'Test dish',
                                    quantity = 500,
-                                   date_cooked = datetime.date.today(),
+                                   date_cooked = datetime.date(2012, 01, 18),
                                    household = test_household,
                                    recipe_url = u'http://www.example.com/recipeurl/',
                                    unit = 'g')
@@ -598,7 +598,7 @@ class FoodViewsTestCase(TestCase):
                                             kwargs={'dish_id': dish.id}),
                                     data={'name': 'Test dish',
                                           'quantity': 400, # was 500
-                                          'date_cooked': datetime.date.today(),
+                                          'date_cooked': datetime.date(2012, 01, 18),
                                           'household': test_household.id,
                                           'recipe_url': u'http://www.example.com/recipeurl/',
                                           'cooks': test_user.id,
@@ -647,7 +647,7 @@ class FoodViewsTestCase(TestCase):
                                             kwargs={'dish_id': dish.id}),
                                     data={'name': 'Test dish',
                                           'quantity': 0, # was 500, then edited to 400
-                                          'date_cooked': datetime.date.today(),
+                                          'date_cooked': datetime.date(2012, 01, 18),
                                           'household': test_household.id,
                                           'recipe_url': u'http://www.example.com/recipeurl/',
                                           'cooks': test_user.id,
@@ -715,7 +715,7 @@ class FoodViewsTestCase(TestCase):
                                                calories = 828)
         dish = Dish.objects.create(name = 'Test dish',
                                    quantity = 500,
-                                   date_cooked = datetime.date.today(),
+                                   date_cooked = datetime.date(2012, 01, 18),
                                    household = test_household,
                                    recipe_url = u'http://www.example.com/recipeurl/',
                                    unit = 'g')
@@ -1131,7 +1131,7 @@ class FoodViewsTestCase(TestCase):
                                                calories = 828)
         dish = Dish.objects.create(name = 'Test dish',
                                    quantity = 500,
-                                   date_cooked = datetime.date.today(),
+                                   date_cooked = datetime.date(2012, 01, 18),
                                    household = test_household,
                                    recipe_url = u'http://www.example.com/recipeurl/',
                                    unit = 'g')
@@ -1141,7 +1141,7 @@ class FoodViewsTestCase(TestCase):
         dish.contained_comestibles_set.create(contained_comestible = ingredient_two,
                                               quantity = 150)
         meal = Meal.objects.create(name = 'breakfast',
-                                   date = datetime.date.today(),
+                                   date = datetime.date(2012, 01, 18),
                                    time = datetime.time(7, 30),
                                    household = test_household,
                                    user = test_user)
@@ -1180,7 +1180,7 @@ class FoodViewsTestCase(TestCase):
                                                calories = 828)
         dish = Dish.objects.create(name = 'Test dish',
                                    quantity = 500,
-                                   date_cooked = datetime.date.today(),
+                                   date_cooked = datetime.date(2012, 01, 18),
                                    household = test_household,
                                    recipe_url = u'http://www.example.com/recipeurl/',
                                    unit = 'g')
@@ -1190,7 +1190,7 @@ class FoodViewsTestCase(TestCase):
         dish.contained_comestibles_set.create(contained_comestible = ingredient_two,
                                               quantity = 150)
         meal = Meal.objects.create(name = 'breakfast',
-                                   date = datetime.date.today(),
+                                   date = datetime.date(2012, 01, 18),
                                    time = datetime.time(7, 30),
                                    household = test_household,
                                    user = test_user)
@@ -1200,7 +1200,7 @@ class FoodViewsTestCase(TestCase):
         # There needs to be a meal remaining after deleting one, so that the
         # view it redirects to (meal_archive) doesn't go to 404
         extra_meal = Meal.objects.create(name = 'lunch',
-                                   date = datetime.date.today(),
+                                   date = datetime.date(2012, 01, 18),
                                    time = datetime.time(12, 30),
                                    household = test_household,
                                    user = test_user)
@@ -1254,7 +1254,7 @@ class FoodViewsTestCase(TestCase):
                                                calories = 828)
         dish = Dish.objects.create(name = 'Test dish',
                                    quantity = 500,
-                                   date_cooked = datetime.date.today(),
+                                   date_cooked = datetime.date(2012, 01, 18),
                                    household = test_household,
                                    recipe_url = u'http://www.example.com/recipeurl/',
                                    unit = 'g')
@@ -1278,7 +1278,7 @@ class FoodViewsTestCase(TestCase):
         # Add a good meal with portions
         response = self.client.post(reverse('meal_add'),
                                     data={'name': 'breakfast',
-                                          'date': datetime.date.today(),
+                                          'date': datetime.date(2012, 01, 18),
                                           'time': datetime.time(7, 30),
                                           'household': test_household.id,
                                           'user': test_user.id,
@@ -1305,7 +1305,7 @@ class FoodViewsTestCase(TestCase):
         # Try to add a meal and portions with invalid quantity values
         response = self.client.post(reverse('meal_add'),
                                     data={'name': 'lunch',
-                                          'date': datetime.date.today(),
+                                          'date': datetime.date(2012, 01, 18),
                                           'time': datetime.time(12, 30),
                                           'household': test_household.id,
                                           'user': test_user.id,
@@ -1337,7 +1337,7 @@ class FoodViewsTestCase(TestCase):
         # than the dish's remaining quantity
         response = self.client.post(reverse('meal_add'),
                                     data={'name': 'dinner',
-                                          'date': datetime.date.today(),
+                                          'date': datetime.date(2012, 01, 18),
                                           'time': datetime.time(19, 30),
                                           'household': test_household.id,
                                           'user': test_user.id,
@@ -1376,7 +1376,7 @@ class FoodViewsTestCase(TestCase):
         # not individual quantities) greater than the dish's remaining quantity
         response = self.client.post(reverse('meal_add'),
                                     data={'name': 'snack',
-                                          'date': datetime.date.today(),
+                                          'date': datetime.date(2012, 01, 18),
                                           'time': datetime.time(15, 30),
                                           'household': test_household.id,
                                           'user': test_user.id,
@@ -1405,7 +1405,7 @@ class FoodViewsTestCase(TestCase):
 #        print type(response.context['formset'].non_form_errors())
 #        print response.context['formset'].non_form_errors()
 
-        expected_error = u"The remaining quantity of Test dish (2012-01-19) (400 g) is less than the total quantity of it in this meal."
+        expected_error = u"The remaining quantity of Test dish (2012-01-18) (400 g) is less than the total quantity of it in this meal."
         self.assertTrue(expected_error in
                             response.context['formset'].non_form_errors())
         self.assertRaises(ObjectDoesNotExist, Meal.objects.get,
@@ -1427,7 +1427,7 @@ class FoodViewsTestCase(TestCase):
                                                calories = 828)
         dish = Dish.objects.create(name = 'Test dish',
                                    quantity = 500,
-                                   date_cooked = datetime.date.today(),
+                                   date_cooked = datetime.date(2012, 01, 18),
                                    household = test_household,
                                    recipe_url = u'http://www.example.com/recipeurl/',
                                    unit = 'g')
@@ -1437,7 +1437,7 @@ class FoodViewsTestCase(TestCase):
         dish.contained_comestibles_set.create(contained_comestible = ingredient_two,
                                               quantity = 150)
         meal = Meal.objects.create(name = 'breakfast',
-                                   date = datetime.date.today(),
+                                   date = datetime.date(2012, 01, 18),
                                    time = datetime.time(7, 30),
                                    household = test_household,
                                    user = test_user)
@@ -1464,7 +1464,7 @@ class FoodViewsTestCase(TestCase):
         response = self.client.post(reverse('meal_edit',
                                            kwargs={'meal_id': meal.id}),
                                     data={'name': 'breakfast',
-                                          'date': datetime.date.today(),
+                                          'date': datetime.date(2012, 01, 18),
                                           'time': datetime.time(8, 30), # was 7:30
                                           'household': test_household.id,
                                           'user': test_user.id,
@@ -1511,7 +1511,7 @@ class FoodViewsTestCase(TestCase):
         response = self.client.post(reverse('meal_edit',
                                            kwargs={'meal_id': meal.id}),
                                     data={'name': 'breakfast',
-                                          'date': datetime.date.today(),
+                                          'date': datetime.date(2012, 01, 18),
                                           'time': datetime.time(8, 30),
                                           'household': test_household.id,
                                           'user': test_user.id,
@@ -1563,7 +1563,7 @@ class FoodViewsTestCase(TestCase):
         response = self.client.post(reverse('meal_edit',
                                            kwargs={'meal_id': meal.id}),
                                     data={'name': 'breakfast',
-                                          'date': datetime.date.today(),
+                                          'date': datetime.date(2012, 01, 18),
                                           'time': datetime.time(8, 30),
                                           'household': test_household.id,
                                           'user': test_user.id,
@@ -1623,7 +1623,7 @@ class FoodViewsTestCase(TestCase):
         response = self.client.post(reverse('meal_edit',
                                            kwargs={'meal_id': meal.id}),
                                     data={'name': 'breakfast',
-                                          'date': datetime.date.today(),
+                                          'date': datetime.date(2012, 01, 18),
                                           'time': datetime.time(8, 30),
                                           'household': test_household.id,
                                           'user': test_user.id,
@@ -1662,7 +1662,7 @@ class FoodViewsTestCase(TestCase):
 #        print type(response.context['formset'].non_form_errors())
 #        print response.context['formset'].non_form_errors()
 
-        expected_error = u"The remaining quantity of Test dish (2012-01-19) (500 g) is less than the total quantity of it in this meal."
+        expected_error = u"The remaining quantity of Test dish (2012-01-18) (500 g) is less than the total quantity of it in this meal."
         self.assertTrue(expected_error in
                             response.context['formset'].non_form_errors())
         # Check that meal & portions weren't changed
