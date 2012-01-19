@@ -1653,6 +1653,13 @@ class FoodViewsTestCase(TestCase):
         updated_dish = Dish.objects.get(name='Test dish')
         self.assertEqual(updated_dish.get_remaining_quantity(), 350)
 
+        # Try to edit a meal which doesn't exist
+        self.assertRaises(ObjectDoesNotExist, Meal.objects.get,
+                                                      pk=fake_pk)
+        response = self.client.get(reverse('meal_edit', kwargs={'meal_id': fake_pk}))
+        self.assertEqual(response.status_code, 404)
+        self.assertTemplateUsed(response, '404.html')
+
     def test_meal_duplicate(self):
         pass
 
