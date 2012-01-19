@@ -1600,9 +1600,9 @@ class FoodViewsTestCase(TestCase):
 #        print type(response.context['formset'].errors[0])
 #        print response.context['formset'].errors[0]
 #        print type(response.context['formset'][0].non_field_errors())
-#        print response.context['formset'][0].non_field_errors()[0]
+#        print response.context['formset'][0].non_field_errors()
 
-        expected_error = u"This portion's quantity is greater than the remaining quantity of the dish (350 g)."
+        expected_error = u"This portion's quantity is greater than the remaining quantity of the dish (400 g)."
         self.assertTrue(expected_error in
                             response.context['formset'][0].non_field_errors())
         # Check that meal & portions weren't changed
@@ -1662,7 +1662,7 @@ class FoodViewsTestCase(TestCase):
 #        print type(response.context['formset'].non_form_errors())
 #        print response.context['formset'].non_form_errors()
 
-        expected_error = u"The remaining quantity of Test dish (2012-01-19) (350 g) is less than the total quantity of it in this meal."
+        expected_error = u"The remaining quantity of Test dish (2012-01-19) (500 g) is less than the total quantity of it in this meal."
         self.assertTrue(expected_error in
                             response.context['formset'].non_form_errors())
         # Check that meal & portions weren't changed
