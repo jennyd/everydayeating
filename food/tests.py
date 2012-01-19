@@ -7,7 +7,7 @@ from django.forms.models import ModelForm, BaseInlineFormSet
 from django.test import TestCase
 
 from food.models import validate_positive, validate_positive_or_zero, Household, Comestible, Ingredient, Dish, Amount, Meal, Portion
-from food.views import BaseMealInlineFormSet, DishMultiplyForm, DishDuplicateForm, get_sum_day_calories, get_avg_week_calories, get_week_starts_in_month
+from food.views import BaseMealInlineFormSet, DishMultiplyForm, DishDuplicateForm, MealDuplicateForm, get_sum_day_calories, get_avg_week_calories, get_week_starts_in_month
 
 
 fake_pk = 9999999999
@@ -1686,7 +1686,98 @@ class FoodViewsTestCase(TestCase):
         self.assertTemplateUsed(response, '404.html')
 
     def test_meal_duplicate(self):
-        pass
+        # Create a user, household, ingredients, dish & amounts, meal & portions
+        test_user = User.objects.create(username = 'testuser',
+                                        password = 'testpassword')
+        test_household = Household.objects.create(name = 'Test household',
+                                             admin = test_user)
+        ingredient_one = Ingredient.objects.create(name = 'Test ingredient 1',
+                                               quantity = 100,
+                                               unit = 'g',
+                                               calories = 75)
+        ingredient_two = Ingredient.objects.create(name = 'Test ingredient 2',
+                                               quantity = 100,
+                                               unit = 'ml',
+                                               calories = 828)
+        dish = Dish.objects.create(name = 'Test dish',
+                                   quantity = 500,
+                                   date_cooked = datetime.date(2012, 01, 18),
+                                   household = test_household,
+                                   recipe_url = u'http://www.example.com/recipeurl/',
+                                   unit = 'g')
+        dish.cooks.add(test_user)
+        dish.contained_comestibles_set.create(contained_comestible = ingredient_one,
+                                              quantity = 50)
+        dish.contained_comestibles_set.create(contained_comestible = ingredient_two,
+                                              quantity = 150)
+        old_meal = Meal.objects.create(name = 'breakfast',
+                                   date = datetime.date(2012, 01, 18),
+                                   time = datetime.time(7, 30),
+                                   household = test_household,
+                                   user = test_user)
+        old_portion_one = Portion.objects.create(comestible = ingredient_one,
+                                         meal = old_meal,
+                                         quantity = 75)
+        old_portion_two = Portion.objects.create(comestible = dish,
+                                         meal = old_meal,
+                                         quantity = 100)
+
+
+        response = self.client.get(reverse('meal_duplicate', kwargs={'meal_id': old_meal.id}))
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(len(response.templates), 2)
+        self.assertTemplateUsed(response, 'food/meal_duplicate.html')
+        self.assertTemplateUsed(response, 'food/base.html')
+        self.assertTrue('form' in response.context)
+        # Is this necessary?
+        self.assertIsInstance(response.context['form'], MealDuplicateForm)
+
+        # Duplicate a dish correctly
+        response = self.client.post(reverse('meal_duplicate',
+                                            kwargs={'meal_id': old_meal.id}),
+                                    data={'date': datetime.date(2012, 01, 19)},
+                                    follow=True)
+#        print response.redirect_chain
+        # FIXME Add more here to check redirects?
+        # Redirects to meal_detail (for new meal)
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(len(response.templates), 2)
+        self.assertTemplateUsed(response, 'food/meal_detail.html')
+        self.assertTemplateUsed(response, 'food/base.html')
+        # Check meal & portions duplicated correctly
+        new_meal = Meal.objects.get(pk=response.context['meal'].id)
+        new_portion_one = Portion.objects.get(comestible=ingredient_one, meal=new_meal)
+        new_portion_two = Portion.objects.get(comestible=dish, meal=new_meal)
+        self.assertEqual(new_meal.date, datetime.date(2012, 01, 19))
+        self.assertEqual(new_meal.name, 'breakfast')
+        self.assertEqual(new_meal.user, test_user)
+        self.assertEqual(new_portion_one.quantity, 75)
+        # This is a quantity of the original dish; this should be changed to
+        # make sure that the dish's remaining quantity isn't exceeded, and if it
+        # would be, to ask if the dish should be duplicated (cooked again)
+        self.assertEqual(new_portion_two.quantity, 100)
+
+        # Is this necessary?
+        # Try to duplicate a meal using an invalid date value
+        # The date needs to be sent as a string because datetime won't allow an
+        # invalid date (e.g. datetime.date(2011, 11, 50).
+        response = self.client.post(reverse('meal_duplicate',
+                                            kwargs={'meal_id': old_meal.id}),
+                                    data={'date': '50/11/2011'},
+                                    follow=True)
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(len(response.templates), 2)
+        self.assertTemplateUsed(response, 'food/meal_duplicate.html')
+        self.assertTemplateUsed(response, 'food/base.html')
+        self.assertTrue(u'Enter a valid date.' in
+                                response.context['form']['date'].errors)
+
+        # Try to duplicate a meal which doesn't exist
+        self.assertRaises(ObjectDoesNotExist, Meal.objects.get,
+                                                      pk=fake_pk)
+        response = self.client.get(reverse('meal_duplicate', kwargs={'meal_id': fake_pk}))
+        self.assertEqual(response.status_code, 404)
+        self.assertTemplateUsed(response, '404.html')
 
 
 class DateViewsTestCase(TestCase):
