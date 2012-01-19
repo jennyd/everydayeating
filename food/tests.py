@@ -3,7 +3,7 @@ import datetime
 from django.core.exceptions import ValidationError, ObjectDoesNotExist
 from django.core.urlresolvers import reverse
 from django.contrib.auth.models import User
-from django.forms.models import ModelForm
+from django.forms.models import ModelForm, BaseInlineFormSet
 from django.test import TestCase
 
 from food.models import validate_positive, validate_positive_or_zero, Household, Comestible, Ingredient, Dish, Amount, Meal, Portion
@@ -493,7 +493,7 @@ class FoodViewsTestCase(TestCase):
         self.assertTrue('formset' in response.context)
         # Is this necessary?
         self.assertIsInstance(response.context['form'], ModelForm)
-        # self.assertIsInstance(response.context['formset'], # ???? )
+        self.assertIsInstance(response.context['formset'], BaseInlineFormSet)
 
         # Add a good dish with amounts
         response = self.client.post(reverse('dish_add'),
@@ -591,7 +591,7 @@ class FoodViewsTestCase(TestCase):
         self.assertTrue('formset' in response.context)
         # Is this necessary?
         self.assertIsInstance(response.context['form'], ModelForm)
-        # self.assertIsInstance(response.context['formset'], # ???? )
+        self.assertIsInstance(response.context['formset'], BaseInlineFormSet)
 
         # Edit a dish correctly
         response = self.client.post(reverse('dish_edit',
