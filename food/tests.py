@@ -1336,6 +1336,45 @@ class FoodViewsTestCase(TestCase):
         self.assertRaises(ObjectDoesNotExist, Meal.objects.get,
                                 name='dinner')
 
+        # Try to add a meal and portions of a dish with a joint quantity (but
+        # not individual quantities) greater than the dish's remaining quantity
+        response = self.client.post(reverse('meal_add'),
+                                    data={'name': 'snack',
+                                          'date': datetime.date.today(),
+                                          'time': datetime.time(15, 30),
+                                          'household': test_household.id,
+                                          'user': test_user.id,
+                                          'portion_set-TOTAL_FORMS': 6,
+                                          'portion_set-INITIAL_FORMS': 0,
+                                          # 100/500 of dish in breakfast
+                                          'portion_set-0-comestible': dish.id,
+                                          'portion_set-0-quantity': 300,
+                                          'portion_set-1-comestible': dish.id,
+                                          'portion_set-1-quantity': 300,
+                                          # Leave the default values for these
+                                          # fields unchanged
+                                          'portion_set-2-quantity': 0,
+                                          'portion_set-3-quantity': 0,
+                                          'portion_set-4-quantity': 0,
+                                          'portion_set-5-quantity': 0},
+                                      # follow=True
+                                      )
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(len(response.templates), 2)
+        self.assertTemplateUsed(response, 'food/meal_edit.html')
+        self.assertTemplateUsed(response, 'food/base.html')
+
+#        print type(response.context['formset'].errors)
+#        print response.context['formset'].errors
+#        print type(response.context['formset'].non_form_errors())
+#        print response.context['formset'].non_form_errors()
+
+        expected_error = u"The remaining quantity of Test dish (2012-01-19) (400 g) is less than the total quantity of it in this meal."
+        self.assertTrue(expected_error in
+                            response.context['formset'].non_form_errors())
+        self.assertRaises(ObjectDoesNotExist, Meal.objects.get,
+                                name='snack')
+
     def test_meal_edit(self):
         pass
 
