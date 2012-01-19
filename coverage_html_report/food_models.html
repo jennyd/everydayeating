@@ -5,7 +5,7 @@
     
     
     <meta http-equiv='X-UA-Compatible' content='IE=emulateIE7' />
-    <title>Coverage for food/models: 92%</title>
+    <title>Coverage for food/models: 93%</title>
     <link rel='stylesheet' href='style.css' type='text/css'>
     <script type='text/javascript' src='jquery-1.4.3.min.js'></script>
     <script type='text/javascript' src='jquery.hotkeys.js'></script>
@@ -20,16 +20,16 @@
 <div id='header'>
     <div class='content'>
         <h1>Coverage for <b>food/models</b> :
-            <span class='pc_cov'>92%</span>
+            <span class='pc_cov'>93%</span>
         </h1>
         <img id='keyboard_icon' src='keybd_closed.png'>
         <h2 class='stats'>
             201 statements
-            <span class='run hide_run shortkey_r' onclick='coverage.toggle_lines(this, "run")'>188 run</span>
-            <span class='mis shortkey_m' onclick='coverage.toggle_lines(this, "mis")'>13 missing</span>
+            <span class='run hide_run shortkey_r' onclick='coverage.toggle_lines(this, "run")'>189 run</span>
+            <span class='mis shortkey_m' onclick='coverage.toggle_lines(this, "mis")'>12 missing</span>
             <span class='exc shortkey_x' onclick='coverage.toggle_lines(this, "exc")'>0 excluded</span>
             
-                <span class='par run hide_run shortkey_p' onclick='coverage.toggle_lines(this, "par")'>5 partial</span>
+                <span class='par run hide_run shortkey_p' onclick='coverage.toggle_lines(this, "par")'>4 partial</span>
             
         </h2>
     </div>
@@ -255,11 +255,11 @@
 <p id='n191' class='stm run hide_run'><a href='#n191'>191</a></p>
 <p id='n192' class='pln'><a href='#n192'>192</a></p>
 <p id='n193' class='stm run hide_run'><a href='#n193'>193</a></p>
-<p id='n194' class='stm par run hide_run'><a href='#n194'>194</a></p>
+<p id='n194' class='stm run hide_run'><a href='#n194'>194</a></p>
 <p id='n195' class='pln'><a href='#n195'>195</a></p>
 <p id='n196' class='pln'><a href='#n196'>196</a></p>
 <p id='n197' class='pln'><a href='#n197'>197</a></p>
-<p id='n198' class='stm mis'><a href='#n198'>198</a></p>
+<p id='n198' class='stm run hide_run'><a href='#n198'>198</a></p>
 <p id='n199' class='pln'><a href='#n199'>199</a></p>
 <p id='n200' class='pln'><a href='#n200'>200</a></p>
 <p id='n201' class='pln'><a href='#n201'>201</a></p>
@@ -713,11 +713,11 @@
 <p id='t191' class='stm run hide_run'>&nbsp; &nbsp; &nbsp; &nbsp; <span class='key'>return</span> <span class='nam'>result</span><span class='strut'>&nbsp;</span></p>
 <p id='t192' class='pln'><span class='strut'>&nbsp;</span></p>
 <p id='t193' class='stm run hide_run'>&nbsp; &nbsp; <span class='key'>def</span> <span class='nam'>save</span><span class='op'>(</span><span class='nam'>self</span><span class='op'>,</span> <span class='op'>*</span><span class='nam'>args</span><span class='op'>,</span> <span class='op'>**</span><span class='nam'>kwargs</span><span class='op'>)</span><span class='op'>:</span><span class='strut'>&nbsp;</span></p>
-<p id='t194' class='stm par run hide_run'><span class='annotate' title='no jump to this line number'>198</span>&nbsp; &nbsp; &nbsp; &nbsp; <span class='key'>if</span> <span class='op'>(</span><span class='nam'>self</span><span class='op'>.</span><span class='nam'>contained_comestible</span><span class='op'>.</span><span class='nam'>is_dish</span> <span class='key'>and</span><span class='strut'>&nbsp;</span></p>
+<p id='t194' class='stm run hide_run'>&nbsp; &nbsp; &nbsp; &nbsp; <span class='key'>if</span> <span class='op'>(</span><span class='nam'>self</span><span class='op'>.</span><span class='nam'>contained_comestible</span><span class='op'>.</span><span class='nam'>is_dish</span> <span class='key'>and</span><span class='strut'>&nbsp;</span></p>
 <p id='t195' class='pln'>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span class='nam'>self</span><span class='op'>.</span><span class='nam'>contained_comestible</span><span class='op'>.</span><span class='nam'>dish</span> <span class='op'>==</span> <span class='nam'>self</span><span class='op'>.</span><span class='nam'>containing_dish</span><span class='op'>)</span><span class='op'>:</span><span class='strut'>&nbsp;</span></p>
 <p id='t196' class='pln'>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span class='com'># This allows following amounts to be saved correctly,</span><span class='strut'>&nbsp;</span></p>
 <p id='t197' class='pln'>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span class='com'># but no notification to user...</span><span class='strut'>&nbsp;</span></p>
-<p id='t198' class='stm mis'>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span class='key'>return</span> <span class='str'>u&quot;A dish cannot contain itself&quot;</span><span class='strut'>&nbsp;</span></p>
+<p id='t198' class='stm run hide_run'>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span class='key'>return</span> <span class='str'>u&quot;A dish cannot contain itself&quot;</span><span class='strut'>&nbsp;</span></p>
 <p id='t199' class='pln'>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span class='com'># This fails obviously, but following valid amounts aren&#39;t saved</span><span class='strut'>&nbsp;</span></p>
 <p id='t200' class='pln'><span class='com'>#&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; raise Exception, u&quot;A dish cannot contain itself&quot;</span><span class='strut'>&nbsp;</span></p>
 <p id='t201' class='pln'>&nbsp; &nbsp; &nbsp; &nbsp; <span class='key'>else</span><span class='op'>:</span><span class='strut'>&nbsp;</span></p>

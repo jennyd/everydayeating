@@ -692,6 +692,58 @@ class FoodViewsTestCase(TestCase):
         self.assertEqual(edited_amount_two.quantity, 180)
         self.assertEqual(edited_amount_three.quantity, 100)
 
+        # Try to edit a dish to make it contain itself
+        response = self.client.post(reverse('dish_edit',
+                                            kwargs={'dish_id': dish.id}),
+                                    data={'name': 'Test dish',
+                                          'quantity': 400,
+                                          'date_cooked': datetime.date(2012, 01, 18),
+                                          'household': test_household.id,
+                                          'recipe_url': u'http://www.example.com/recipeurl/',
+                                          'cooks': test_user.id,
+                                          'unit': 'ml',
+                                          'contained_comestibles_set-TOTAL_FORMS': 9,
+                                          'contained_comestibles_set-INITIAL_FORMS': 3,
+                                          # amount id needed here, apparently -
+                                          # because 2 amounts have the same
+                                          # comestible?
+                                          'contained_comestibles_set-0-id': amount_one.id,
+                                          'contained_comestibles_set-0-contained_comestible': 1,
+                                          'contained_comestibles_set-0-quantity': 50,
+                                          'contained_comestibles_set-1-id': amount_two.id,
+                                          'contained_comestibles_set-1-contained_comestible': dish.id, # was 2
+                                          'contained_comestibles_set-1-quantity': 180,
+                                          'contained_comestibles_set-2-id': amount_three.id,
+                                          'contained_comestibles_set-2-contained_comestible': 2,
+                                          'contained_comestibles_set-2-quantity': 75, # was 100
+                                          # Leave the default values for these
+                                          # fields unchanged
+                                          'contained_comestibles_set-3-quantity': 0,
+                                          'contained_comestibles_set-4-quantity': 0,
+                                          'contained_comestibles_set-5-quantity': 0,
+                                          'contained_comestibles_set-6-quantity': 0,
+                                          'contained_comestibles_set-7-quantity': 0,
+                                          'contained_comestibles_set-8-quantity': 0},
+                                    follow=True)
+        # This produces no error message at the moment, to allow following
+        # correctly edited amounts to be saved; find a way to get around this!
+        # (It just redirects to the dish_detail page.)
+        # FIXME
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(len(response.templates), 2)
+        self.assertTemplateUsed(response, 'food/dish_detail.html')
+        self.assertTemplateUsed(response, 'food/base.html')
+        # Check that dish & amounts weren't changed, except for the correctly
+        # edited amount_three
+        edited_dish = Dish.objects.get(name='Test dish')
+        edited_amount_one = Amount.objects.get(pk=amount_one.id)
+        edited_amount_two = Amount.objects.get(pk=amount_two.id)
+        edited_amount_three = Amount.objects.get(pk=amount_three.id)
+        self.assertEqual(edited_dish.quantity, 400)
+        self.assertEqual(edited_amount_one.quantity, 50) # unchanged
+        self.assertEqual(edited_amount_two.contained_comestible.id, 2) # unchanged
+        self.assertEqual(edited_amount_three.quantity, 75) # updated
+
         # Try to edit a dish which doesn't exist
         self.assertRaises(ObjectDoesNotExist, Dish.objects.get,
                                                       pk=fake_pk)
