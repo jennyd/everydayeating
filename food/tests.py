@@ -577,9 +577,9 @@ class FoodViewsTestCase(TestCase):
                                    recipe_url = u'http://www.example.com/recipeurl/',
                                    unit = 'g')
         dish.cooks.add(test_user)
-        dish.contained_comestibles_set.create(contained_comestible = ingredient_one,
+        amount_one = dish.contained_comestibles_set.create(contained_comestible = ingredient_one,
                                               quantity = 50)
-        dish.contained_comestibles_set.create(contained_comestible = ingredient_two,
+        amount_two = dish.contained_comestibles_set.create(contained_comestible = ingredient_two,
                                               quantity = 150)
 
         response = self.client.get(reverse('dish_edit', kwargs={'dish_id': dish.id}))
@@ -603,18 +603,26 @@ class FoodViewsTestCase(TestCase):
                                           'recipe_url': u'http://www.example.com/recipeurl/',
                                           'cooks': test_user.id,
                                           'unit': 'ml', # was 'g'
-                                          'contained_comestibles_set-TOTAL_FORMS': 6,
-                                          'contained_comestibles_set-INITIAL_FORMS': 0,
+                                          'contained_comestibles_set-TOTAL_FORMS': 8,
+                                          'contained_comestibles_set-INITIAL_FORMS': 2,
+                                          # amount id needed here, since a new
+                                          # amount is being added to the formset
+                                          'contained_comestibles_set-0-id': amount_one.id,
                                           'contained_comestibles_set-0-contained_comestible': 1,
                                           'contained_comestibles_set-0-quantity': 50,
+                                          'contained_comestibles_set-1-id': amount_two.id,
                                           'contained_comestibles_set-1-contained_comestible': 2,
                                           'contained_comestibles_set-1-quantity': 180, # was 150
+                                          # new amount
+                                          'contained_comestibles_set-2-contained_comestible': 2,
+                                          'contained_comestibles_set-2-quantity': 100,
                                           # Leave the default values for these
                                           # fields unchanged
-                                          'contained_comestibles_set-2-quantity': 0,
                                           'contained_comestibles_set-3-quantity': 0,
                                           'contained_comestibles_set-4-quantity': 0,
-                                          'contained_comestibles_set-5-quantity': 0},
+                                          'contained_comestibles_set-5-quantity': 0,
+                                          'contained_comestibles_set-6-quantity': 0,
+                                          'contained_comestibles_set-7-quantity': 0},
                                     follow=True)
 #        print response.redirect_chain
         # FIXME Add more here to check redirects?
@@ -623,7 +631,16 @@ class FoodViewsTestCase(TestCase):
         self.assertEqual(len(response.templates), 2)
         self.assertTemplateUsed(response, 'food/dish_detail.html')
         self.assertTemplateUsed(response, 'food/base.html')
-        # Check dish & amounts edited correctly
+        # Check dish & amounts edited/created correctly
+        edited_dish = Dish.objects.get(name='Test dish')
+        edited_amount_one = Amount.objects.get(pk=amount_one.id)
+        edited_amount_two = Amount.objects.get(pk=amount_two.id)
+        amount_three = Amount.objects.get(pk=3)
+        self.assertEqual(edited_dish.quantity, 400)
+        self.assertEqual(edited_dish.unit, 'ml')
+        self.assertEqual(edited_amount_one.quantity, 50)
+        self.assertEqual(edited_amount_two.quantity, 180)
+        self.assertEqual(amount_three.quantity, 100)
 
         # Try to edit a dish and an amount with invalid quantity values
         response = self.client.post(reverse('dish_edit',
@@ -634,19 +651,29 @@ class FoodViewsTestCase(TestCase):
                                           'household': test_household.id,
                                           'recipe_url': u'http://www.example.com/recipeurl/',
                                           'cooks': test_user.id,
-                                          'unit': 'ml', # was 'g', then edited to 'ml'
-                                          'contained_comestibles_set-TOTAL_FORMS': 6,
-                                          'contained_comestibles_set-INITIAL_FORMS': 0,
+                                          'unit': 'ml',
+                                          'contained_comestibles_set-TOTAL_FORMS': 9,
+                                          'contained_comestibles_set-INITIAL_FORMS': 3,
+                                          # amount id needed here, apparently -
+                                          # because 2 amounts have the same meal
+                                          # and comestible?
+                                          'contained_comestibles_set-0-id': amount_one.id,
                                           'contained_comestibles_set-0-contained_comestible': 1,
                                           'contained_comestibles_set-0-quantity': 50,
+                                          'contained_comestibles_set-1-id': amount_two.id,
                                           'contained_comestibles_set-1-contained_comestible': 2,
                                           'contained_comestibles_set-1-quantity': -100, # was 150, then edited to 180
+                                          'contained_comestibles_set-2-id': amount_three.id,
+                                          'contained_comestibles_set-2-contained_comestible': 2,
+                                          'contained_comestibles_set-2-quantity': 100,
                                           # Leave the default values for these
                                           # fields unchanged
-                                          'contained_comestibles_set-2-quantity': 0,
                                           'contained_comestibles_set-3-quantity': 0,
                                           'contained_comestibles_set-4-quantity': 0,
-                                          'contained_comestibles_set-5-quantity': 0})
+                                          'contained_comestibles_set-5-quantity': 0,
+                                          'contained_comestibles_set-6-quantity': 0,
+                                          'contained_comestibles_set-7-quantity': 0,
+                                          'contained_comestibles_set-8-quantity': 0})
         self.assertEqual(response.status_code, 200)
         self.assertEqual(len(response.templates), 2)
         self.assertTemplateUsed(response, 'food/dish_edit.html')
@@ -655,6 +682,15 @@ class FoodViewsTestCase(TestCase):
                                 response.context['form']['quantity'].errors)
         self.assertTrue(u'Enter a number not less than 0' in
                                 response.context['formset'][1]['quantity'].errors)
+        # Check that dish & amounts weren't changed
+        edited_dish = Dish.objects.get(name='Test dish')
+        edited_amount_one = Amount.objects.get(pk=amount_one.id)
+        edited_amount_two = Amount.objects.get(pk=amount_two.id)
+        edited_amount_three = Amount.objects.get(pk=amount_three.id)
+        self.assertEqual(edited_dish.quantity, 400)
+        self.assertEqual(edited_amount_one.quantity, 50)
+        self.assertEqual(edited_amount_two.quantity, 180)
+        self.assertEqual(edited_amount_three.quantity, 100)
 
         # Try to edit a dish which doesn't exist
         self.assertRaises(ObjectDoesNotExist, Dish.objects.get,
@@ -1434,9 +1470,6 @@ class FoodViewsTestCase(TestCase):
                                           'user': test_user.id,
                                           'portion_set-TOTAL_FORMS': 8,
                                           'portion_set-INITIAL_FORMS': 2,
-
-# FIXME also add a new amount via the formset like this in test_dish_edit
-
                                           # portion id needed when new portions
                                           # are added into the formset
                                           'portion_set-0-id': portion_one.id,
