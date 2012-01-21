@@ -25,8 +25,8 @@
         <img id='keyboard_icon' src='keybd_closed.png'>
         <h2 class='stats'>
             201 statements
-            <span class='run hide_run shortkey_r' onclick='coverage.toggle_lines(this, "run")'>195 run</span>
-            <span class='mis shortkey_m' onclick='coverage.toggle_lines(this, "mis")'>6 missing</span>
+            <span class='run hide_run shortkey_r' onclick='coverage.toggle_lines(this, "run")'>197 run</span>
+            <span class='mis shortkey_m' onclick='coverage.toggle_lines(this, "mis")'>4 missing</span>
             <span class='exc shortkey_x' onclick='coverage.toggle_lines(this, "exc")'>0 excluded</span>
             
                 <span class='par run hide_run shortkey_p' onclick='coverage.toggle_lines(this, "par")'>2 partial</span>
@@ -487,8 +487,8 @@
 <p id='n423' class='pln'><a href='#n423'>423</a></p>
 <p id='n424' class='stm run hide_run'><a href='#n424'>424</a></p>
 <p id='n425' class='stm run hide_run'><a href='#n425'>425</a></p>
-<p id='n426' class='stm mis'><a href='#n426'>426</a></p>
-<p id='n427' class='stm mis'><a href='#n427'>427</a></p>
+<p id='n426' class='stm run hide_run'><a href='#n426'>426</a></p>
+<p id='n427' class='stm run hide_run'><a href='#n427'>427</a></p>
 <p id='n428' class='stm run hide_run'><a href='#n428'>428</a></p>
 <p id='n429' class='stm run hide_run'><a href='#n429'>429</a></p>
 <p id='n430' class='pln'><a href='#n430'>430</a></p>
@@ -945,8 +945,8 @@
 <p id='t423' class='pln'>&nbsp; &nbsp; <span class='com'># deleted, so a deleted portion won&#39;t always have a meal to update</span><span class='strut'>&nbsp;</span></p>
 <p id='t424' class='stm run hide_run'>&nbsp; &nbsp; <span class='key'>try</span><span class='op'>:</span><span class='strut'>&nbsp;</span></p>
 <p id='t425' class='stm run hide_run'>&nbsp; &nbsp; &nbsp; &nbsp; <span class='nam'>meal</span> <span class='op'>=</span> <span class='nam'>portion</span><span class='op'>.</span><span class='nam'>meal</span><span class='strut'>&nbsp;</span></p>
-<p id='t426' class='stm mis'>&nbsp; &nbsp; &nbsp; &nbsp; <span class='key'>print</span> <span class='op'>&gt;&gt;</span> <span class='nam'>sys</span><span class='op'>.</span><span class='nam'>stderr</span><span class='op'>,</span> <span class='str'>&quot;Instance deleted: portion (can&#39;t get name); updating meal&quot;</span><span class='op'>,</span> <span class='nam'>meal</span><span class='op'>,</span> <span class='nam'>meal</span><span class='op'>.</span><span class='nam'>calories</span><span class='op'>,</span> <span class='str'>&quot;calories&quot;</span><span class='strut'>&nbsp;</span></p>
-<p id='t427' class='stm mis'>&nbsp; &nbsp; &nbsp; &nbsp; <span class='nam'>meal</span><span class='op'>.</span><span class='nam'>save</span><span class='op'>(</span><span class='op'>)</span><span class='strut'>&nbsp;</span></p>
+<p id='t426' class='stm run hide_run'>&nbsp; &nbsp; &nbsp; &nbsp; <span class='key'>print</span> <span class='op'>&gt;&gt;</span> <span class='nam'>sys</span><span class='op'>.</span><span class='nam'>stderr</span><span class='op'>,</span> <span class='str'>&quot;Instance deleted: portion (can&#39;t get name); updating meal&quot;</span><span class='op'>,</span> <span class='nam'>meal</span><span class='op'>,</span> <span class='nam'>meal</span><span class='op'>.</span><span class='nam'>calories</span><span class='op'>,</span> <span class='str'>&quot;calories&quot;</span><span class='strut'>&nbsp;</span></p>
+<p id='t427' class='stm run hide_run'>&nbsp; &nbsp; &nbsp; &nbsp; <span class='nam'>meal</span><span class='op'>.</span><span class='nam'>save</span><span class='op'>(</span><span class='op'>)</span><span class='strut'>&nbsp;</span></p>
 <p id='t428' class='stm run hide_run'>&nbsp; &nbsp; <span class='key'>except</span> <span class='nam'>Meal</span><span class='op'>.</span><span class='nam'>DoesNotExist</span><span class='op'>:</span><span class='strut'>&nbsp;</span></p>
 <p id='t429' class='stm run hide_run'>&nbsp; &nbsp; &nbsp; &nbsp; <span class='key'>print</span> <span class='op'>&gt;&gt;</span> <span class='nam'>sys</span><span class='op'>.</span><span class='nam'>stderr</span><span class='op'>,</span> <span class='str'>&quot;Instance deleted: portion (can&#39;t get name); meal has already been deleted&quot;</span><span class='strut'>&nbsp;</span></p>
 <p id='t430' class='pln'><span class='strut'>&nbsp;</span></p>

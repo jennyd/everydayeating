@@ -1573,11 +1573,11 @@ class FoodViewsTestCase(TestCase):
         ingredient_one = Ingredient.objects.create(name = 'Test ingredient 1',
                                                quantity = 100,
                                                unit = 'g',
-                                               calories = 75)
+                                               calories = 50)
         ingredient_two = Ingredient.objects.create(name = 'Test ingredient 2',
                                                quantity = 100,
                                                unit = 'ml',
-                                               calories = 828)
+                                               calories = 30)
         dish = Dish.objects.create(name = 'Test dish',
                                    quantity = 500,
                                    date_cooked = datetime.date(2012, 01, 18),
@@ -1631,12 +1631,14 @@ class FoodViewsTestCase(TestCase):
                                           'portion_set-1-id': portion_two.id,
                                           'portion_set-1-comestible': dish.id,
                                           'portion_set-1-quantity': 100, # was 200
-                                          # new portion
+                                          # 2 new portions...
                                           'portion_set-2-comestible': ingredient_one.id,
                                           'portion_set-2-quantity': 150,
+                                          # ...this one to be deleted next
+                                          'portion_set-3-comestible': ingredient_two.id,
+                                          'portion_set-3-quantity': 15,
                                           # Leave the default values for these
                                           # fields unchanged
-                                          'portion_set-3-quantity': 0,
                                           'portion_set-4-quantity': 0,
                                           'portion_set-5-quantity': 0,
                                           'portion_set-6-quantity': 0,
@@ -1652,10 +1654,63 @@ class FoodViewsTestCase(TestCase):
         edited_portion_one = Portion.objects.get(pk=portion_one.id)
         edited_portion_two = Portion.objects.get(pk=portion_two.id)
         portion_three = Portion.objects.get(pk=3)
+        portion_four = Portion.objects.get(pk=4)
         self.assertEqual(edited_meal.time, datetime.time(8, 30))
+        # edited_meal.calories are useful to have here to compare with next test
+        self.assertEqual(edited_meal.calories, 100.5)
         self.assertEqual(edited_portion_one.quantity, 50)
         self.assertEqual(edited_portion_two.quantity, 100)
         self.assertEqual(portion_three.quantity, 150)
+        self.assertEqual(portion_four.quantity, 15)
+        # Check dish's remaining quantity
+        updated_dish = Dish.objects.get(name='Test dish')
+        self.assertEqual(updated_dish.get_remaining_quantity(), 350)
+
+        # Delete a portion correctly
+        response = self.client.post(reverse('meal_edit',
+                                           kwargs={'meal_id': meal.id}),
+                                    data={'name': 'breakfast',
+                                          'date': datetime.date(2012, 01, 18),
+                                          'time': datetime.time(8, 30), # was 7:30
+                                          'household': test_household.id,
+                                          'user': test_user.id,
+                                          'portion_set-TOTAL_FORMS': 10,
+                                          'portion_set-INITIAL_FORMS': 4,
+                                          # portion id needed when new portions
+                                          # are added into the formset
+                                          'portion_set-0-id': portion_one.id,
+                                          'portion_set-0-comestible': dish.id,
+                                          'portion_set-0-quantity': 50, # was 100
+                                          'portion_set-1-id': portion_two.id,
+                                          'portion_set-1-comestible': dish.id,
+                                          'portion_set-1-quantity': 100, # was 200
+                                          'portion_set-2-id': portion_three.id,
+                                          'portion_set-2-comestible': ingredient_one.id,
+                                          'portion_set-2-quantity': 150,
+                                          # Delete portion_four
+                                          'portion_set-3-id': portion_four.id,
+                                          'portion_set-3-comestible': ingredient_two.id,
+                                          'portion_set-3-quantity': 15,
+                                          'portion_set-3-DELETE': True,
+                                          # Leave the default values for these
+                                          # fields unchanged
+                                          'portion_set-4-quantity': 0,
+                                          'portion_set-5-quantity': 0,
+                                          'portion_set-6-quantity': 0,
+                                          'portion_set-7-quantity': 0,
+                                          'portion_set-8-quantity': 0,
+                                          'portion_set-9-quantity': 0},
+                                    follow=True)
+        # Redirects to meal_detail
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(len(response.templates), 2)
+        self.assertTemplateUsed(response, 'food/meal_detail.html')
+        self.assertTemplateUsed(response, 'food/base.html')
+        # Check portion deleted correctly and meal updated
+        edited_meal = Meal.objects.get(name='breakfast')
+        self.assertEqual(edited_meal.calories, 96)
+        self.assertRaises(ObjectDoesNotExist, Portion.objects.get,
+                                                      pk=portion_four.id)
         # Check dish's remaining quantity
         updated_dish = Dish.objects.get(name='Test dish')
         self.assertEqual(updated_dish.get_remaining_quantity(), 350)
