@@ -366,6 +366,8 @@ class MealWeekArchiveView(WeekArchiveView):
             # so have to use _week_bounds again to do that
             next_week = _week_bounds(first_day_with_meal)[0]
             return next_week
+        else:
+            return None
 
     def get_previous_week(self, date):
         """
@@ -389,6 +391,8 @@ class MealWeekArchiveView(WeekArchiveView):
             previous_week = _week_bounds(first_day_with_meal)[0]
 #            print >> sys.stderr, "Previous week: ", previous_week
             return previous_week
+        else:
+            return None
 
     def get_context_data(self, **kwargs):
 
