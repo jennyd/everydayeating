@@ -565,11 +565,11 @@ class FoodViewsTestCase(TestCase):
         ingredient_one = Ingredient.objects.create(name = 'Test ingredient 1',
                                                quantity = 100,
                                                unit = 'g',
-                                               calories = 75)
+                                               calories = 100)
         ingredient_two = Ingredient.objects.create(name = 'Test ingredient 2',
                                                quantity = 100,
                                                unit = 'ml',
-                                               calories = 828)
+                                               calories = 100)
         dish = Dish.objects.create(name = 'Test dish',
                                    quantity = 500,
                                    date_cooked = datetime.date(2012, 01, 18),
@@ -646,7 +646,7 @@ class FoodViewsTestCase(TestCase):
         response = self.client.post(reverse('dish_edit',
                                             kwargs={'dish_id': dish.id}),
                                     data={'name': 'Test dish',
-                                          'quantity': 0, # was 500, then edited to 400
+                                          'quantity': 0, # was 400
                                           'date_cooked': datetime.date(2012, 01, 18),
                                           'household': test_household.id,
                                           'recipe_url': u'http://www.example.com/recipeurl/',
@@ -662,7 +662,7 @@ class FoodViewsTestCase(TestCase):
                                           'contained_comestibles_set-0-quantity': 50,
                                           'contained_comestibles_set-1-id': amount_two.id,
                                           'contained_comestibles_set-1-contained_comestible': 2,
-                                          'contained_comestibles_set-1-quantity': -100, # was 150, then edited to 180
+                                          'contained_comestibles_set-1-quantity': -100, # was 180
                                           'contained_comestibles_set-2-id': amount_three.id,
                                           'contained_comestibles_set-2-contained_comestible': 2,
                                           'contained_comestibles_set-2-quantity': 100,
@@ -750,6 +750,89 @@ class FoodViewsTestCase(TestCase):
         response = self.client.get(reverse('dish_edit', kwargs={'dish_id': fake_pk}))
         self.assertEqual(response.status_code, 404)
         self.assertTemplateUsed(response, '404.html')
+
+        # Create an amount and a portion of a dish and check that they are
+        # updated when the dish is edited
+        # Get dish, to get its current values
+        dish = Dish.objects.get(pk=dish.id)
+        # (containing_dish and containing_meal are only created because the
+        # amount and portion need values for them)
+        containing_dish = Dish.objects.create(name = "Containing dish",
+                                              quantity = 500,
+                                              date_cooked = datetime.date(2012, 01, 18),
+                                              household = test_household,
+                                              recipe_url = u'http://www.example.com/recipeurl/',
+                                              unit = 'g')
+        containing_dish.cooks.add(test_user)
+        containing_meal = Meal.objects.create(name = 'breakfast',
+                                              date = datetime.date(2011, 01, 01),
+                                              time = datetime.time(7, 30),
+                                              household = test_household,
+                                              user = test_user)
+        amount_of_dish = Amount.objects.create(contained_comestible = dish.comestible,
+                                               containing_dish = containing_dish,
+                                               quantity = 100)
+        portion_of_dish = Portion.objects.create(comestible = dish.comestible,
+                                                 meal = containing_meal,
+                                                 quantity = 200)
+#        print dish.calories
+#        print amount_of_dish.calories
+#        print portion_of_dish.calories
+        self.assertEqual(dish.calories, 305)
+        self.assertEqual(amount_of_dish.calories, 76.25)
+        self.assertEqual(portion_of_dish.calories, 152.5)
+
+        response = self.client.post(reverse('dish_edit',
+                                            kwargs={'dish_id': dish.id}),
+                                    data={'name': 'Test dish',
+                                          'quantity': 400,
+                                          'date_cooked': datetime.date(2012, 01, 18),
+                                          'household': test_household.id,
+                                          'recipe_url': u'http://www.example.com/recipeurl/',
+                                          'cooks': test_user.id,
+                                          'unit': 'ml',
+                                          'contained_comestibles_set-TOTAL_FORMS': 9,
+                                          'contained_comestibles_set-INITIAL_FORMS': 3,
+                                          # amount id needed here, since a new
+                                          # amount is being added to the formset
+                                          'contained_comestibles_set-0-id': amount_one.id,
+                                          'contained_comestibles_set-0-contained_comestible': 1,
+                                          'contained_comestibles_set-0-quantity': 50,
+                                          'contained_comestibles_set-1-id': amount_two.id,
+                                          'contained_comestibles_set-1-contained_comestible': 2,
+                                          'contained_comestibles_set-1-quantity': 180, # was 150
+                                          # Delete this amount
+                                          'contained_comestibles_set-2-id': amount_three.id,
+                                          'contained_comestibles_set-2-contained_comestible': 2,
+                                          'contained_comestibles_set-2-quantity': 100,
+                                          'contained_comestibles_set-2-DELETE': True,
+                                          # Leave the default values for these
+                                          # fields unchanged
+                                          'contained_comestibles_set-3-quantity': 0,
+                                          'contained_comestibles_set-4-quantity': 0,
+                                          'contained_comestibles_set-5-quantity': 0,
+                                          'contained_comestibles_set-6-quantity': 0,
+                                          'contained_comestibles_set-7-quantity': 0,
+                                          'contained_comestibles_set-8-quantity': 0},
+                                    follow=True)
+        # Redirects to dish_detail
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(len(response.templates), 2)
+        self.assertTemplateUsed(response, 'food/dish_detail.html')
+        self.assertTemplateUsed(response, 'food/base.html')
+        # Check that amount_three was deleted correctly
+        self.assertRaises(ObjectDoesNotExist, Amount.objects.get,
+                                                      pk=amount_three.id)
+        # Check that dish and the amount and portion of it were updated correctly
+        updated_dish = Dish.objects.get(pk=dish.id)
+        updated_amount_of_dish = Amount.objects.get(pk=amount_of_dish.id)
+        updated_portion_of_dish = Portion.objects.get(pk=portion_of_dish.id)
+#        print updated_dish.calories
+#        print updated_amount_of_dish.calories
+#        print updated_portion_of_dish.calories
+        self.assertEqual(updated_dish.calories, 230)
+        self.assertEqual(updated_amount_of_dish.calories, 57.5)
+        self.assertEqual(updated_portion_of_dish.calories, 115)
 
     def test_dish_multiply(self):
         # Create a user, household, ingredients, dish & amounts

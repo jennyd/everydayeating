@@ -82,7 +82,7 @@ I1
 sg20
 I0
 sg21
-I767
+I788
 sg22
 I0
 sg23
@@ -90,7 +90,7 @@ I0
 sg24
 I0
 sbssg25
-S'/8@vdav8\xf1J\x00\x7f(\xd7cC'
+S'\x0b\xa7Y*XR\xfa\x18\x1cdz :\xf2\xd0\xe5'
 p38
 ssS'food_admin'
 p39
@@ -200,7 +200,7 @@ p63
 g6
 (dp65
 g30
-I4
+I2
 sg31
 S'food_models.html'
 p66
@@ -222,11 +222,11 @@ I201
 sg22
 I0
 sg23
-I12
+I6
 sg24
-I4
+I2
 sbssg25
-S'k,\xb6\n\x0b\xfb9``Z\xa4\xf4\x93\x91*\xea'
+S'DEJ\x86\x95+)\x80\x87\xae!\xfe\xcaV\x15\xc6'
 p70
 sssS'version'
 p71

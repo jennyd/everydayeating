@@ -5,7 +5,7 @@
     
     
     <meta http-equiv='X-UA-Compatible' content='IE=emulateIE7' />
-    <title>Coverage for food/models: 93%</title>
+    <title>Coverage for food/models: 97%</title>
     <link rel='stylesheet' href='style.css' type='text/css'>
     <script type='text/javascript' src='jquery-1.4.3.min.js'></script>
     <script type='text/javascript' src='jquery.hotkeys.js'></script>
@@ -20,16 +20,16 @@
 <div id='header'>
     <div class='content'>
         <h1>Coverage for <b>food/models</b> :
-            <span class='pc_cov'>93%</span>
+            <span class='pc_cov'>97%</span>
         </h1>
         <img id='keyboard_icon' src='keybd_closed.png'>
         <h2 class='stats'>
             201 statements
-            <span class='run hide_run shortkey_r' onclick='coverage.toggle_lines(this, "run")'>189 run</span>
-            <span class='mis shortkey_m' onclick='coverage.toggle_lines(this, "mis")'>12 missing</span>
+            <span class='run hide_run shortkey_r' onclick='coverage.toggle_lines(this, "run")'>195 run</span>
+            <span class='mis shortkey_m' onclick='coverage.toggle_lines(this, "mis")'>6 missing</span>
             <span class='exc shortkey_x' onclick='coverage.toggle_lines(this, "exc")'>0 excluded</span>
             
-                <span class='par run hide_run shortkey_p' onclick='coverage.toggle_lines(this, "par")'>4 partial</span>
+                <span class='par run hide_run shortkey_p' onclick='coverage.toggle_lines(this, "par")'>2 partial</span>
             
         </h2>
     </div>
@@ -443,12 +443,12 @@
 <p id='n379' class='pln'><a href='#n379'>379</a></p>
 <p id='n380' class='stm run hide_run'><a href='#n380'>380</a></p>
 <p id='n381' class='stm run hide_run'><a href='#n381'>381</a></p>
-<p id='n382' class='stm par run hide_run'><a href='#n382'>382</a></p>
-<p id='n383' class='stm mis'><a href='#n383'>383</a></p>
-<p id='n384' class='stm mis'><a href='#n384'>384</a></p>
-<p id='n385' class='stm par run hide_run'><a href='#n385'>385</a></p>
-<p id='n386' class='stm mis'><a href='#n386'>386</a></p>
-<p id='n387' class='stm mis'><a href='#n387'>387</a></p>
+<p id='n382' class='stm run hide_run'><a href='#n382'>382</a></p>
+<p id='n383' class='stm run hide_run'><a href='#n383'>383</a></p>
+<p id='n384' class='stm run hide_run'><a href='#n384'>384</a></p>
+<p id='n385' class='stm run hide_run'><a href='#n385'>385</a></p>
+<p id='n386' class='stm run hide_run'><a href='#n386'>386</a></p>
+<p id='n387' class='stm run hide_run'><a href='#n387'>387</a></p>
 <p id='n388' class='pln'><a href='#n388'>388</a></p>
 <p id='n389' class='pln'><a href='#n389'>389</a></p>
 <p id='n390' class='pln'><a href='#n390'>390</a></p>
@@ -475,8 +475,8 @@
 <p id='n411' class='pln'><a href='#n411'>411</a></p>
 <p id='n412' class='stm run hide_run'><a href='#n412'>412</a></p>
 <p id='n413' class='stm run hide_run'><a href='#n413'>413</a></p>
-<p id='n414' class='stm mis'><a href='#n414'>414</a></p>
-<p id='n415' class='stm mis'><a href='#n415'>415</a></p>
+<p id='n414' class='stm run hide_run'><a href='#n414'>414</a></p>
+<p id='n415' class='stm run hide_run'><a href='#n415'>415</a></p>
 <p id='n416' class='stm run hide_run'><a href='#n416'>416</a></p>
 <p id='n417' class='stm run hide_run'><a href='#n417'>417</a></p>
 <p id='n418' class='pln'><a href='#n418'>418</a></p>
@@ -901,12 +901,12 @@
 <p id='t379' class='pln'><span class='key'>def</span> <span class='nam'>update_on_dish_save</span><span class='op'>(</span><span class='nam'>sender</span><span class='op'>,</span> <span class='op'>**</span><span class='nam'>kwargs</span><span class='op'>)</span><span class='op'>:</span><span class='strut'>&nbsp;</span></p>
 <p id='t380' class='stm run hide_run'>&nbsp; &nbsp; <span class='nam'>dish</span> <span class='op'>=</span> <span class='nam'>kwargs</span><span class='op'>[</span><span class='str'>&#39;instance&#39;</span><span class='op'>]</span><span class='strut'>&nbsp;</span></p>
 <p id='t381' class='stm run hide_run'>&nbsp; &nbsp; <span class='key'>print</span> <span class='op'>&gt;&gt;</span> <span class='nam'>sys</span><span class='op'>.</span><span class='nam'>stderr</span><span class='op'>,</span> <span class='str'>&quot;Instance: dish&quot;</span><span class='op'>,</span> <span class='nam'>dish</span><span class='strut'>&nbsp;</span></p>
-<p id='t382' class='stm par run hide_run'><span class='annotate' title='no jump to this line number'>383</span>&nbsp; &nbsp; <span class='key'>for</span> <span class='nam'>amount</span> <span class='key'>in</span> <span class='nam'>Amount</span><span class='op'>.</span><span class='nam'>objects</span><span class='op'>.</span><span class='nam'>filter</span><span class='op'>(</span><span class='nam'>contained_comestible__id</span><span class='op'>=</span><span class='nam'>dish</span><span class='op'>.</span><span class='nam'>id</span><span class='op'>)</span><span class='op'>:</span><span class='strut'>&nbsp;</span></p>
-<p id='t383' class='stm mis'>&nbsp; &nbsp; &nbsp; &nbsp; <span class='key'>print</span> <span class='op'>&gt;&gt;</span> <span class='nam'>sys</span><span class='op'>.</span><span class='nam'>stderr</span><span class='op'>,</span> <span class='str'>&quot;Updating amount&quot;</span><span class='op'>,</span> <span class='nam'>amount</span><span class='op'>,</span> <span class='str'>&quot;in&quot;</span><span class='op'>,</span> <span class='nam'>amount</span><span class='op'>.</span><span class='nam'>containing_dish</span><span class='op'>,</span> <span class='nam'>amount</span><span class='op'>.</span><span class='nam'>calories</span><span class='op'>,</span> <span class='str'>&quot;calories&quot;</span><span class='strut'>&nbsp;</span></p>
-<p id='t384' class='stm mis'>&nbsp; &nbsp; &nbsp; &nbsp; <span class='nam'>amount</span><span class='op'>.</span><span class='nam'>save</span><span class='op'>(</span><span class='op'>)</span><span class='strut'>&nbsp;</span></p>
-<p id='t385' class='stm par run hide_run'><span class='annotate' title='no jump to this line number'>386</span>&nbsp; &nbsp; <span class='key'>for</span> <span class='nam'>portion</span> <span class='key'>in</span> <span class='nam'>Portion</span><span class='op'>.</span><span class='nam'>objects</span><span class='op'>.</span><span class='nam'>filter</span><span class='op'>(</span><span class='nam'>comestible__id</span><span class='op'>=</span><span class='nam'>dish</span><span class='op'>.</span><span class='nam'>id</span><span class='op'>)</span><span class='op'>:</span><span class='strut'>&nbsp;</span></p>
-<p id='t386' class='stm mis'>&nbsp; &nbsp; &nbsp; &nbsp; <span class='key'>print</span> <span class='op'>&gt;&gt;</span> <span class='nam'>sys</span><span class='op'>.</span><span class='nam'>stderr</span><span class='op'>,</span> <span class='str'>&quot;Updating portion&quot;</span><span class='op'>,</span> <span class='nam'>portion</span><span class='op'>,</span> <span class='str'>&quot;in&quot;</span><span class='op'>,</span> <span class='nam'>portion</span><span class='op'>.</span><span class='nam'>meal</span><span class='op'>,</span> <span class='nam'>portion</span><span class='op'>.</span><span class='nam'>calories</span><span class='strut'>&nbsp;</span></p>
-<p id='t387' class='stm mis'>&nbsp; &nbsp; &nbsp; &nbsp; <span class='nam'>portion</span><span class='op'>.</span><span class='nam'>save</span><span class='op'>(</span><span class='op'>)</span><span class='strut'>&nbsp;</span></p>
+<p id='t382' class='stm run hide_run'>&nbsp; &nbsp; <span class='key'>for</span> <span class='nam'>amount</span> <span class='key'>in</span> <span class='nam'>Amount</span><span class='op'>.</span><span class='nam'>objects</span><span class='op'>.</span><span class='nam'>filter</span><span class='op'>(</span><span class='nam'>contained_comestible__id</span><span class='op'>=</span><span class='nam'>dish</span><span class='op'>.</span><span class='nam'>id</span><span class='op'>)</span><span class='op'>:</span><span class='strut'>&nbsp;</span></p>
+<p id='t383' class='stm run hide_run'>&nbsp; &nbsp; &nbsp; &nbsp; <span class='key'>print</span> <span class='op'>&gt;&gt;</span> <span class='nam'>sys</span><span class='op'>.</span><span class='nam'>stderr</span><span class='op'>,</span> <span class='str'>&quot;Updating amount&quot;</span><span class='op'>,</span> <span class='nam'>amount</span><span class='op'>,</span> <span class='str'>&quot;in&quot;</span><span class='op'>,</span> <span class='nam'>amount</span><span class='op'>.</span><span class='nam'>containing_dish</span><span class='op'>,</span> <span class='nam'>amount</span><span class='op'>.</span><span class='nam'>calories</span><span class='op'>,</span> <span class='str'>&quot;calories&quot;</span><span class='strut'>&nbsp;</span></p>
+<p id='t384' class='stm run hide_run'>&nbsp; &nbsp; &nbsp; &nbsp; <span class='nam'>amount</span><span class='op'>.</span><span class='nam'>save</span><span class='op'>(</span><span class='op'>)</span><span class='strut'>&nbsp;</span></p>
+<p id='t385' class='stm run hide_run'>&nbsp; &nbsp; <span class='key'>for</span> <span class='nam'>portion</span> <span class='key'>in</span> <span class='nam'>Portion</span><span class='op'>.</span><span class='nam'>objects</span><span class='op'>.</span><span class='nam'>filter</span><span class='op'>(</span><span class='nam'>comestible__id</span><span class='op'>=</span><span class='nam'>dish</span><span class='op'>.</span><span class='nam'>id</span><span class='op'>)</span><span class='op'>:</span><span class='strut'>&nbsp;</span></p>
+<p id='t386' class='stm run hide_run'>&nbsp; &nbsp; &nbsp; &nbsp; <span class='key'>print</span> <span class='op'>&gt;&gt;</span> <span class='nam'>sys</span><span class='op'>.</span><span class='nam'>stderr</span><span class='op'>,</span> <span class='str'>&quot;Updating portion&quot;</span><span class='op'>,</span> <span class='nam'>portion</span><span class='op'>,</span> <span class='str'>&quot;in&quot;</span><span class='op'>,</span> <span class='nam'>portion</span><span class='op'>.</span><span class='nam'>meal</span><span class='op'>,</span> <span class='nam'>portion</span><span class='op'>.</span><span class='nam'>calories</span><span class='strut'>&nbsp;</span></p>
+<p id='t387' class='stm run hide_run'>&nbsp; &nbsp; &nbsp; &nbsp; <span class='nam'>portion</span><span class='op'>.</span><span class='nam'>save</span><span class='op'>(</span><span class='op'>)</span><span class='strut'>&nbsp;</span></p>
 <p id='t388' class='pln'><span class='strut'>&nbsp;</span></p>
 <p id='t389' class='pln'><span class='com'># This is triggered for each portion when saving the formset</span><span class='strut'>&nbsp;</span></p>
 <p id='t390' class='pln'><span class='com'># Perhaps create a new signal for the formset to do it only once?</span><span class='strut'>&nbsp;</span></p>
@@ -933,8 +933,8 @@
 <p id='t411' class='pln'>&nbsp; &nbsp; <span class='com'># containing dish to update</span><span class='strut'>&nbsp;</span></p>
 <p id='t412' class='stm run hide_run'>&nbsp; &nbsp; <span class='key'>try</span><span class='op'>:</span><span class='strut'>&nbsp;</span></p>
 <p id='t413' class='stm run hide_run'>&nbsp; &nbsp; &nbsp; &nbsp; <span class='nam'>dish</span> <span class='op'>=</span> <span class='nam'>amount</span><span class='op'>.</span><span class='nam'>containing_dish</span><span class='strut'>&nbsp;</span></p>
-<p id='t414' class='stm mis'>&nbsp; &nbsp; &nbsp; &nbsp; <span class='key'>print</span> <span class='op'>&gt;&gt;</span> <span class='nam'>sys</span><span class='op'>.</span><span class='nam'>stderr</span><span class='op'>,</span> <span class='str'>&quot;Instance deleted: amount (can&#39;t get name); updating containing_dish&quot;</span><span class='op'>,</span> <span class='nam'>dish</span><span class='op'>,</span> <span class='nam'>dish</span><span class='op'>.</span><span class='nam'>calories</span><span class='op'>,</span> <span class='str'>&quot;calories&quot;</span><span class='strut'>&nbsp;</span></p>
-<p id='t415' class='stm mis'>&nbsp; &nbsp; &nbsp; &nbsp; <span class='nam'>dish</span><span class='op'>.</span><span class='nam'>save</span><span class='op'>(</span><span class='op'>)</span><span class='strut'>&nbsp;</span></p>
+<p id='t414' class='stm run hide_run'>&nbsp; &nbsp; &nbsp; &nbsp; <span class='key'>print</span> <span class='op'>&gt;&gt;</span> <span class='nam'>sys</span><span class='op'>.</span><span class='nam'>stderr</span><span class='op'>,</span> <span class='str'>&quot;Instance deleted: amount (can&#39;t get name); updating containing_dish&quot;</span><span class='op'>,</span> <span class='nam'>dish</span><span class='op'>,</span> <span class='nam'>dish</span><span class='op'>.</span><span class='nam'>calories</span><span class='op'>,</span> <span class='str'>&quot;calories&quot;</span><span class='strut'>&nbsp;</span></p>
+<p id='t415' class='stm run hide_run'>&nbsp; &nbsp; &nbsp; &nbsp; <span class='nam'>dish</span><span class='op'>.</span><span class='nam'>save</span><span class='op'>(</span><span class='op'>)</span><span class='strut'>&nbsp;</span></p>
 <p id='t416' class='stm run hide_run'>&nbsp; &nbsp; <span class='key'>except</span> <span class='nam'>Dish</span><span class='op'>.</span><span class='nam'>DoesNotExist</span><span class='op'>:</span><span class='strut'>&nbsp;</span></p>
 <p id='t417' class='stm run hide_run'>&nbsp; &nbsp; &nbsp; &nbsp; <span class='key'>print</span> <span class='op'>&gt;&gt;</span> <span class='nam'>sys</span><span class='op'>.</span><span class='nam'>stderr</span><span class='op'>,</span> <span class='str'>&quot;Instance deleted: amount (can&#39;t get name); containing dish has already been deleted&quot;</span><span class='strut'>&nbsp;</span></p>
 <p id='t418' class='pln'><span class='strut'>&nbsp;</span></p>
