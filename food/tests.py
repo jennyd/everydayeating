@@ -291,8 +291,74 @@ class FoodViewsTestCase(TestCase):
         # Redirects to ingredient_list
         self.assertTemplateUsed(response, 'food/ingredient_list.html')
         self.assertTemplateUsed(response, 'food/base.html')
-        ingredient = Ingredient.objects.get(pk=ingredient_one.id)
-        self.assertEqual(ingredient.calories, 5)
+        edited_ingredient_one = Ingredient.objects.get(pk=ingredient_one.id)
+        self.assertEqual(edited_ingredient_one.calories, 5)
+
+        # Create an amount and a portion of an ingredient and check that they are
+        # updated when the ingredient is edited
+        # Get ingredient, to get its current values
+        ingredient_one = Ingredient.objects.get(pk=edited_ingredient_one.id)
+        # (containing_dish and containing_meal are only created because the
+        # amount and portion need values for them)
+        test_user = User.objects.create(username = 'testuser',
+                                        password = 'testpassword')
+        test_household = Household.objects.create(name = 'Test household',
+                                             admin = test_user)
+        containing_dish = Dish.objects.create(name = "Containing dish",
+                                              quantity = 500,
+                                              date_cooked = datetime.date(2012, 01, 18),
+                                              household = test_household,
+                                              recipe_url = u'http://www.example.com/recipeurl/',
+                                              unit = 'g')
+        containing_dish.cooks.add(test_user)
+        containing_meal = Meal.objects.create(name = 'breakfast',
+                                              date = datetime.date(2011, 01, 01),
+                                              time = datetime.time(7, 30),
+                                              household = test_household,
+                                              user = test_user)
+        amount = Amount.objects.create(contained_comestible = ingredient_one.comestible,
+                                               containing_dish = containing_dish,
+                                               quantity = 200)
+        portion = Portion.objects.create(comestible = ingredient_one.comestible,
+                                                 meal = containing_meal,
+                                                 quantity = 300)
+        self.assertEqual(ingredient_one.calories, 5)
+        self.assertEqual(amount.calories, 10)
+        self.assertEqual(portion.calories, 15)
+
+        response = self.client.post(reverse('ingredient_manage'),
+                                    data={'form-TOTAL_FORMS': 5,
+                                          'form-INITIAL_FORMS': 2,
+                                          'form-0-comestible_ptr': ingredient_one.id,
+                                          'form-0-name': 'Test ingredient 1',
+                                          'form-0-quantity': 100,
+                                          'form-0-unit': 'g',
+                                          'form-0-calories': 10, # was 5
+                                          'form-1-comestible_ptr': ingredient_two.id,
+                                          'form-1-name': 'Test ingredient 2',
+                                          'form-1-quantity': 100,
+                                          'form-1-unit': 'ml',
+                                          'form-1-calories': 828,
+                                          # Leave the default values for these
+                                          # fields unchanged
+                                          'form-2-quantity': 100,
+                                          'form-2-unit': 'g',
+                                          'form-3-quantity': 100,
+                                          'form-3-unit': 'g',
+                                          'form-4-quantity': 100,
+                                          'form-4-unit': 'g'},
+                                    follow=True)
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(len(response.templates), 2)
+        # Redirects to ingredient_list
+        self.assertTemplateUsed(response, 'food/ingredient_list.html')
+        self.assertTemplateUsed(response, 'food/base.html')
+        edited_ingredient_one = Ingredient.objects.get(pk=ingredient_one.id)
+        updated_amount = Amount.objects.get(pk=amount.id)
+        updated_portion = Portion.objects.get(pk=portion.id)
+        self.assertEqual(edited_ingredient_one.calories, 10)
+        self.assertEqual(updated_amount.calories, 20)
+        self.assertEqual(updated_portion.calories, 30)
 
         # Try to edit an ingredient with invalid quantity and calories values
         response = self.client.post(reverse('ingredient_manage'),

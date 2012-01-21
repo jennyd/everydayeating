@@ -5,7 +5,7 @@
     
     
     <meta http-equiv='X-UA-Compatible' content='IE=emulateIE7' />
-    <title>Coverage for food/models: 97%</title>
+    <title>Coverage for food/models: 100%</title>
     <link rel='stylesheet' href='style.css' type='text/css'>
     <script type='text/javascript' src='jquery-1.4.3.min.js'></script>
     <script type='text/javascript' src='jquery.hotkeys.js'></script>
@@ -20,16 +20,16 @@
 <div id='header'>
     <div class='content'>
         <h1>Coverage for <b>food/models</b> :
-            <span class='pc_cov'>97%</span>
+            <span class='pc_cov'>100%</span>
         </h1>
         <img id='keyboard_icon' src='keybd_closed.png'>
         <h2 class='stats'>
             201 statements
-            <span class='run hide_run shortkey_r' onclick='coverage.toggle_lines(this, "run")'>197 run</span>
-            <span class='mis shortkey_m' onclick='coverage.toggle_lines(this, "mis")'>4 missing</span>
+            <span class='run hide_run shortkey_r' onclick='coverage.toggle_lines(this, "run")'>201 run</span>
+            <span class='mis shortkey_m' onclick='coverage.toggle_lines(this, "mis")'>0 missing</span>
             <span class='exc shortkey_x' onclick='coverage.toggle_lines(this, "exc")'>0 excluded</span>
             
-                <span class='par run hide_run shortkey_p' onclick='coverage.toggle_lines(this, "par")'>2 partial</span>
+                <span class='par run hide_run shortkey_p' onclick='coverage.toggle_lines(this, "par")'>0 partial</span>
             
         </h2>
     </div>
@@ -423,12 +423,12 @@
 <p id='n359' class='pln'><a href='#n359'>359</a></p>
 <p id='n360' class='stm run hide_run'><a href='#n360'>360</a></p>
 <p id='n361' class='stm run hide_run'><a href='#n361'>361</a></p>
-<p id='n362' class='stm par run hide_run'><a href='#n362'>362</a></p>
-<p id='n363' class='stm mis'><a href='#n363'>363</a></p>
-<p id='n364' class='stm mis'><a href='#n364'>364</a></p>
-<p id='n365' class='stm par run hide_run'><a href='#n365'>365</a></p>
-<p id='n366' class='stm mis'><a href='#n366'>366</a></p>
-<p id='n367' class='stm mis'><a href='#n367'>367</a></p>
+<p id='n362' class='stm run hide_run'><a href='#n362'>362</a></p>
+<p id='n363' class='stm run hide_run'><a href='#n363'>363</a></p>
+<p id='n364' class='stm run hide_run'><a href='#n364'>364</a></p>
+<p id='n365' class='stm run hide_run'><a href='#n365'>365</a></p>
+<p id='n366' class='stm run hide_run'><a href='#n366'>366</a></p>
+<p id='n367' class='stm run hide_run'><a href='#n367'>367</a></p>
 <p id='n368' class='pln'><a href='#n368'>368</a></p>
 <p id='n369' class='pln'><a href='#n369'>369</a></p>
 <p id='n370' class='pln'><a href='#n370'>370</a></p>
@@ -881,12 +881,12 @@
 <p id='t359' class='pln'><span class='key'>def</span> <span class='nam'>update_on_ingredient_save</span><span class='op'>(</span><span class='nam'>sender</span><span class='op'>,</span> <span class='op'>**</span><span class='nam'>kwargs</span><span class='op'>)</span><span class='op'>:</span><span class='strut'>&nbsp;</span></p>
 <p id='t360' class='stm run hide_run'>&nbsp; &nbsp; <span class='nam'>ingredient</span> <span class='op'>=</span> <span class='nam'>kwargs</span><span class='op'>[</span><span class='str'>&#39;instance&#39;</span><span class='op'>]</span><span class='strut'>&nbsp;</span></p>
 <p id='t361' class='stm run hide_run'>&nbsp; &nbsp; <span class='key'>print</span> <span class='op'>&gt;&gt;</span> <span class='nam'>sys</span><span class='op'>.</span><span class='nam'>stderr</span><span class='op'>,</span> <span class='str'>&quot;Instance: ingredient&quot;</span><span class='op'>,</span> <span class='nam'>ingredient</span><span class='strut'>&nbsp;</span></p>
-<p id='t362' class='stm par run hide_run'><span class='annotate' title='no jump to this line number'>363</span>&nbsp; &nbsp; <span class='key'>for</span> <span class='nam'>amount</span> <span class='key'>in</span> <span class='nam'>Amount</span><span class='op'>.</span><span class='nam'>objects</span><span class='op'>.</span><span class='nam'>filter</span><span class='op'>(</span><span class='nam'>contained_comestible__id</span><span class='op'>=</span><span class='nam'>ingredient</span><span class='op'>.</span><span class='nam'>id</span><span class='op'>)</span><span class='op'>:</span><span class='strut'>&nbsp;</span></p>
-<p id='t363' class='stm mis'>&nbsp; &nbsp; &nbsp; &nbsp; <span class='key'>print</span> <span class='op'>&gt;&gt;</span> <span class='nam'>sys</span><span class='op'>.</span><span class='nam'>stderr</span><span class='op'>,</span> <span class='str'>&quot;Updating amount&quot;</span><span class='op'>,</span> <span class='nam'>amount</span><span class='op'>,</span> <span class='str'>&quot;in&quot;</span><span class='op'>,</span> <span class='nam'>amount</span><span class='op'>.</span><span class='nam'>containing_dish</span><span class='op'>,</span> <span class='nam'>amount</span><span class='op'>.</span><span class='nam'>calories</span><span class='op'>,</span> <span class='str'>&quot;calories&quot;</span><span class='strut'>&nbsp;</span></p>
-<p id='t364' class='stm mis'>&nbsp; &nbsp; &nbsp; &nbsp; <span class='nam'>amount</span><span class='op'>.</span><span class='nam'>save</span><span class='op'>(</span><span class='op'>)</span><span class='strut'>&nbsp;</span></p>
-<p id='t365' class='stm par run hide_run'><span class='annotate' title='no jump to this line number'>366</span>&nbsp; &nbsp; <span class='key'>for</span> <span class='nam'>portion</span> <span class='key'>in</span> <span class='nam'>Portion</span><span class='op'>.</span><span class='nam'>objects</span><span class='op'>.</span><span class='nam'>filter</span><span class='op'>(</span><span class='nam'>comestible__id</span><span class='op'>=</span><span class='nam'>ingredient</span><span class='op'>.</span><span class='nam'>id</span><span class='op'>)</span><span class='op'>:</span><span class='strut'>&nbsp;</span></p>
-<p id='t366' class='stm mis'>&nbsp; &nbsp; &nbsp; &nbsp; <span class='key'>print</span> <span class='op'>&gt;&gt;</span> <span class='nam'>sys</span><span class='op'>.</span><span class='nam'>stderr</span><span class='op'>,</span> <span class='str'>&quot;Updating portion&quot;</span><span class='op'>,</span> <span class='nam'>portion</span><span class='op'>,</span> <span class='str'>&quot;in&quot;</span><span class='op'>,</span> <span class='nam'>portion</span><span class='op'>.</span><span class='nam'>meal</span><span class='op'>,</span> <span class='nam'>portion</span><span class='op'>.</span><span class='nam'>calories</span><span class='strut'>&nbsp;</span></p>
-<p id='t367' class='stm mis'>&nbsp; &nbsp; &nbsp; &nbsp; <span class='nam'>portion</span><span class='op'>.</span><span class='nam'>save</span><span class='op'>(</span><span class='op'>)</span><span class='strut'>&nbsp;</span></p>
+<p id='t362' class='stm run hide_run'>&nbsp; &nbsp; <span class='key'>for</span> <span class='nam'>amount</span> <span class='key'>in</span> <span class='nam'>Amount</span><span class='op'>.</span><span class='nam'>objects</span><span class='op'>.</span><span class='nam'>filter</span><span class='op'>(</span><span class='nam'>contained_comestible__id</span><span class='op'>=</span><span class='nam'>ingredient</span><span class='op'>.</span><span class='nam'>id</span><span class='op'>)</span><span class='op'>:</span><span class='strut'>&nbsp;</span></p>
+<p id='t363' class='stm run hide_run'>&nbsp; &nbsp; &nbsp; &nbsp; <span class='key'>print</span> <span class='op'>&gt;&gt;</span> <span class='nam'>sys</span><span class='op'>.</span><span class='nam'>stderr</span><span class='op'>,</span> <span class='str'>&quot;Updating amount&quot;</span><span class='op'>,</span> <span class='nam'>amount</span><span class='op'>,</span> <span class='str'>&quot;in&quot;</span><span class='op'>,</span> <span class='nam'>amount</span><span class='op'>.</span><span class='nam'>containing_dish</span><span class='op'>,</span> <span class='nam'>amount</span><span class='op'>.</span><span class='nam'>calories</span><span class='op'>,</span> <span class='str'>&quot;calories&quot;</span><span class='strut'>&nbsp;</span></p>
+<p id='t364' class='stm run hide_run'>&nbsp; &nbsp; &nbsp; &nbsp; <span class='nam'>amount</span><span class='op'>.</span><span class='nam'>save</span><span class='op'>(</span><span class='op'>)</span><span class='strut'>&nbsp;</span></p>
+<p id='t365' class='stm run hide_run'>&nbsp; &nbsp; <span class='key'>for</span> <span class='nam'>portion</span> <span class='key'>in</span> <span class='nam'>Portion</span><span class='op'>.</span><span class='nam'>objects</span><span class='op'>.</span><span class='nam'>filter</span><span class='op'>(</span><span class='nam'>comestible__id</span><span class='op'>=</span><span class='nam'>ingredient</span><span class='op'>.</span><span class='nam'>id</span><span class='op'>)</span><span class='op'>:</span><span class='strut'>&nbsp;</span></p>
+<p id='t366' class='stm run hide_run'>&nbsp; &nbsp; &nbsp; &nbsp; <span class='key'>print</span> <span class='op'>&gt;&gt;</span> <span class='nam'>sys</span><span class='op'>.</span><span class='nam'>stderr</span><span class='op'>,</span> <span class='str'>&quot;Updating portion&quot;</span><span class='op'>,</span> <span class='nam'>portion</span><span class='op'>,</span> <span class='str'>&quot;in&quot;</span><span class='op'>,</span> <span class='nam'>portion</span><span class='op'>.</span><span class='nam'>meal</span><span class='op'>,</span> <span class='nam'>portion</span><span class='op'>.</span><span class='nam'>calories</span><span class='strut'>&nbsp;</span></p>
+<p id='t367' class='stm run hide_run'>&nbsp; &nbsp; &nbsp; &nbsp; <span class='nam'>portion</span><span class='op'>.</span><span class='nam'>save</span><span class='op'>(</span><span class='op'>)</span><span class='strut'>&nbsp;</span></p>
 <p id='t368' class='pln'><span class='strut'>&nbsp;</span></p>
 <p id='t369' class='pln'><span class='com'># This is triggered for each amount when saving the formset</span><span class='strut'>&nbsp;</span></p>
 <p id='t370' class='pln'><span class='com'># Perhaps create a new signal for the formset to do it only once?</span><span class='strut'>&nbsp;</span></p>
