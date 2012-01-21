@@ -1148,6 +1148,24 @@ class FoodViewsTestCase(TestCase):
                                    time = datetime.time(7, 30),
                                    household = test_household,
                                    user = test_user)
+
+        # Test first without any meals in previous or next weeks
+        response = self.client.get(reverse('meal_archive_week',
+                                           kwargs={'year': 2012,
+                                                   'week': '1'}))
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(len(response.templates), 2)
+        self.assertTemplateUsed(response, 'food/meal_archive_week.html')
+        self.assertTemplateUsed(response, 'food/base.html')
+        self.assertTrue('meal_list' in response.context)
+        self.assertTrue('date_list' in response.context)
+        self.assertTrue('avg_week_calories' in response.context)
+        self.assertTrue('previous_week' in response.context)
+        self.assertTrue('next_week' in response.context)
+        self.assertFalse(response.context['previous_week'])
+        self.assertFalse(response.context['next_week'])
+
+        # Create meals in other weeks and test again with them
         # These are 2 weeks before/after, to check that it really is finding
         # the previous/next weeks containing a meal
         previous_week_meal = Meal.objects.create(name = 'breakfast',
