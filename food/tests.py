@@ -108,8 +108,6 @@ class FoodViewsTestCase(TestCase):
                                           'unit': 'g',
                                           'calories': 75},
                                     follow=True)
-#        print response.redirect_chain
-        # FIXME Add more here to check redirects?
         # Redirects to ingredient_list
         self.assertEqual(response.status_code, 200)
         self.assertEqual(len(response.templates), 2)
@@ -134,7 +132,7 @@ class FoodViewsTestCase(TestCase):
         self.assertTrue(u'Enter a number not less than 0' in
                                 response.context['form']['calories'].errors)
         self.assertRaises(ObjectDoesNotExist, Ingredient.objects.get,
-                                name='Test ingredient bad')
+                                              name='Test ingredient bad')
 
     def test_ingredient_detail(self):
         ingredient = Ingredient.objects.create(name = 'Test ingredient',
@@ -150,8 +148,10 @@ class FoodViewsTestCase(TestCase):
         self.assertTrue('ingredient' in response.context)
 
         # Try to display an ingredient which doesn't exist
+        self.assertRaises(ObjectDoesNotExist, Ingredient.objects.get,
+                                              pk=fake_pk)
         response = self.client.get(reverse('ingredient_detail',
-                                           kwargs={'pk': fake_pk}))
+                                            kwargs={'pk': fake_pk}))
         self.assertEqual(response.status_code, 404)
         self.assertTemplateUsed(response, '404.html')
 
@@ -173,7 +173,7 @@ class FoodViewsTestCase(TestCase):
 
         # Edit an ingredient correctly
         response = self.client.post(reverse('ingredient_edit',
-                                           kwargs={'pk': ingredient.id}),
+                                            kwargs={'pk': ingredient.id}),
                                     data={'name': 'Test ingredient',
                                           'quantity': 100,
                                           'unit': 'g',
@@ -189,7 +189,7 @@ class FoodViewsTestCase(TestCase):
 
         # Try to edit an ingredient with invalid quantity and calories values
         response = self.client.post(reverse('ingredient_edit',
-                                           kwargs={'pk': ingredient.id}),
+                                            kwargs={'pk': ingredient.id}),
                                     data={'quantity': 0,
                                           'calories': -75},
                                     follow=True)
@@ -205,7 +205,7 @@ class FoodViewsTestCase(TestCase):
 
         # Try to edit an ingredient which doesn't exist
         self.assertRaises(ObjectDoesNotExist, Ingredient.objects.get,
-                                                      pk=fake_pk)
+                                              pk=fake_pk)
         response = self.client.get(reverse('ingredient_edit',
                                            kwargs={'pk': fake_pk}))
         self.assertEqual(response.status_code, 404)
@@ -226,7 +226,7 @@ class FoodViewsTestCase(TestCase):
 
         # Delete an ingredient
         response = self.client.post(reverse('ingredient_delete',
-                                           kwargs={'pk': ingredient.id}),
+                                            kwargs={'pk': ingredient.id}),
                                     follow=True)
         self.assertEqual(response.status_code, 200)
         self.assertEqual(len(response.templates), 2)
@@ -234,11 +234,11 @@ class FoodViewsTestCase(TestCase):
         self.assertTemplateUsed(response, 'food/ingredient_list.html')
         self.assertTemplateUsed(response, 'food/base.html')
         self.assertRaises(ObjectDoesNotExist, Ingredient.objects.get,
-                                        pk=ingredient.id)
+                                              pk=ingredient.id)
 
         # Try to delete an ingredient which doesn't exist
         self.assertRaises(ObjectDoesNotExist, Ingredient.objects.get,
-                                                      pk=fake_pk)
+                                              pk=fake_pk)
         response = self.client.get(reverse('ingredient_delete',
                                            kwargs={'pk': fake_pk}))
         self.assertEqual(response.status_code, 404)
@@ -246,13 +246,13 @@ class FoodViewsTestCase(TestCase):
 
     def test_ingredient_manage(self):
         ingredient_one = Ingredient.objects.create(name = 'Test ingredient 1',
-                                               quantity = 100,
-                                               unit = 'g',
-                                               calories = 75)
+                                                   quantity = 100,
+                                                   unit = 'g',
+                                                   calories = 75)
         ingredient_two = Ingredient.objects.create(name = 'Test ingredient 2',
-                                               quantity = 100,
-                                               unit = 'ml',
-                                               calories = 828)
+                                                   quantity = 100,
+                                                   unit = 'ml',
+                                                   calories = 828)
         response = self.client.get(reverse('ingredient_manage'))
         self.assertEqual(response.status_code, 200)
         self.assertEqual(len(response.templates), 2)
@@ -303,7 +303,7 @@ class FoodViewsTestCase(TestCase):
         test_user = User.objects.create(username = 'testuser',
                                         password = 'testpassword')
         test_household = Household.objects.create(name = 'Test household',
-                                             admin = test_user)
+                                                  admin = test_user)
         containing_dish = Dish.objects.create(name = "Containing dish",
                                               quantity = 500,
                                               date_cooked = datetime.date(2012, 01, 18),
@@ -317,11 +317,11 @@ class FoodViewsTestCase(TestCase):
                                               household = test_household,
                                               user = test_user)
         amount = Amount.objects.create(contained_comestible = ingredient_one.comestible,
-                                               containing_dish = containing_dish,
-                                               quantity = 200)
+                                       containing_dish = containing_dish,
+                                       quantity = 200)
         portion = Portion.objects.create(comestible = ingredient_one.comestible,
-                                                 meal = containing_meal,
-                                                 quantity = 300)
+                                         meal = containing_meal,
+                                         quantity = 300)
         self.assertEqual(ingredient_one.calories, 5)
         self.assertEqual(amount.calories, 10)
         self.assertEqual(portion.calories, 15)
@@ -395,9 +395,9 @@ class FoodViewsTestCase(TestCase):
 
         # Try to send a comestible_ptr which doesn't exist
         self.assertRaises(ObjectDoesNotExist, Ingredient.objects.get,
-                                                      pk=fake_pk)
+                                              pk=fake_pk)
         self.assertRaises(ObjectDoesNotExist, Comestible.objects.get,
-                                                      pk=fake_pk)
+                                              pk=fake_pk)
         response = self.client.post(reverse('ingredient_manage'),
                                     data={'form-TOTAL_FORMS': 5,
                                           'form-INITIAL_FORMS': 2,
@@ -442,15 +442,15 @@ class FoodViewsTestCase(TestCase):
         test_user = User.objects.create(username = 'testuser',
                                         password = 'testpassword')
         test_household = Household.objects.create(name = 'Test household',
-                                             admin = test_user)
+                                                  admin = test_user)
         ingredient_one = Ingredient.objects.create(name = 'Test ingredient 1',
-                                               quantity = 100,
-                                               unit = 'g',
-                                               calories = 75)
+                                                   quantity = 100,
+                                                   unit = 'g',
+                                                   calories = 75)
         ingredient_two = Ingredient.objects.create(name = 'Test ingredient 2',
-                                               quantity = 100,
-                                               unit = 'ml',
-                                               calories = 828)
+                                                   quantity = 100,
+                                                   unit = 'ml',
+                                                   calories = 828)
         dish = Dish.objects.create(name = 'Test dish',
                                    quantity = 500,
                                    date_cooked = datetime.date(2012, 01, 18),
@@ -483,15 +483,15 @@ class FoodViewsTestCase(TestCase):
         test_user = User.objects.create(username = 'testuser',
                                         password = 'testpassword')
         test_household = Household.objects.create(name = 'Test household',
-                                             admin = test_user)
+                                                  admin = test_user)
         ingredient_one = Ingredient.objects.create(name = 'Test ingredient 1',
-                                               quantity = 100,
-                                               unit = 'g',
-                                               calories = 75)
+                                                   quantity = 100,
+                                                   unit = 'g',
+                                                   calories = 75)
         ingredient_two = Ingredient.objects.create(name = 'Test ingredient 2',
-                                               quantity = 100,
-                                               unit = 'ml',
-                                               calories = 828)
+                                                   quantity = 100,
+                                                   unit = 'ml',
+                                                   calories = 828)
         dish = Dish.objects.create(name = 'Test dish',
                                    quantity = 500,
                                    date_cooked = datetime.date(2012, 01, 18),
@@ -514,7 +514,7 @@ class FoodViewsTestCase(TestCase):
 
         # Delete a dish (and its amounts via cascade)
         response = self.client.post(reverse('dish_delete',
-                                           kwargs={'pk': dish.id}),
+                                            kwargs={'pk': dish.id}),
                                     follow=True)
         self.assertEqual(response.status_code, 200)
         self.assertEqual(len(response.templates), 2)
@@ -522,13 +522,12 @@ class FoodViewsTestCase(TestCase):
         self.assertTemplateUsed(response, 'food/dish_list.html')
         self.assertTemplateUsed(response, 'food/base.html')
         self.assertRaises(ObjectDoesNotExist, Dish.objects.get,
-                                        pk=dish.id)
+                                              pk=dish.id)
         self.assertRaises(ObjectDoesNotExist, Amount.objects.get,
-                                        containing_dish=dish.id)
+                                              containing_dish=dish.id)
 
         # Try to delete a dish which doesn't exist
-        self.assertRaises(ObjectDoesNotExist, Dish.objects.get,
-                                                      pk=fake_pk)
+        self.assertRaises(ObjectDoesNotExist, Dish.objects.get, pk=fake_pk)
         response = self.client.get(reverse('dish_delete',
                                            kwargs={'pk': fake_pk}))
         self.assertEqual(response.status_code, 404)
@@ -536,19 +535,19 @@ class FoodViewsTestCase(TestCase):
 
     def test_dish_add(self):
         # Create a user, household and ingredients
-        # Use setUp for this instead of fixtures?
+        # Use setUp for this instead of fixtures? FIXME
         test_user = User.objects.create(username = 'testuser',
                                         password = 'testpassword')
         test_household = Household.objects.create(name = 'Test household',
-                                             admin = test_user)
+                                                  admin = test_user)
         ingredient_one = Ingredient.objects.create(name = 'Test ingredient 1',
-                                               quantity = 100,
-                                               unit = 'g',
-                                               calories = 75)
+                                                   quantity = 100,
+                                                   unit = 'g',
+                                                   calories = 75)
         ingredient_two = Ingredient.objects.create(name = 'Test ingredient 2',
-                                               quantity = 100,
-                                               unit = 'ml',
-                                               calories = 828)
+                                                   quantity = 100,
+                                                   unit = 'ml',
+                                                   calories = 828)
 
         response = self.client.get(reverse('dish_add'))
         self.assertEqual(response.status_code, 200)
@@ -582,14 +581,12 @@ class FoodViewsTestCase(TestCase):
                                           'contained_comestibles_set-4-quantity': 0,
                                           'contained_comestibles_set-5-quantity': 0},
                                     follow=True)
-#        print response.redirect_chain
-        # FIXME Add more here to check redirects?
         # Redirects to dish_detail
         self.assertEqual(response.status_code, 200)
         self.assertEqual(len(response.templates), 2)
         self.assertTemplateUsed(response, 'food/dish_detail.html')
         self.assertTemplateUsed(response, 'food/base.html')
-        # Check dish & amounts created correctly
+        # Check dish & amounts created correctly - FIXME
 
         # Try to add a dish and an amount with invalid quantity values
         response = self.client.post(reverse('dish_add'),
@@ -620,22 +617,22 @@ class FoodViewsTestCase(TestCase):
         self.assertTrue(u'Enter a number not less than 0' in
                                 response.context['formset'][0]['quantity'].errors)
         self.assertRaises(ObjectDoesNotExist, Dish.objects.get,
-                                name='Test dish bad')
+                                              name='Test dish bad')
 
     def test_dish_edit(self):
         # Create a user, household, ingredients, dish & amounts
         test_user = User.objects.create(username = 'testuser',
                                         password = 'testpassword')
         test_household = Household.objects.create(name = 'Test household',
-                                             admin = test_user)
+                                                  admin = test_user)
         ingredient_one = Ingredient.objects.create(name = 'Test ingredient 1',
-                                               quantity = 100,
-                                               unit = 'g',
-                                               calories = 100)
+                                                   quantity = 100,
+                                                   unit = 'g',
+                                                   calories = 100)
         ingredient_two = Ingredient.objects.create(name = 'Test ingredient 2',
-                                               quantity = 100,
-                                               unit = 'ml',
-                                               calories = 100)
+                                                   quantity = 100,
+                                                   unit = 'ml',
+                                                   calories = 100)
         dish = Dish.objects.create(name = 'Test dish',
                                    quantity = 500,
                                    date_cooked = datetime.date(2012, 01, 18),
@@ -644,11 +641,12 @@ class FoodViewsTestCase(TestCase):
                                    unit = 'g')
         dish.cooks.add(test_user)
         amount_one = dish.contained_comestibles_set.create(contained_comestible = ingredient_one,
-                                              quantity = 50)
+                                                           quantity = 50)
         amount_two = dish.contained_comestibles_set.create(contained_comestible = ingredient_two,
-                                              quantity = 150)
+                                                           quantity = 150)
 
-        response = self.client.get(reverse('dish_edit', kwargs={'dish_id': dish.id}))
+        response = self.client.get(reverse('dish_edit',
+                                           kwargs={'dish_id': dish.id}))
         self.assertEqual(response.status_code, 200)
         self.assertEqual(len(response.templates), 2)
         self.assertTemplateUsed(response, 'food/dish_edit.html')
@@ -690,8 +688,6 @@ class FoodViewsTestCase(TestCase):
                                           'contained_comestibles_set-6-quantity': 0,
                                           'contained_comestibles_set-7-quantity': 0},
                                     follow=True)
-#        print response.redirect_chain
-        # FIXME Add more here to check redirects?
         # Redirects to dish_detail
         self.assertEqual(response.status_code, 200)
         self.assertEqual(len(response.templates), 2)
@@ -811,9 +807,9 @@ class FoodViewsTestCase(TestCase):
         self.assertEqual(edited_amount_three.quantity, 75) # updated
 
         # Try to edit a dish which doesn't exist
-        self.assertRaises(ObjectDoesNotExist, Dish.objects.get,
-                                                      pk=fake_pk)
-        response = self.client.get(reverse('dish_edit', kwargs={'dish_id': fake_pk}))
+        self.assertRaises(ObjectDoesNotExist, Dish.objects.get, pk=fake_pk)
+        response = self.client.get(reverse('dish_edit',
+                                           kwargs={'dish_id': fake_pk}))
         self.assertEqual(response.status_code, 404)
         self.assertTemplateUsed(response, '404.html')
 
@@ -888,7 +884,7 @@ class FoodViewsTestCase(TestCase):
         self.assertTemplateUsed(response, 'food/base.html')
         # Check that amount_three was deleted correctly
         self.assertRaises(ObjectDoesNotExist, Amount.objects.get,
-                                                      pk=amount_three.id)
+                                              pk=amount_three.id)
         # Check that dish and the amount and portion of it were updated correctly
         updated_dish = Dish.objects.get(pk=dish.id)
         updated_amount_of_dish = Amount.objects.get(pk=amount_of_dish.id)
@@ -905,15 +901,15 @@ class FoodViewsTestCase(TestCase):
         test_user = User.objects.create(username = 'testuser',
                                         password = 'testpassword')
         test_household = Household.objects.create(name = 'Test household',
-                                             admin = test_user)
+                                                  admin = test_user)
         ingredient_one = Ingredient.objects.create(name = 'Test ingredient 1',
-                                               quantity = 100,
-                                               unit = 'g',
-                                               calories = 75)
+                                                   quantity = 100,
+                                                   unit = 'g',
+                                                   calories = 75)
         ingredient_two = Ingredient.objects.create(name = 'Test ingredient 2',
-                                               quantity = 100,
-                                               unit = 'ml',
-                                               calories = 828)
+                                                   quantity = 100,
+                                                   unit = 'ml',
+                                                   calories = 828)
         dish = Dish.objects.create(name = 'Test dish',
                                    quantity = 500,
                                    date_cooked = datetime.date(2012, 01, 18),
@@ -926,7 +922,8 @@ class FoodViewsTestCase(TestCase):
         dish.contained_comestibles_set.create(contained_comestible = ingredient_two,
                                               quantity = 150)
 
-        response = self.client.get(reverse('dish_multiply', kwargs={'dish_id': dish.id}))
+        response = self.client.get(reverse('dish_multiply',
+                                           kwargs={'dish_id': dish.id}))
         self.assertEqual(response.status_code, 200)
         self.assertEqual(len(response.templates), 2)
         self.assertTemplateUsed(response, 'food/dish_multiply.html')
@@ -941,8 +938,6 @@ class FoodViewsTestCase(TestCase):
                                     data={'operation': 'multiply',
                                           'factor': 2},
                                     follow=True)
-#        print response.redirect_chain
-        # FIXME Add more here to check redirects?
         # Redirects to dish_detail
         self.assertEqual(response.status_code, 200)
         self.assertEqual(len(response.templates), 2)
@@ -962,8 +957,6 @@ class FoodViewsTestCase(TestCase):
                                     data={'operation': 'divide',
                                           'factor': 2},
                                     follow=True)
-#        print response.redirect_chain
-        # FIXME Add more here to check redirects?
         # Redirects to dish_detail
         self.assertEqual(response.status_code, 200)
         self.assertEqual(len(response.templates), 2)
@@ -987,14 +980,13 @@ class FoodViewsTestCase(TestCase):
         self.assertEqual(len(response.templates), 2)
         self.assertTemplateUsed(response, 'food/dish_multiply.html')
         self.assertTemplateUsed(response, 'food/base.html')
-
         self.assertTrue(u'Enter a number greater than 0' in
                                 response.context['form']['factor'].errors)
 
         # Try to multiply a dish which doesn't exist
-        self.assertRaises(ObjectDoesNotExist, Dish.objects.get,
-                                                      pk=fake_pk)
-        response = self.client.get(reverse('dish_multiply', kwargs={'dish_id': fake_pk}))
+        self.assertRaises(ObjectDoesNotExist, Dish.objects.get, pk=fake_pk)
+        response = self.client.get(reverse('dish_multiply',
+                                           kwargs={'dish_id': fake_pk}))
         self.assertEqual(response.status_code, 404)
         self.assertTemplateUsed(response, '404.html')
 
@@ -1003,28 +995,29 @@ class FoodViewsTestCase(TestCase):
         test_user = User.objects.create(username = 'testuser',
                                         password = 'testpassword')
         test_household = Household.objects.create(name = 'Test household',
-                                             admin = test_user)
+                                                  admin = test_user)
         ingredient_one = Ingredient.objects.create(name = 'Test ingredient 1',
-                                               quantity = 100,
-                                               unit = 'g',
-                                               calories = 75)
+                                                   quantity = 100,
+                                                   unit = 'g',
+                                                   calories = 75)
         ingredient_two = Ingredient.objects.create(name = 'Test ingredient 2',
-                                               quantity = 100,
-                                               unit = 'ml',
-                                               calories = 828)
+                                                   quantity = 100,
+                                                   unit = 'ml',
+                                                   calories = 828)
         old_dish = Dish.objects.create(name = 'Test dish',
-                                   quantity = 500,
-                                   date_cooked = datetime.date(2011, 11, 28),
-                                   household = test_household,
-                                   recipe_url = u'http://www.example.com/recipeurl/',
-                                   unit = 'g')
+                                       quantity = 500,
+                                       date_cooked = datetime.date(2011, 11, 28),
+                                       household = test_household,
+                                       recipe_url = u'http://www.example.com/recipeurl/',
+                                       unit = 'g')
         old_dish.cooks.add(test_user)
         old_dish.contained_comestibles_set.create(contained_comestible = ingredient_one,
                                               quantity = 50)
         old_dish.contained_comestibles_set.create(contained_comestible = ingredient_two,
-                                              quantity = 150)
+                                                  quantity = 150)
 
-        response = self.client.get(reverse('dish_duplicate', kwargs={'dish_id': old_dish.id}))
+        response = self.client.get(reverse('dish_duplicate',
+                                           kwargs={'dish_id': old_dish.id}))
         self.assertEqual(response.status_code, 200)
         self.assertEqual(len(response.templates), 2)
         self.assertTemplateUsed(response, 'food/dish_duplicate.html')
@@ -1038,8 +1031,6 @@ class FoodViewsTestCase(TestCase):
                                             kwargs={'dish_id': old_dish.id}),
                                     data={'date': datetime.date(2011, 11, 30)},
                                     follow=True)
-#        print response.redirect_chain
-        # FIXME Add more here to check redirects?
         # Redirects to dish_detail
         self.assertEqual(response.status_code, 200)
         self.assertEqual(len(response.templates), 2)
@@ -1047,18 +1038,21 @@ class FoodViewsTestCase(TestCase):
         self.assertTemplateUsed(response, 'food/base.html')
         # Check dish & amounts duplicated correctly
         new_dish = Dish.objects.get(pk=response.context['dish'].id)
-        amount_one = Amount.objects.get(contained_comestible=ingredient_one, containing_dish=new_dish)
-        amount_two = Amount.objects.get(contained_comestible=ingredient_two, containing_dish=new_dish)
+        amount_one = Amount.objects.get(contained_comestible=ingredient_one,
+                                        containing_dish=new_dish)
+        amount_two = Amount.objects.get(contained_comestible=ingredient_two,
+                                        containing_dish=new_dish)
         self.assertEqual(new_dish.date_cooked, datetime.date(2011, 11, 30))
         self.assertEqual(new_dish.name, 'Test dish')
         self.assertEqual(new_dish.quantity, 500)
         # Dish.clone() doesn't deal with cooks yet because it's ManyToMany;
-        # this needs to be dealt with at some point...
+        # this needs to be dealt with at some point... FIXME
         self.assertFalse(new_dish.cooks.all())
         self.assertEqual(amount_one.quantity, 50)
         self.assertEqual(amount_two.quantity, 150)
 
         # Try to duplicate a dish using an invalid date value
+        # Is this necessary?
         # The date needs to be sent as a string because datetime won't allow an
         # invalid date (e.g. datetime.date(2011, 11, 50).
         response = self.client.post(reverse('dish_duplicate',
@@ -1073,9 +1067,9 @@ class FoodViewsTestCase(TestCase):
                                 response.context['form']['date'].errors)
 
         # Try to duplicate a dish which doesn't exist
-        self.assertRaises(ObjectDoesNotExist, Dish.objects.get,
-                                                      pk=fake_pk)
-        response = self.client.get(reverse('dish_duplicate', kwargs={'dish_id': fake_pk}))
+        self.assertRaises(ObjectDoesNotExist, Dish.objects.get, pk=fake_pk)
+        response = self.client.get(reverse('dish_duplicate',
+                                           kwargs={'dish_id': fake_pk}))
         self.assertEqual(response.status_code, 404)
         self.assertTemplateUsed(response, '404.html')
 
@@ -1164,15 +1158,15 @@ class FoodViewsTestCase(TestCase):
         # These are 2 months before/after, to check that it really is finding
         # the previous/next months containing a meal
         previous_month_meal = Meal.objects.create(name = 'breakfast',
-                                   date = datetime.date(2010, 11, 01),
-                                   time = datetime.time(7, 30),
-                                   household = test_household,
-                                   user = test_user)
+                                                  date = datetime.date(2010, 11, 01),
+                                                  time = datetime.time(7, 30),
+                                                  household = test_household,
+                                                  user = test_user)
         next_month_meal = Meal.objects.create(name = 'breakfast',
-                                   date = datetime.date(2011, 03, 01),
-                                   time = datetime.time(7, 30),
-                                   household = test_household,
-                                   user = test_user)
+                                                  date = datetime.date(2011, 03, 01),
+                                                  time = datetime.time(7, 30),
+                                                  household = test_household,
+                                                  user = test_user)
 
         response = self.client.get(reverse('meal_archive_month',
                                            kwargs={'year': 2011,
@@ -1194,7 +1188,7 @@ class FoodViewsTestCase(TestCase):
     def test_meal_archive_week(self):
         # 404 if there aren't any meals in the given week
 
-        # Can't filter date on week - use a range from _week_bounds instead?
+        # Can't filter date on week - use a range from _week_bounds instead? FIXME
         # self.assertFalse(Meal.objects.filter(date__year=2011, date__week=01)) # no meals in this week
         response = self.client.get(reverse('meal_archive_week',
                                            kwargs={'year': 2011,
@@ -1235,15 +1229,17 @@ class FoodViewsTestCase(TestCase):
         # These are 2 weeks before/after, to check that it really is finding
         # the previous/next weeks containing a meal
         previous_week_meal = Meal.objects.create(name = 'breakfast',
-                                   date = datetime.date(2011, 12, 20), # Tuesday
-                                   time = datetime.time(7, 30),
-                                   household = test_household,
-                                   user = test_user)
+                                                 # A Tuesday:
+                                                 date = datetime.date(2011, 12, 20),
+                                                 time = datetime.time(7, 30),
+                                                 household = test_household,
+                                                 user = test_user)
         next_week_meal = Meal.objects.create(name = 'breakfast',
-                                   date = datetime.date(2012, 01, 17), # Tuesday
-                                   time = datetime.time(7, 30),
-                                   household = test_household,
-                                   user = test_user)
+                                             # A Tuesday:
+                                             date = datetime.date(2012, 01, 17),
+                                             time = datetime.time(7, 30),
+                                             household = test_household,
+                                             user = test_user)
 
         response = self.client.get(reverse('meal_archive_week',
                                            kwargs={'year': 2012,
@@ -1264,7 +1260,9 @@ class FoodViewsTestCase(TestCase):
 
     def test_meal_archive_day(self):
         # 404 if there aren't any meals on the given day
-        self.assertFalse(Meal.objects.filter(date__year=2011, date__month=1, date__day=1)) # no meals on this day
+        self.assertFalse(Meal.objects.filter(date__year=2011,
+                                             date__month=1,
+                                             date__day=1)) # no meals on this day
         response = self.client.get(reverse('meal_archive_day',
                                            kwargs={'year': 2011,
                                                    # month needs leading zero
@@ -1288,15 +1286,15 @@ class FoodViewsTestCase(TestCase):
         # These are 2 months before/after, to check that it really is finding
         # the previous/next days containing a meal
         previous_day_meal = Meal.objects.create(name = 'breakfast',
-                                   date = datetime.date(2010, 11, 30),
-                                   time = datetime.time(7, 30),
-                                   household = test_household,
-                                   user = test_user)
+                                               date = datetime.date(2010, 11, 30),
+                                               time = datetime.time(7, 30),
+                                               household = test_household,
+                                               user = test_user)
         next_day_meal = Meal.objects.create(name = 'breakfast',
-                                   date = datetime.date(2011, 03, 03),
-                                   time = datetime.time(7, 30),
-                                   household = test_household,
-                                   user = test_user)
+                                            date = datetime.date(2011, 03, 03),
+                                            time = datetime.time(7, 30),
+                                            household = test_household,
+                                            user = test_user)
 
         response = self.client.get(reverse('meal_archive_day',
                                            kwargs={'year': 2011,
@@ -1308,7 +1306,7 @@ class FoodViewsTestCase(TestCase):
         self.assertTemplateUsed(response, 'food/base.html')
         self.assertTrue('meal_list' in response.context)
         self.assertTrue('date_list' in response.context)
-        # date_list is None - assertFalse?
+        # date_list is None - assertFalse? FIXME
         self.assertTrue('day_calories' in response.context)
         self.assertTrue('day' in response.context)
         self.assertEqual(datetime.date(2011, 01, 01),
@@ -1339,15 +1337,15 @@ class FoodViewsTestCase(TestCase):
         test_user = User.objects.create(username = 'testuser',
                                         password = 'testpassword')
         test_household = Household.objects.create(name = 'Test household',
-                                             admin = test_user)
+                                                  admin = test_user)
         ingredient_one = Ingredient.objects.create(name = 'Test ingredient 1',
-                                               quantity = 100,
-                                               unit = 'g',
-                                               calories = 75)
+                                                   quantity = 100,
+                                                   unit = 'g',
+                                                   calories = 75)
         ingredient_two = Ingredient.objects.create(name = 'Test ingredient 2',
-                                               quantity = 100,
-                                               unit = 'ml',
-                                               calories = 828)
+                                                   quantity = 100,
+                                                   unit = 'ml',
+                                                   calories = 828)
         dish = Dish.objects.create(name = 'Test dish',
                                    quantity = 500,
                                    date_cooked = datetime.date(2012, 01, 18),
@@ -1388,15 +1386,15 @@ class FoodViewsTestCase(TestCase):
         test_user = User.objects.create(username = 'testuser',
                                         password = 'testpassword')
         test_household = Household.objects.create(name = 'Test household',
-                                             admin = test_user)
+                                                  admin = test_user)
         ingredient_one = Ingredient.objects.create(name = 'Test ingredient 1',
-                                               quantity = 100,
-                                               unit = 'g',
-                                               calories = 75)
+                                                   quantity = 100,
+                                                   unit = 'g',
+                                                   calories = 75)
         ingredient_two = Ingredient.objects.create(name = 'Test ingredient 2',
-                                               quantity = 100,
-                                               unit = 'ml',
-                                               calories = 828)
+                                                   quantity = 100,
+                                                   unit = 'ml',
+                                                   calories = 828)
         dish = Dish.objects.create(name = 'Test dish',
                                    quantity = 500,
                                    date_cooked = datetime.date(2012, 01, 18),
@@ -1419,13 +1417,13 @@ class FoodViewsTestCase(TestCase):
         # There needs to be a meal remaining after deleting one, so that the
         # view it redirects to (meal_archive) doesn't go to 404
         extra_meal = Meal.objects.create(name = 'lunch',
-                                   date = datetime.date(2012, 01, 18),
-                                   time = datetime.time(12, 30),
-                                   household = test_household,
-                                   user = test_user)
+                                         date = datetime.date(2012, 01, 18),
+                                         time = datetime.time(12, 30),
+                                         household = test_household,
+                                         user = test_user)
         extra_portion = Portion.objects.create(comestible = dish,
-                                         meal = extra_meal,
-                                         quantity = 100)
+                                               meal = extra_meal,
+                                               quantity = 100)
 
         response = self.client.get(reverse('meal_delete',
                                            kwargs={'pk': meal.id}))
@@ -1437,21 +1435,18 @@ class FoodViewsTestCase(TestCase):
 
         # Delete a meal (and its portion(s) via cascade)
         response = self.client.post(reverse('meal_delete',
-                                           kwargs={'pk': meal.id}),
+                                            kwargs={'pk': meal.id}),
                                     follow=True)
         self.assertEqual(response.status_code, 200)
         self.assertEqual(len(response.templates), 2)
         # Redirects to meal_archive
         self.assertTemplateUsed(response, 'food/meal_archive.html')
         self.assertTemplateUsed(response, 'food/base.html')
-        self.assertRaises(ObjectDoesNotExist, Meal.objects.get,
-                                        pk=meal.id)
-        self.assertRaises(ObjectDoesNotExist, Portion.objects.get,
-                                        meal=meal.id)
+        self.assertRaises(ObjectDoesNotExist, Meal.objects.get, pk=meal.id)
+        self.assertRaises(ObjectDoesNotExist, Portion.objects.get, meal=meal.id)
 
         # Try to delete a meal which doesn't exist
-        self.assertRaises(ObjectDoesNotExist, Meal.objects.get,
-                                                      pk=fake_pk)
+        self.assertRaises(ObjectDoesNotExist, Meal.objects.get, pk=fake_pk)
         response = self.client.get(reverse('meal_delete',
                                            kwargs={'pk': fake_pk}))
         self.assertEqual(response.status_code, 404)
@@ -1462,15 +1457,15 @@ class FoodViewsTestCase(TestCase):
         test_user = User.objects.create(username = 'testuser',
                                         password = 'testpassword')
         test_household = Household.objects.create(name = 'Test household',
-                                             admin = test_user)
+                                                 admin = test_user)
         ingredient_one = Ingredient.objects.create(name = 'Test ingredient 1',
-                                               quantity = 100,
-                                               unit = 'g',
-                                               calories = 75)
+                                                   quantity = 100,
+                                                   unit = 'g',
+                                                   calories = 75)
         ingredient_two = Ingredient.objects.create(name = 'Test ingredient 2',
-                                               quantity = 100,
-                                               unit = 'ml',
-                                               calories = 828)
+                                                   quantity = 100,
+                                                   unit = 'ml',
+                                                   calories = 828)
         dish = Dish.objects.create(name = 'Test dish',
                                    quantity = 500,
                                    date_cooked = datetime.date(2012, 01, 18),
@@ -1519,7 +1514,7 @@ class FoodViewsTestCase(TestCase):
         self.assertEqual(len(response.templates), 2)
         self.assertTemplateUsed(response, 'food/meal_detail.html')
         self.assertTemplateUsed(response, 'food/base.html')
-        # Check meal & portions created correctly?
+        # Check meal & portions created correctly - FIXME
 
         # Try to add a meal and portions with invalid quantity values
         response = self.client.post(reverse('meal_add'),
@@ -1549,8 +1544,7 @@ class FoodViewsTestCase(TestCase):
         self.assertTemplateUsed(response, 'food/base.html')
         self.assertTrue(u'Enter a number not less than 0' in
                                 response.context['formset'][0]['quantity'].errors)
-        self.assertRaises(ObjectDoesNotExist, Meal.objects.get,
-                                name='lunch')
+        self.assertRaises(ObjectDoesNotExist, Meal.objects.get, name='lunch')
 
         # Try to add a meal and a portion of a dish with a quantity greater
         # than the dish's remaining quantity
@@ -1588,8 +1582,7 @@ class FoodViewsTestCase(TestCase):
         expected_error = u"This portion's quantity is greater than the remaining quantity of the dish (400 g)."
         self.assertTrue(expected_error in
                             response.context['formset'][1].non_field_errors())
-        self.assertRaises(ObjectDoesNotExist, Meal.objects.get,
-                                name='dinner')
+        self.assertRaises(ObjectDoesNotExist, Meal.objects.get, name='dinner')
 
         # Try to add a meal and portions of a dish with a joint quantity (but
         # not individual quantities) greater than the dish's remaining quantity
@@ -1627,23 +1620,22 @@ class FoodViewsTestCase(TestCase):
         expected_error = u"The remaining quantity of Test dish (2012-01-18) (400 g) is less than the total quantity of it in this meal."
         self.assertTrue(expected_error in
                             response.context['formset'].non_form_errors())
-        self.assertRaises(ObjectDoesNotExist, Meal.objects.get,
-                                name='snack')
+        self.assertRaises(ObjectDoesNotExist, Meal.objects.get, name='snack')
 
     def test_meal_edit(self):
         # Create a user, household, ingredients, dish & amounts, meal & portions
         test_user = User.objects.create(username = 'testuser',
                                         password = 'testpassword')
         test_household = Household.objects.create(name = 'Test household',
-                                             admin = test_user)
+                                                  admin = test_user)
         ingredient_one = Ingredient.objects.create(name = 'Test ingredient 1',
-                                               quantity = 100,
-                                               unit = 'g',
-                                               calories = 50)
+                                                   quantity = 100,
+                                                   unit = 'g',
+                                                   calories = 50)
         ingredient_two = Ingredient.objects.create(name = 'Test ingredient 2',
-                                               quantity = 100,
-                                               unit = 'ml',
-                                               calories = 30)
+                                                   quantity = 100,
+                                                   unit = 'ml',
+                                                   calories = 30)
         dish = Dish.objects.create(name = 'Test dish',
                                    quantity = 500,
                                    date_cooked = datetime.date(2012, 01, 18),
@@ -1661,11 +1653,11 @@ class FoodViewsTestCase(TestCase):
                                    household = test_household,
                                    user = test_user)
         portion_one = Portion.objects.create(comestible = dish,
-                                         meal = meal,
-                                         quantity = 100)
+                                             meal = meal,
+                                             quantity = 100)
         portion_two = Portion.objects.create(comestible = dish,
-                                         meal = meal,
-                                         quantity = 200)
+                                             meal = meal,
+                                             quantity = 200)
 
         response = self.client.get(reverse('meal_edit',
                                            kwargs={'meal_id': meal.id}))
@@ -1681,7 +1673,7 @@ class FoodViewsTestCase(TestCase):
 
         # Edit a meal and portions correctly
         response = self.client.post(reverse('meal_edit',
-                                           kwargs={'meal_id': meal.id}),
+                                            kwargs={'meal_id': meal.id}),
                                     data={'name': 'breakfast',
                                           'date': datetime.date(2012, 01, 18),
                                           'time': datetime.time(8, 30), # was 7:30
@@ -1734,7 +1726,7 @@ class FoodViewsTestCase(TestCase):
 
         # Delete a portion correctly
         response = self.client.post(reverse('meal_edit',
-                                           kwargs={'meal_id': meal.id}),
+                                            kwargs={'meal_id': meal.id}),
                                     data={'name': 'breakfast',
                                           'date': datetime.date(2012, 01, 18),
                                           'time': datetime.time(8, 30), # was 7:30
@@ -1776,14 +1768,14 @@ class FoodViewsTestCase(TestCase):
         edited_meal = Meal.objects.get(name='breakfast')
         self.assertEqual(edited_meal.calories, 96)
         self.assertRaises(ObjectDoesNotExist, Portion.objects.get,
-                                                      pk=portion_four.id)
+                                              pk=portion_four.id)
         # Check dish's remaining quantity
         updated_dish = Dish.objects.get(name='Test dish')
         self.assertEqual(updated_dish.get_remaining_quantity(), 350)
 
         # Try to edit a meal and portions using invalid quantity values
         response = self.client.post(reverse('meal_edit',
-                                           kwargs={'meal_id': meal.id}),
+                                            kwargs={'meal_id': meal.id}),
                                     data={'name': 'breakfast',
                                           'date': datetime.date(2012, 01, 18),
                                           'time': datetime.time(8, 30),
@@ -1835,7 +1827,7 @@ class FoodViewsTestCase(TestCase):
         # Try to edit a meal and a portion of a dish using a quantity greater
         # than the dish's remaining quantity
         response = self.client.post(reverse('meal_edit',
-                                           kwargs={'meal_id': meal.id}),
+                                            kwargs={'meal_id': meal.id}),
                                     data={'name': 'breakfast',
                                           'date': datetime.date(2012, 01, 18),
                                           'time': datetime.time(8, 30),
@@ -1895,7 +1887,7 @@ class FoodViewsTestCase(TestCase):
         # Try to edit a meal and portions of a dish using a joint quantity (but
         # not individual quantities) greater than the dish's remaining quantity
         response = self.client.post(reverse('meal_edit',
-                                           kwargs={'meal_id': meal.id}),
+                                            kwargs={'meal_id': meal.id}),
                                     data={'name': 'breakfast',
                                           'date': datetime.date(2012, 01, 18),
                                           'time': datetime.time(8, 30),
@@ -1953,9 +1945,9 @@ class FoodViewsTestCase(TestCase):
         self.assertEqual(updated_dish.get_remaining_quantity(), 350)
 
         # Try to edit a meal which doesn't exist
-        self.assertRaises(ObjectDoesNotExist, Meal.objects.get,
-                                                      pk=fake_pk)
-        response = self.client.get(reverse('meal_edit', kwargs={'meal_id': fake_pk}))
+        self.assertRaises(ObjectDoesNotExist, Meal.objects.get, pk=fake_pk)
+        response = self.client.get(reverse('meal_edit',
+                                           kwargs={'meal_id': fake_pk}))
         self.assertEqual(response.status_code, 404)
         self.assertTemplateUsed(response, '404.html')
 
@@ -1964,15 +1956,15 @@ class FoodViewsTestCase(TestCase):
         test_user = User.objects.create(username = 'testuser',
                                         password = 'testpassword')
         test_household = Household.objects.create(name = 'Test household',
-                                             admin = test_user)
+                                                  admin = test_user)
         ingredient_one = Ingredient.objects.create(name = 'Test ingredient 1',
-                                               quantity = 100,
-                                               unit = 'g',
-                                               calories = 75)
+                                                   quantity = 100,
+                                                   unit = 'g',
+                                                   calories = 75)
         ingredient_two = Ingredient.objects.create(name = 'Test ingredient 2',
-                                               quantity = 100,
-                                               unit = 'ml',
-                                               calories = 828)
+                                                   quantity = 100,
+                                                   unit = 'ml',
+                                                   calories = 828)
         dish = Dish.objects.create(name = 'Test dish',
                                    quantity = 500,
                                    date_cooked = datetime.date(2012, 01, 18),
@@ -1985,19 +1977,19 @@ class FoodViewsTestCase(TestCase):
         dish.contained_comestibles_set.create(contained_comestible = ingredient_two,
                                               quantity = 150)
         old_meal = Meal.objects.create(name = 'breakfast',
-                                   date = datetime.date(2012, 01, 18),
-                                   time = datetime.time(7, 30),
-                                   household = test_household,
-                                   user = test_user)
+                                       date = datetime.date(2012, 01, 18),
+                                       time = datetime.time(7, 30),
+                                       household = test_household,
+                                       user = test_user)
         old_portion_one = Portion.objects.create(comestible = ingredient_one,
-                                         meal = old_meal,
-                                         quantity = 75)
+                                                 meal = old_meal,
+                                                 quantity = 75)
         old_portion_two = Portion.objects.create(comestible = dish,
-                                         meal = old_meal,
-                                         quantity = 100)
+                                                 meal = old_meal,
+                                                 quantity = 100)
 
-
-        response = self.client.get(reverse('meal_duplicate', kwargs={'meal_id': old_meal.id}))
+        response = self.client.get(reverse('meal_duplicate',
+                                           kwargs={'meal_id': old_meal.id}))
         self.assertEqual(response.status_code, 200)
         self.assertEqual(len(response.templates), 2)
         self.assertTemplateUsed(response, 'food/meal_duplicate.html')
@@ -2011,8 +2003,6 @@ class FoodViewsTestCase(TestCase):
                                             kwargs={'meal_id': old_meal.id}),
                                     data={'date': datetime.date(2012, 01, 19)},
                                     follow=True)
-#        print response.redirect_chain
-        # FIXME Add more here to check redirects?
         # Redirects to meal_detail (for new meal)
         self.assertEqual(response.status_code, 200)
         self.assertEqual(len(response.templates), 2)
@@ -2020,8 +2010,10 @@ class FoodViewsTestCase(TestCase):
         self.assertTemplateUsed(response, 'food/base.html')
         # Check meal & portions duplicated correctly
         new_meal = Meal.objects.get(pk=response.context['meal'].id)
-        new_portion_one = Portion.objects.get(comestible=ingredient_one, meal=new_meal)
-        new_portion_two = Portion.objects.get(comestible=dish, meal=new_meal)
+        new_portion_one = Portion.objects.get(comestible=ingredient_one,
+                                              meal=new_meal)
+        new_portion_two = Portion.objects.get(comestible=dish,
+                                              meal=new_meal)
         self.assertEqual(new_meal.date, datetime.date(2012, 01, 19))
         self.assertEqual(new_meal.name, 'breakfast')
         self.assertEqual(new_meal.user, test_user)
@@ -2047,9 +2039,9 @@ class FoodViewsTestCase(TestCase):
                                 response.context['form']['date'].errors)
 
         # Try to duplicate a meal which doesn't exist
-        self.assertRaises(ObjectDoesNotExist, Meal.objects.get,
-                                                      pk=fake_pk)
-        response = self.client.get(reverse('meal_duplicate', kwargs={'meal_id': fake_pk}))
+        self.assertRaises(ObjectDoesNotExist, Meal.objects.get, pk=fake_pk)
+        response = self.client.get(reverse('meal_duplicate',
+                                           kwargs={'meal_id': fake_pk}))
         self.assertEqual(response.status_code, 404)
         self.assertTemplateUsed(response, '404.html')
 
