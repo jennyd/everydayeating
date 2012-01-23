@@ -264,7 +264,8 @@ class FoodViewsTestCase(TestCase):
         self.assertTrue('formset' in response.context)
         # Is this necessary?
         self.assertIsInstance(response.context['formset'], BaseModelFormSet )
-        # FIXME Check that it's using RequestContext
+        # Check that it's using RequestContext
+        self.assertTrue('csrf_token' in response.context)
 
         # Edit an ingredient correctly
         response = self.client.post(reverse('ingredient_manage'),
@@ -557,6 +558,7 @@ class FoodViewsTestCase(TestCase):
         self.assertEqual(len(response.templates), 2)
         self.assertTemplateUsed(response, 'food/dish_edit.html')
         self.assertTemplateUsed(response, 'food/base.html')
+        self.assertTrue('csrf_token' in response.context)
         self.assertTrue('form' in response.context)
         self.assertTrue('formset' in response.context)
         # Is this necessary?
@@ -654,6 +656,7 @@ class FoodViewsTestCase(TestCase):
         self.assertEqual(len(response.templates), 2)
         self.assertTemplateUsed(response, 'food/dish_edit.html')
         self.assertTemplateUsed(response, 'food/base.html')
+        self.assertTrue('csrf_token' in response.context)
         self.assertTrue('form' in response.context)
         self.assertTrue('formset' in response.context)
         # Is this necessary?
@@ -931,8 +934,8 @@ class FoodViewsTestCase(TestCase):
         self.assertEqual(len(response.templates), 2)
         self.assertTemplateUsed(response, 'food/dish_multiply.html')
         self.assertTemplateUsed(response, 'food/base.html')
+        self.assertTrue('csrf_token' in response.context)
         self.assertTrue('form' in response.context)
-        # Is this necessary?
         self.assertIsInstance(response.context['form'], DishMultiplyForm)
 
         # Multiply a dish correctly
@@ -1025,8 +1028,8 @@ class FoodViewsTestCase(TestCase):
         self.assertEqual(len(response.templates), 2)
         self.assertTemplateUsed(response, 'food/dish_duplicate.html')
         self.assertTemplateUsed(response, 'food/base.html')
+        self.assertTrue('csrf_token' in response.context)
         self.assertTrue('form' in response.context)
-        # Is this necessary?
         self.assertIsInstance(response.context['form'], DishDuplicateForm)
 
         # Duplicate a dish correctly
@@ -1486,6 +1489,7 @@ class FoodViewsTestCase(TestCase):
         self.assertEqual(len(response.templates), 2)
         self.assertTemplateUsed(response, 'food/meal_edit.html')
         self.assertTemplateUsed(response, 'food/base.html')
+        self.assertTrue('csrf_token' in response.context)
         self.assertTrue('form' in response.context)
         self.assertTrue('formset' in response.context)
         # Is this necessary?
@@ -1668,6 +1672,7 @@ class FoodViewsTestCase(TestCase):
         self.assertEqual(len(response.templates), 2)
         self.assertTemplateUsed(response, 'food/meal_edit.html')
         self.assertTemplateUsed(response, 'food/base.html')
+        self.assertTrue('csrf_token' in response.context)
         self.assertTrue('form' in response.context)
         self.assertTrue('formset' in response.context)
         # Is this necessary?
@@ -1997,8 +2002,8 @@ class FoodViewsTestCase(TestCase):
         self.assertEqual(len(response.templates), 2)
         self.assertTemplateUsed(response, 'food/meal_duplicate.html')
         self.assertTemplateUsed(response, 'food/base.html')
+        self.assertTrue('csrf_token' in response.context)
         self.assertTrue('form' in response.context)
-        # Is this necessary?
         self.assertIsInstance(response.context['form'], MealDuplicateForm)
 
         # Duplicate a dish correctly
