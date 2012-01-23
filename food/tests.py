@@ -384,7 +384,7 @@ class FoodViewsTestCase(TestCase):
                                           'form-0-name': 'Test ingredient 1',
                                           'form-0-quantity': 0, # was 100
                                           'form-0-unit': 'g',
-                                          'form-0-calories': -75, # was 5
+                                          'form-0-calories': -75, # was 10
                                           'form-1-comestible_ptr': ingredient_two.id,
                                           'form-1-name': 'Test ingredient 2',
                                           'form-1-quantity': 100,
@@ -426,7 +426,7 @@ class FoodViewsTestCase(TestCase):
                                           'form-0-name': 'Test ingredient 1',
                                           'form-0-quantity': 100,
                                           'form-0-unit': 'g',
-                                          'form-0-calories': 5,
+                                          'form-0-calories': 10,
                                           'form-1-comestible_ptr': fake_pk,
                                           'form-1-name': 'Test ingredient 2',
                                           'form-1-quantity': 100,
