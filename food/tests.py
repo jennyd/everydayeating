@@ -184,8 +184,8 @@ class FoodViewsTestCase(TestCase):
         # Redirects to ingredient_list
         self.assertTemplateUsed(response, 'food/ingredient_list.html')
         self.assertTemplateUsed(response, 'food/base.html')
-        ingredient = Ingredient.objects.get(pk=ingredient.id)
-        self.assertEqual(ingredient.calories, 5)
+        edited_ingredient = Ingredient.objects.get(pk=ingredient.id)
+        self.assertEqual(edited_ingredient.calories, 5)
 
         # Try to edit an ingredient with invalid quantity and calories values
         response = self.client.post(reverse('ingredient_edit',
@@ -201,7 +201,10 @@ class FoodViewsTestCase(TestCase):
                                 response.context['form']['quantity'].errors)
         self.assertTrue(u'Enter a number not less than 0' in
                                 response.context['form']['calories'].errors)
-        # FIXME Check that the ingredient still has its initial values
+        # Check that the ingredient still has its initial values
+        edited_ingredient = Ingredient.objects.get(pk=ingredient.id)
+        self.assertEqual(edited_ingredient.quantity, 100)
+        self.assertEqual(edited_ingredient.calories, 5)
 
         # Try to edit an ingredient which doesn't exist
         self.assertRaises(ObjectDoesNotExist, Ingredient.objects.get,
