@@ -3,7 +3,7 @@ import datetime
 from django.core.exceptions import ValidationError, ObjectDoesNotExist
 from django.core.urlresolvers import reverse
 from django.contrib.auth.models import User
-from django.forms.models import ModelForm, BaseInlineFormSet
+from django.forms.models import ModelForm, BaseInlineFormSet, BaseModelFormSet
 from django.test import TestCase
 
 from food.models import validate_positive, validate_positive_or_zero, Household, Comestible, Ingredient, Dish, Amount, Meal, Portion
@@ -262,8 +262,8 @@ class FoodViewsTestCase(TestCase):
         self.assertTemplateUsed(response, 'food/ingredient_manage.html')
         self.assertTemplateUsed(response, 'food/base.html')
         self.assertTrue('formset' in response.context)
-        # FIXME what is this formset?
-        # self.assertIsInstance(response.context['formset'], #### )
+        # Is this necessary?
+        self.assertIsInstance(response.context['formset'], BaseModelFormSet )
         # FIXME Check that it's using RequestContext
 
         # Edit an ingredient correctly
