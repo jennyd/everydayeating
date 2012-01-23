@@ -267,7 +267,7 @@ class FoodViewsTestCase(TestCase):
         # Check that it's using RequestContext
         self.assertTrue('csrf_token' in response.context)
 
-        # Edit an ingredient correctly
+        # Edit an ingredient and add a new one correctly
         response = self.client.post(reverse('ingredient_manage'),
                                     data={'form-TOTAL_FORMS': 5,
                                           'form-INITIAL_FORMS': 2,
@@ -281,14 +281,19 @@ class FoodViewsTestCase(TestCase):
                                           'form-1-quantity': 100,
                                           'form-1-unit': 'ml',
                                           'form-1-calories': 828,
-                                          # Leave the default values for these
-                                          # fields unchanged
+                                          # new ingredient
+                                          'form-2-name': 'Test ingredient 3',
                                           'form-2-quantity': 100,
                                           'form-2-unit': 'g',
+                                          'form-2-calories': 80,
+                                          # Leave the default values for these
+                                          # fields unchanged
                                           'form-3-quantity': 100,
                                           'form-3-unit': 'g',
                                           'form-4-quantity': 100,
-                                          'form-4-unit': 'g'},
+                                          'form-4-unit': 'g',
+                                          'form-5-quantity': 100,
+                                          'form-5-unit': 'g'},
                                     follow=True)
         self.assertEqual(response.status_code, 200)
         self.assertEqual(len(response.templates), 2)
@@ -296,7 +301,9 @@ class FoodViewsTestCase(TestCase):
         self.assertTemplateUsed(response, 'food/ingredient_list.html')
         self.assertTemplateUsed(response, 'food/base.html')
         edited_ingredient_one = Ingredient.objects.get(pk=ingredient_one.id)
+        ingredient_three = Ingredient.objects.get(name='Test ingredient 3')
         self.assertEqual(edited_ingredient_one.calories, 5)
+        self.assertEqual(ingredient_three.calories, 80)
 
         # Create an amount and a portion of an ingredient and check that they are
         # updated when the ingredient is edited
@@ -331,8 +338,8 @@ class FoodViewsTestCase(TestCase):
         self.assertEqual(portion.calories, 15)
 
         response = self.client.post(reverse('ingredient_manage'),
-                                    data={'form-TOTAL_FORMS': 5,
-                                          'form-INITIAL_FORMS': 2,
+                                    data={'form-TOTAL_FORMS': 6,
+                                          'form-INITIAL_FORMS': 3,
                                           'form-0-comestible_ptr': ingredient_one.id,
                                           'form-0-name': 'Test ingredient 1',
                                           'form-0-quantity': 100,
@@ -343,14 +350,19 @@ class FoodViewsTestCase(TestCase):
                                           'form-1-quantity': 100,
                                           'form-1-unit': 'ml',
                                           'form-1-calories': 828,
-                                          # Leave the default values for these
-                                          # fields unchanged
+                                          'form-2-comestible_ptr': ingredient_three.id,
+                                          'form-2-name': 'Test ingredient 3',
                                           'form-2-quantity': 100,
                                           'form-2-unit': 'g',
+                                          'form-2-calories': 80,
+                                          # Leave the default values for these
+                                          # fields unchanged
                                           'form-3-quantity': 100,
                                           'form-3-unit': 'g',
                                           'form-4-quantity': 100,
-                                          'form-4-unit': 'g'},
+                                          'form-4-unit': 'g',
+                                          'form-5-quantity': 100,
+                                          'form-5-unit': 'g'},
                                     follow=True)
         self.assertEqual(response.status_code, 200)
         self.assertEqual(len(response.templates), 2)
@@ -366,8 +378,8 @@ class FoodViewsTestCase(TestCase):
 
         # Try to edit an ingredient with invalid quantity and calories values
         response = self.client.post(reverse('ingredient_manage'),
-                                    data={'form-TOTAL_FORMS': 5,
-                                          'form-INITIAL_FORMS': 2,
+                                    data={'form-TOTAL_FORMS': 6,
+                                          'form-INITIAL_FORMS': 3,
                                           'form-0-comestible_ptr': ingredient_one.id,
                                           'form-0-name': 'Test ingredient 1',
                                           'form-0-quantity': 0, # was 100
@@ -378,14 +390,19 @@ class FoodViewsTestCase(TestCase):
                                           'form-1-quantity': 100,
                                           'form-1-unit': 'ml',
                                           'form-1-calories': 828,
-                                          # Leave the default values for these
-                                          # fields unchanged
+                                          'form-2-comestible_ptr': ingredient_three.id,
+                                          'form-2-name': 'Test ingredient 3',
                                           'form-2-quantity': 100,
                                           'form-2-unit': 'g',
+                                          'form-2-calories': 80,
+                                          # Leave the default values for these
+                                          # fields unchanged
                                           'form-3-quantity': 100,
                                           'form-3-unit': 'g',
                                           'form-4-quantity': 100,
-                                          'form-4-unit': 'g'},
+                                          'form-4-unit': 'g',
+                                          'form-5-quantity': 100,
+                                          'form-5-unit': 'g'},
                                     follow=True)
         self.assertEqual(response.status_code, 200)
         self.assertEqual(len(response.templates), 2)
@@ -403,8 +420,8 @@ class FoodViewsTestCase(TestCase):
         self.assertRaises(ObjectDoesNotExist, Comestible.objects.get,
                                               pk=fake_pk)
         response = self.client.post(reverse('ingredient_manage'),
-                                    data={'form-TOTAL_FORMS': 5,
-                                          'form-INITIAL_FORMS': 2,
+                                    data={'form-TOTAL_FORMS': 6,
+                                          'form-INITIAL_FORMS': 3,
                                           'form-0-comestible_ptr': ingredient_one.id,
                                           'form-0-name': 'Test ingredient 1',
                                           'form-0-quantity': 100,
@@ -415,14 +432,19 @@ class FoodViewsTestCase(TestCase):
                                           'form-1-quantity': 100,
                                           'form-1-unit': 'ml',
                                           'form-1-calories': 828,
-                                          # Leave the default values for these
-                                          # fields unchanged
+                                          'form-2-comestible_ptr': ingredient_three.id,
+                                          'form-2-name': 'Test ingredient 3',
                                           'form-2-quantity': 100,
                                           'form-2-unit': 'g',
+                                          'form-2-calories': 80,
+                                          # Leave the default values for these
+                                          # fields unchanged
                                           'form-3-quantity': 100,
                                           'form-3-unit': 'g',
                                           'form-4-quantity': 100,
-                                          'form-4-unit': 'g'},
+                                          'form-4-unit': 'g',
+                                          'form-5-quantity': 100,
+                                          'form-5-unit': 'g'},
                                     follow=True)
         self.assertEqual(response.status_code, 200)
         self.assertEqual(len(response.templates), 2)
