@@ -1225,11 +1225,12 @@ class FoodViewsTestCase(TestCase):
 
     def test_meal_archive_week(self):
         # 404 if there aren't any meals in the given week
-
-        # Can't filter date on week - use a range from _week_bounds instead? FIXME
-        # self.assertFalse(Meal.objects.filter(date__year=2011, date__week=01)) # no meals in this week
+        # Can't filter date on week - use a range instead (range includes both dates)
+        first_day = datetime.date(2012, 01, 02)
+        last_day = datetime.date(2012, 01, 8)
+        self.assertFalse(Meal.objects.filter(date__range=(first_day, last_day))) # no meals in this week
         response = self.client.get(reverse('meal_archive_week',
-                                           kwargs={'year': 2011,
+                                           kwargs={'year': 2012,
                                                    # week doesn't need leading zero
                                                    'week': '1'}))
         self.assertEqual(response.status_code, 404)
