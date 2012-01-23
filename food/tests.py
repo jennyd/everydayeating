@@ -1258,6 +1258,8 @@ class FoodViewsTestCase(TestCase):
         self.assertTemplateUsed(response, 'food/base.html')
         self.assertTrue('meal_list' in response.context)
         self.assertTrue('date_list' in response.context)
+        self.assertTrue(response.context['meal_list'])
+        self.assertTrue(response.context['date_list'])
         self.assertTrue('avg_week_calories' in response.context)
         self.assertTrue('previous_week' in response.context)
         self.assertTrue('next_week' in response.context)
