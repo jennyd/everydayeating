@@ -1270,14 +1270,14 @@ class FoodViewsTestCase(TestCase):
         # These are 2 weeks before/after, to check that it really is finding
         # the previous/next weeks containing a meal
         previous_week_meal = Meal.objects.create(name = 'breakfast',
-                                                 # A Tuesday:
-                                                 date = datetime.date(2011, 12, 20),
+                                                 # A Sunday:
+                                                 date = datetime.date(2011, 12, 25),
                                                  time = datetime.time(7, 30),
                                                  household = test_household,
                                                  user = test_user)
         next_week_meal = Meal.objects.create(name = 'breakfast',
-                                             # A Tuesday:
-                                             date = datetime.date(2012, 01, 17),
+                                             # A Sunday:
+                                             date = datetime.date(2012, 01, 22),
                                              time = datetime.time(7, 30),
                                              household = test_household,
                                              user = test_user)
