@@ -1192,7 +1192,9 @@ class FoodViewsTestCase(TestCase):
                                    date = datetime.date(2011, 01, 01),
                                    time = datetime.time(7, 30),
                                    household = test_household,
-                                   user = test_user)
+                                   user = test_user,
+                                   # Set calories here to test get_avg_week_calories
+                                   calories = 1000)
         # These are 2 months before/after, to check that it really is finding
         # the previous/next months containing a meal
         previous_month_meal = Meal.objects.create(name = 'breakfast',
@@ -1216,6 +1218,16 @@ class FoodViewsTestCase(TestCase):
         self.assertTrue('meal_list' in response.context)
         self.assertTrue('date_list' in response.context)
         self.assertTrue('week_list' in response.context)
+        self.assertTrue(response.context['meal_list'])
+        self.assertTrue(response.context['date_list'])
+        self.assertTrue(response.context['week_list'])
+        week_list = [{'date' : datetime.date(2010, 12, 27), 'calories': 1000},
+                     {'date' : datetime.date(2011, 01, 03), 'calories': 0},
+                     {'date' : datetime.date(2011, 01, 10), 'calories': 0},
+                     {'date' : datetime.date(2011, 01, 17), 'calories': 0},
+                     {'date' : datetime.date(2011, 01, 24), 'calories': 0},
+                     {'date' : datetime.date(2011, 01, 31), 'calories': 0}]
+        self.assertEqual(response.context['week_list'], week_list)
         self.assertTrue('previous_month' in response.context)
         self.assertTrue('next_month' in response.context)
         self.assertEqual(datetime.date(2010, 11, 1),
