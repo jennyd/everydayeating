@@ -412,7 +412,10 @@ class FoodViewsTestCase(TestCase):
                                 response.context['formset'][0]['quantity'].errors)
         self.assertTrue(u'Enter a number not less than 0' in
                                 response.context['formset'][0]['calories'].errors)
-        # FIXME Check that the ingredient still has its initial values
+        # Check that the ingredient still has its initial values
+        edited_ingredient_one = Ingredient.objects.get(pk=ingredient_one.id)
+        self.assertEqual(edited_ingredient_one.quantity, 100)
+        self.assertEqual(edited_ingredient_one.calories, 10)
 
         # Try to send a comestible_ptr which doesn't exist
         self.assertRaises(ObjectDoesNotExist, Ingredient.objects.get,
