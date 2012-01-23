@@ -453,7 +453,9 @@ class FoodViewsTestCase(TestCase):
         self.assertEqual(len(response.templates), 2)
         self.assertTemplateUsed(response, 'food/ingredient_manage.html')
         self.assertTemplateUsed(response, 'food/base.html')
-        # FIXME Check errors here
+        expected_error = u'Select a valid choice. That choice is not one of the available choices.'
+        self.assertTrue(expected_error in
+                            response.context['formset'][1]['comestible_ptr'].errors)
 
 ################################################################################
 # Dish views tests
