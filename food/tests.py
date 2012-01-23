@@ -592,7 +592,7 @@ class FoodViewsTestCase(TestCase):
         self.assertIsInstance(response.context['form'], ModelForm)
         self.assertIsInstance(response.context['formset'], BaseInlineFormSet)
 
-        # Add a good dish with amounts
+        # Add a good dish with an amount
         response = self.client.post(reverse('dish_add'),
                                     data={'name': 'Test dish',
                                           'quantity': 500,
@@ -618,7 +618,12 @@ class FoodViewsTestCase(TestCase):
         self.assertEqual(len(response.templates), 2)
         self.assertTemplateUsed(response, 'food/dish_detail.html')
         self.assertTemplateUsed(response, 'food/base.html')
-        # Check dish & amounts created correctly - FIXME
+        # Check dish & amounts created correctly
+        dish = Dish.objects.get(name='Test dish')
+        amount_one = Amount.objects.get(pk=1)
+        self.assertEqual(dish.quantity, 500)
+        self.assertEqual(dish.unit, 'g')
+        self.assertEqual(amount_one.quantity, 50)
 
         # Try to add a dish and an amount with invalid quantity values
         response = self.client.post(reverse('dish_add'),
