@@ -1367,7 +1367,8 @@ class FoodViewsTestCase(TestCase):
         self.assertTemplateUsed(response, 'food/base.html')
         self.assertTrue('meal_list' in response.context)
         self.assertTrue('date_list' in response.context)
-        # date_list is None - assertFalse? FIXME
+        self.assertEqual(len(response.context['meal_list']), 1)
+        self.assertFalse(response.context['date_list'])
         self.assertTrue('day_calories' in response.context)
         self.assertEqual(response.context['day_calories'], 1000)
         self.assertTrue('day' in response.context)
