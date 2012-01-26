@@ -1341,7 +1341,9 @@ class FoodViewsTestCase(TestCase):
                                    date = datetime.date(2011, 01, 01),
                                    time = datetime.time(7, 30),
                                    household = test_household,
-                                   user = test_user)
+                                   user = test_user,
+                                   # Set calories here to test get_sum_day_calories
+                                   calories = 1000)
         # These are 2 months before/after, to check that it really is finding
         # the previous/next days containing a meal
         previous_day_meal = Meal.objects.create(name = 'breakfast',
@@ -1367,6 +1369,7 @@ class FoodViewsTestCase(TestCase):
         self.assertTrue('date_list' in response.context)
         # date_list is None - assertFalse? FIXME
         self.assertTrue('day_calories' in response.context)
+        self.assertEqual(response.context['day_calories'], 1000)
         self.assertTrue('day' in response.context)
         self.assertEqual(datetime.date(2011, 01, 01),
                          response.context['day'])
