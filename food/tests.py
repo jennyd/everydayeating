@@ -1309,6 +1309,7 @@ class FoodViewsTestCase(TestCase):
         self.assertTrue(response.context['meal_list'])
         self.assertTrue(response.context['date_list'])
         self.assertTrue('avg_week_calories' in response.context)
+        self.assertEqual(response.context['avg_week_calories'], 1000)
         self.assertTrue('previous_week' in response.context)
         self.assertTrue('next_week' in response.context)
         self.assertEqual(datetime.date(2011, 12, 19), # Monday
