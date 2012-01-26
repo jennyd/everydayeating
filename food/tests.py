@@ -1263,6 +1263,7 @@ class FoodViewsTestCase(TestCase):
                                    calories = 1000)
 
         # Test first without any meals in previous or next weeks
+        # (this is tested separately to complete coverage of get_previous/next_week)
         response = self.client.get(reverse('meal_archive_week',
                                            kwargs={'year': 2012,
                                                    'week': '1'}))
