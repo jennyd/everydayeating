@@ -1348,10 +1348,10 @@ class FoodViewsTestCase(TestCase):
         # These are 2 months before/after, to check that it really is finding
         # the previous/next days containing a meal
         previous_day_meal = Meal.objects.create(name = 'breakfast',
-                                               date = datetime.date(2010, 11, 30),
-                                               time = datetime.time(7, 30),
-                                               household = test_household,
-                                               user = test_user)
+                                                date = datetime.date(2010, 11, 30),
+                                                time = datetime.time(7, 30),
+                                                household = test_household,
+                                                user = test_user)
         next_day_meal = Meal.objects.create(name = 'breakfast',
                                             date = datetime.date(2011, 03, 03),
                                             time = datetime.time(7, 30),
@@ -1521,7 +1521,7 @@ class FoodViewsTestCase(TestCase):
         test_user = User.objects.create(username = 'testuser',
                                         password = 'testpassword')
         test_household = Household.objects.create(name = 'Test household',
-                                                 admin = test_user)
+                                                  admin = test_user)
         ingredient_one = Ingredient.objects.create(name = 'Test ingredient 1',
                                                    quantity = 100,
                                                    unit = 'g',
