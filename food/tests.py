@@ -1258,7 +1258,9 @@ class FoodViewsTestCase(TestCase):
                                    date = datetime.date(2012, 01, 03), # Tuesday
                                    time = datetime.time(7, 30),
                                    household = test_household,
-                                   user = test_user)
+                                   user = test_user,
+                                   # Set calories here to test get_avg_week_calories
+                                   calories = 1000)
 
         # Test first without any meals in previous or next weeks
         response = self.client.get(reverse('meal_archive_week',
@@ -1273,6 +1275,7 @@ class FoodViewsTestCase(TestCase):
         self.assertTrue(response.context['meal_list'])
         self.assertTrue(response.context['date_list'])
         self.assertTrue('avg_week_calories' in response.context)
+        self.assertEqual(response.context['avg_week_calories'], 1000)
         self.assertTrue('previous_week' in response.context)
         self.assertTrue('next_week' in response.context)
         self.assertFalse(response.context['previous_week'])
