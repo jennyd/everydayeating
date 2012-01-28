@@ -120,6 +120,7 @@ class FoodViewsTestCase(TestCase):
         # Try to add an ingredient with invalid quantity and calories values
         response = self.client.post(reverse('ingredient_add'),
                                     data={'name': 'Test ingredient bad',
+                                          # quantity should be positive
                                           'quantity': 0,
                                           'unit': 'g',
                                           'calories': -75})
@@ -190,7 +191,9 @@ class FoodViewsTestCase(TestCase):
         # Try to edit an ingredient with invalid quantity and calories values
         response = self.client.post(reverse('ingredient_edit',
                                             kwargs={'pk': ingredient.id}),
-                                    data={'quantity': 0,
+                                    data={# quantity should be positive
+                                          'quantity': 0,
+                                          # calories should be positive or zero
                                           'calories': -75},
                                     follow=True)
         self.assertEqual(response.status_code, 200)
@@ -382,8 +385,10 @@ class FoodViewsTestCase(TestCase):
                                           'form-INITIAL_FORMS': 3,
                                           'form-0-comestible_ptr': ingredient_one.id,
                                           'form-0-name': 'Test ingredient 1',
+                                          # quantity should be positive
                                           'form-0-quantity': 0, # was 100
                                           'form-0-unit': 'g',
+                                          # calories should be positive or zero
                                           'form-0-calories': -75, # was 10
                                           'form-1-comestible_ptr': ingredient_two.id,
                                           'form-1-name': 'Test ingredient 2',
@@ -628,6 +633,7 @@ class FoodViewsTestCase(TestCase):
         # Try to add a dish and an amount with invalid quantity values
         response = self.client.post(reverse('dish_add'),
                                     data={'name': 'Test dish bad',
+                                          # quantity should be positive
                                           'quantity': 0,
                                           'date_cooked': datetime.date(2012, 01, 18),
                                           'household': test_household.id,
@@ -637,6 +643,7 @@ class FoodViewsTestCase(TestCase):
                                           'contained_comestibles_set-TOTAL_FORMS': 6,
                                           'contained_comestibles_set-INITIAL_FORMS': 0,
                                           'contained_comestibles_set-0-contained_comestible': 1,
+                                          # quantity should be positive
                                           'contained_comestibles_set-0-quantity': -1,
                                           # Leave the default values for these
                                           # fields unchanged
@@ -746,6 +753,7 @@ class FoodViewsTestCase(TestCase):
         response = self.client.post(reverse('dish_edit',
                                             kwargs={'dish_id': dish.id}),
                                     data={'name': 'Test dish',
+                                          # quantity should be positive
                                           'quantity': 0, # was 400
                                           'date_cooked': datetime.date(2012, 01, 18),
                                           'household': test_household.id,
@@ -762,6 +770,7 @@ class FoodViewsTestCase(TestCase):
                                           'contained_comestibles_set-0-quantity': 50,
                                           'contained_comestibles_set-1-id': amount_two.id,
                                           'contained_comestibles_set-1-contained_comestible': 2,
+                                          # quantity should be positive
                                           'contained_comestibles_set-1-quantity': -100, # was 180
                                           'contained_comestibles_set-2-id': amount_three.id,
                                           'contained_comestibles_set-2-contained_comestible': 2,
@@ -1012,6 +1021,7 @@ class FoodViewsTestCase(TestCase):
         response = self.client.post(reverse('dish_multiply',
                                             kwargs={'dish_id': dish.id}),
                                     data={'operation': 'multiply',
+                                          # factor should be positive
                                           'factor': -2},
                                     follow=True)
         self.assertEqual(response.status_code, 200)
@@ -1600,6 +1610,7 @@ class FoodViewsTestCase(TestCase):
                                           'portion_set-TOTAL_FORMS': 6,
                                           'portion_set-INITIAL_FORMS': 0,
                                           'portion_set-0-comestible': ingredient_one.id,
+                                          # quantity should be positive
                                           'portion_set-0-quantity': -50,
                                           'portion_set-1-comestible': dish.id,
                                           # 100/500 of dish in breakfast
@@ -1863,6 +1874,7 @@ class FoodViewsTestCase(TestCase):
                                           # and comestible?
                                           'portion_set-0-id': portion_one.id,
                                           'portion_set-0-comestible': dish.id,
+                                          # quantity should be positive
                                           'portion_set-0-quantity': -50,
                                           'portion_set-1-id': portion_two.id,
                                           'portion_set-1-comestible': dish.id,
