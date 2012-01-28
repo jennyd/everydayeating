@@ -1525,11 +1525,11 @@ class FoodViewsTestCase(TestCase):
         ingredient_one = Ingredient.objects.create(name = 'Test ingredient 1',
                                                    quantity = 100,
                                                    unit = 'g',
-                                                   calories = 75)
+                                                   calories = 50)
         ingredient_two = Ingredient.objects.create(name = 'Test ingredient 2',
                                                    quantity = 100,
                                                    unit = 'ml',
-                                                   calories = 828)
+                                                   calories = 100)
         dish = Dish.objects.create(name = 'Test dish',
                                    quantity = 500,
                                    date_cooked = datetime.date(2012, 01, 18),
@@ -1579,7 +1579,16 @@ class FoodViewsTestCase(TestCase):
         self.assertEqual(len(response.templates), 2)
         self.assertTemplateUsed(response, 'food/meal_detail.html')
         self.assertTemplateUsed(response, 'food/base.html')
-        # Check meal & portions created correctly - FIXME
+        # Check meal & portions created correctly
+        added_meal = Meal.objects.get(name='breakfast')
+        added_portion_one = Portion.objects.get(pk=1)
+        added_portion_two = Portion.objects.get(pk=2)
+        self.assertEqual(added_meal.time, datetime.time(7, 30))
+        self.assertEqual(added_portion_one.quantity, 50)
+        self.assertEqual(added_portion_two.quantity, 100)
+        # Check dish's remaining quantity
+        updated_dish = Dish.objects.get(name='Test dish')
+        self.assertEqual(updated_dish.get_remaining_quantity(), 400)
 
         # Try to add a meal and portions with invalid quantity values
         response = self.client.post(reverse('meal_add'),
