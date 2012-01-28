@@ -1630,6 +1630,7 @@ class FoodViewsTestCase(TestCase):
         self.assertTrue(u'Enter a number not less than 0' in
                                 response.context['formset'][0]['quantity'].errors)
         self.assertRaises(ObjectDoesNotExist, Meal.objects.get, name='lunch')
+        self.assertRaises(ObjectDoesNotExist, Portion.objects.get, meal__name='lunch')
 
         # Try to add a meal and a portion of a dish with a quantity greater
         # than the dish's remaining quantity
@@ -1668,6 +1669,7 @@ class FoodViewsTestCase(TestCase):
         self.assertTrue(expected_error in
                             response.context['formset'][1].non_field_errors())
         self.assertRaises(ObjectDoesNotExist, Meal.objects.get, name='dinner')
+        self.assertRaises(ObjectDoesNotExist, Portion.objects.get, meal__name='dinner')
 
         # Try to add a meal and portions of a dish with a joint quantity (but
         # not individual quantities) greater than the dish's remaining quantity
@@ -1706,6 +1708,7 @@ class FoodViewsTestCase(TestCase):
         self.assertTrue(expected_error in
                             response.context['formset'].non_form_errors())
         self.assertRaises(ObjectDoesNotExist, Meal.objects.get, name='snack')
+        self.assertRaises(ObjectDoesNotExist, Portion.objects.get, meal__name='snack')
 
     def test_meal_edit(self):
         # Create a user, household, ingredients, dish & amounts, meal & portions
