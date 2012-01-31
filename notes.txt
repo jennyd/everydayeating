@@ -18,6 +18,8 @@
 # make most views login_required and restricted to user.household
 # and make household- and user-based views & templates
 
+# rename related_names on contained_comestible and containing_dish
+
 # create & edit portions of a dish
 
 # convert a portion of a dish to an amount in another dish
@@ -39,6 +41,8 @@
 # dish: add, edit and duplicate dishes, which are collections of fixed quantities of foods and/or other dishes
 
 # diary: assign foods and dishes to times and dates, both past and future
+
+# fridge/freezer: keep track of cooked dishes/portions in the fridge/freezer, with dates by which they should be eaten
 
 # restaurant: allow diary entries with estimated calorie counts, which won't appear in later search results (and can't be duplicated?)
 
