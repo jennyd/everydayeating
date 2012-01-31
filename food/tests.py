@@ -113,6 +113,7 @@ class FoodViewsTestCase(TestCase):
         self.assertEqual(len(response.templates), 2)
         self.assertTemplateUsed(response, 'food/ingredient_list.html')
         self.assertTemplateUsed(response, 'food/base.html')
+        self.assertEqual(Ingredient.objects.count(), 1)
         ingredient = Ingredient.objects.get(name='Test ingredient good')
         # is_dish should be set to False on save (default True)
         self.assertFalse(ingredient.is_dish)
@@ -239,6 +240,7 @@ class FoodViewsTestCase(TestCase):
         # Redirects to ingredient_list
         self.assertTemplateUsed(response, 'food/ingredient_list.html')
         self.assertTemplateUsed(response, 'food/base.html')
+        self.assertEqual(Ingredient.objects.count(), 0)
         self.assertRaises(ObjectDoesNotExist, Ingredient.objects.get,
                                               pk=ingredient.id)
 
@@ -303,6 +305,7 @@ class FoodViewsTestCase(TestCase):
         # Redirects to ingredient_list
         self.assertTemplateUsed(response, 'food/ingredient_list.html')
         self.assertTemplateUsed(response, 'food/base.html')
+        self.assertEqual(Ingredient.objects.count(), 3)
         edited_ingredient_one = Ingredient.objects.get(pk=ingredient_one.id)
         ingredient_three = Ingredient.objects.get(name='Test ingredient 3')
         self.assertEqual(edited_ingredient_one.calories, 5)
@@ -557,6 +560,8 @@ class FoodViewsTestCase(TestCase):
         # Redirects to dish_list
         self.assertTemplateUsed(response, 'food/dish_list.html')
         self.assertTemplateUsed(response, 'food/base.html')
+        self.assertEqual(Dish.objects.count(), 0)
+        self.assertEqual(Amount.objects.count(), 0)
         self.assertRaises(ObjectDoesNotExist, Dish.objects.get,
                                               pk=dish.id)
         self.assertRaises(ObjectDoesNotExist, Amount.objects.get,
@@ -624,6 +629,8 @@ class FoodViewsTestCase(TestCase):
         self.assertTemplateUsed(response, 'food/dish_detail.html')
         self.assertTemplateUsed(response, 'food/base.html')
         # Check dish & amounts created correctly
+        self.assertEqual(Dish.objects.count(), 1)
+        self.assertEqual(Amount.objects.count(), 1)
         dish = Dish.objects.get(name='Test dish')
         amount_one = Amount.objects.get(pk=1)
         self.assertEqual(dish.quantity, 500)
@@ -660,6 +667,8 @@ class FoodViewsTestCase(TestCase):
                                 response.context['form']['quantity'].errors)
         self.assertTrue(u'Enter a number not less than 0' in
                                 response.context['formset'][0]['quantity'].errors)
+        self.assertEqual(Dish.objects.count(), 1)
+        self.assertEqual(Amount.objects.count(), 1)
         self.assertRaises(ObjectDoesNotExist, Dish.objects.get,
                                               name='Test dish bad')
 
@@ -739,6 +748,8 @@ class FoodViewsTestCase(TestCase):
         self.assertTemplateUsed(response, 'food/dish_detail.html')
         self.assertTemplateUsed(response, 'food/base.html')
         # Check dish & amounts edited/created correctly
+        self.assertEqual(Dish.objects.count(), 1)
+        self.assertEqual(Amount.objects.count(), 3)
         edited_dish = Dish.objects.get(name='Test dish')
         edited_amount_one = Amount.objects.get(pk=amount_one.id)
         edited_amount_two = Amount.objects.get(pk=amount_two.id)
@@ -890,6 +901,8 @@ class FoodViewsTestCase(TestCase):
         self.assertEqual(dish.calories, 305)
         self.assertEqual(amount_of_dish.calories, 76.25)
         self.assertEqual(portion_of_dish.calories, 152.5)
+        self.assertEqual(Dish.objects.count(), 2)
+        self.assertEqual(Amount.objects.count(), 4)
 
         response = self.client.post(reverse('dish_edit',
                                             kwargs={'dish_id': dish.id}),
@@ -930,6 +943,8 @@ class FoodViewsTestCase(TestCase):
         self.assertTemplateUsed(response, 'food/dish_detail.html')
         self.assertTemplateUsed(response, 'food/base.html')
         # Check that amount_three was deleted correctly
+        self.assertEqual(Dish.objects.count(), 2)
+        self.assertEqual(Amount.objects.count(), 3)
         self.assertRaises(ObjectDoesNotExist, Amount.objects.get,
                                               pk=amount_three.id)
         # Check that dish and the amount and portion of it were updated correctly
@@ -991,6 +1006,8 @@ class FoodViewsTestCase(TestCase):
         self.assertTemplateUsed(response, 'food/dish_detail.html')
         self.assertTemplateUsed(response, 'food/base.html')
         # Check dish & amounts multiplied correctly
+        self.assertEqual(Dish.objects.count(), 1)
+        self.assertEqual(Amount.objects.count(), 2)
         dish = Dish.objects.get(pk=dish.id)
         amount_one = Amount.objects.get(contained_comestible=ingredient_one)
         amount_two = Amount.objects.get(contained_comestible=ingredient_two)
@@ -1010,6 +1027,8 @@ class FoodViewsTestCase(TestCase):
         self.assertTemplateUsed(response, 'food/dish_detail.html')
         self.assertTemplateUsed(response, 'food/base.html')
         # Check dish & amounts divided correctly
+        self.assertEqual(Dish.objects.count(), 1)
+        self.assertEqual(Amount.objects.count(), 2)
         dish = Dish.objects.get(pk=dish.id)
         amount_one = Amount.objects.get(contained_comestible=ingredient_one)
         amount_two = Amount.objects.get(contained_comestible=ingredient_two)
@@ -1085,6 +1104,8 @@ class FoodViewsTestCase(TestCase):
         self.assertTemplateUsed(response, 'food/dish_detail.html')
         self.assertTemplateUsed(response, 'food/base.html')
         # Check dish & amounts duplicated correctly
+        self.assertEqual(Dish.objects.count(), 2)
+        self.assertEqual(Amount.objects.count(), 4)
         new_dish = Dish.objects.get(pk=response.context['dish'].id)
         amount_one = Amount.objects.get(contained_comestible=ingredient_one,
                                         containing_dish=new_dish)
@@ -1113,6 +1134,8 @@ class FoodViewsTestCase(TestCase):
         self.assertTemplateUsed(response, 'food/base.html')
         self.assertTrue(u'Enter a valid date.' in
                                 response.context['form']['date'].errors)
+        self.assertEqual(Dish.objects.count(), 2)
+        self.assertEqual(Amount.objects.count(), 4)
 
         # Try to duplicate a dish which doesn't exist
         self.assertRaises(ObjectDoesNotExist, Dish.objects.get, pk=fake_pk)
@@ -1516,6 +1539,8 @@ class FoodViewsTestCase(TestCase):
         # Redirects to meal_archive
         self.assertTemplateUsed(response, 'food/meal_archive.html')
         self.assertTemplateUsed(response, 'food/base.html')
+        self.assertEqual(Meal.objects.count(), 1)
+        self.assertEqual(Portion.objects.count(), 1)
         self.assertRaises(ObjectDoesNotExist, Meal.objects.get, pk=meal.id)
         self.assertRaises(ObjectDoesNotExist, Portion.objects.get, meal=meal.id)
 
@@ -1525,6 +1550,8 @@ class FoodViewsTestCase(TestCase):
                                            kwargs={'pk': fake_pk}))
         self.assertEqual(response.status_code, 404)
         self.assertTemplateUsed(response, '404.html')
+        self.assertEqual(Meal.objects.count(), 1)
+        self.assertEqual(Portion.objects.count(), 1)
 
     def test_meal_add(self):
         # Create a user, household, ingredients, dish & amounts
@@ -1590,6 +1617,8 @@ class FoodViewsTestCase(TestCase):
         self.assertTemplateUsed(response, 'food/meal_detail.html')
         self.assertTemplateUsed(response, 'food/base.html')
         # Check meal & portions created correctly
+        self.assertEqual(Meal.objects.count(), 1)
+        self.assertEqual(Portion.objects.count(), 2)
         added_meal = Meal.objects.get(name='breakfast')
         added_portion_one = Portion.objects.get(pk=1)
         added_portion_two = Portion.objects.get(pk=2)
@@ -1629,6 +1658,8 @@ class FoodViewsTestCase(TestCase):
         self.assertTemplateUsed(response, 'food/base.html')
         self.assertTrue(u'Enter a number not less than 0' in
                                 response.context['formset'][0]['quantity'].errors)
+        self.assertEqual(Meal.objects.count(), 1)
+        self.assertEqual(Portion.objects.count(), 2)
         self.assertRaises(ObjectDoesNotExist, Meal.objects.get, name='lunch')
         self.assertRaises(ObjectDoesNotExist, Portion.objects.get, meal__name='lunch')
 
@@ -1668,6 +1699,8 @@ class FoodViewsTestCase(TestCase):
         expected_error = u"This portion's quantity is greater than the remaining quantity of the dish (400 g)."
         self.assertTrue(expected_error in
                             response.context['formset'][1].non_field_errors())
+        self.assertEqual(Meal.objects.count(), 1)
+        self.assertEqual(Portion.objects.count(), 2)
         self.assertRaises(ObjectDoesNotExist, Meal.objects.get, name='dinner')
         self.assertRaises(ObjectDoesNotExist, Portion.objects.get, meal__name='dinner')
 
@@ -1707,6 +1740,8 @@ class FoodViewsTestCase(TestCase):
         expected_error = u"The remaining quantity of Test dish (2012-01-18) (400 g) is less than the total quantity of it in this meal."
         self.assertTrue(expected_error in
                             response.context['formset'].non_form_errors())
+        self.assertEqual(Meal.objects.count(), 1)
+        self.assertEqual(Portion.objects.count(), 2)
         self.assertRaises(ObjectDoesNotExist, Meal.objects.get, name='snack')
         self.assertRaises(ObjectDoesNotExist, Portion.objects.get, meal__name='snack')
 
@@ -1797,6 +1832,8 @@ class FoodViewsTestCase(TestCase):
         self.assertTemplateUsed(response, 'food/meal_detail.html')
         self.assertTemplateUsed(response, 'food/base.html')
         # Check meal & portions edited/created correctly
+        self.assertEqual(Meal.objects.count(), 1)
+        self.assertEqual(Portion.objects.count(), 4)
         edited_meal = Meal.objects.get(name='breakfast')
         edited_portion_one = Portion.objects.get(pk=portion_one.id)
         edited_portion_two = Portion.objects.get(pk=portion_two.id)
@@ -1854,6 +1891,8 @@ class FoodViewsTestCase(TestCase):
         self.assertTemplateUsed(response, 'food/meal_detail.html')
         self.assertTemplateUsed(response, 'food/base.html')
         # Check portion deleted correctly and meal updated
+        self.assertEqual(Meal.objects.count(), 1)
+        self.assertEqual(Portion.objects.count(), 3)
         edited_meal = Meal.objects.get(name='breakfast')
         self.assertEqual(edited_meal.calories, 96)
         self.assertRaises(ObjectDoesNotExist, Portion.objects.get,
@@ -1902,6 +1941,8 @@ class FoodViewsTestCase(TestCase):
         self.assertTrue(u'Enter a number not less than 0' in
                                 response.context['formset'][0]['quantity'].errors)
         # Check that meal & portions weren't changed
+        self.assertEqual(Meal.objects.count(), 1)
+        self.assertEqual(Portion.objects.count(), 3)
         edited_meal = Meal.objects.get(name='breakfast')
         edited_portion_one = Portion.objects.get(pk=portion_one.id)
         edited_portion_two = Portion.objects.get(pk=portion_two.id)
@@ -1962,6 +2003,8 @@ class FoodViewsTestCase(TestCase):
         self.assertTrue(expected_error in
                             response.context['formset'][0].non_field_errors())
         # Check that meal & portions weren't changed
+        self.assertEqual(Meal.objects.count(), 1)
+        self.assertEqual(Portion.objects.count(), 3)
         edited_meal = Meal.objects.get(name='breakfast')
         edited_portion_one = Portion.objects.get(pk=portion_one.id)
         edited_portion_two = Portion.objects.get(pk=portion_two.id)
@@ -2022,6 +2065,8 @@ class FoodViewsTestCase(TestCase):
         self.assertTrue(expected_error in
                             response.context['formset'].non_form_errors())
         # Check that meal & portions weren't changed
+        self.assertEqual(Meal.objects.count(), 1)
+        self.assertEqual(Portion.objects.count(), 3)
         edited_meal = Meal.objects.get(name='breakfast')
         edited_portion_one = Portion.objects.get(pk=portion_one.id)
         edited_portion_two = Portion.objects.get(pk=portion_two.id)
@@ -2100,6 +2145,7 @@ class FoodViewsTestCase(TestCase):
         self.assertTemplateUsed(response, 'food/base.html')
         # Check meal & portions duplicated correctly
         self.assertEqual(Meal.objects.count(), 2)
+        self.assertEqual(Portion.objects.count(), 4)
         new_meal = Meal.objects.get(pk=response.context['meal'].id)
         new_portion_one = Portion.objects.get(comestible=ingredient_one,
                                               meal=new_meal)
@@ -2129,6 +2175,7 @@ class FoodViewsTestCase(TestCase):
         self.assertTrue(u'Enter a valid date.' in
                                 response.context['form']['date'].errors)
         self.assertEqual(Meal.objects.count(), 2)
+        self.assertEqual(Portion.objects.count(), 4)
 
         # Try to duplicate a meal which doesn't exist
         self.assertRaises(ObjectDoesNotExist, Meal.objects.get, pk=fake_pk)
