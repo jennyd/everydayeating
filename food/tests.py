@@ -2099,6 +2099,7 @@ class FoodViewsTestCase(TestCase):
         self.assertTemplateUsed(response, 'food/meal_detail.html')
         self.assertTemplateUsed(response, 'food/base.html')
         # Check meal & portions duplicated correctly
+        self.assertEqual(Meal.objects.count(), 2)
         new_meal = Meal.objects.get(pk=response.context['meal'].id)
         new_portion_one = Portion.objects.get(comestible=ingredient_one,
                                               meal=new_meal)
@@ -2127,6 +2128,7 @@ class FoodViewsTestCase(TestCase):
         self.assertTemplateUsed(response, 'food/base.html')
         self.assertTrue(u'Enter a valid date.' in
                                 response.context['form']['date'].errors)
+        self.assertEqual(Meal.objects.count(), 2)
 
         # Try to duplicate a meal which doesn't exist
         self.assertRaises(ObjectDoesNotExist, Meal.objects.get, pk=fake_pk)
