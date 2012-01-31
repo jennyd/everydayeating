@@ -26,8 +26,6 @@
 
 # prevent a dish having the same name as an ingredient
 
-# tests...
-
 # add a comment field to Amount, for e.g. preparation instructions
 
 # add get_week_start(date): while (date - 1).week == date.week: date -= 1
