@@ -497,10 +497,10 @@ class FoodViewsTestCase(TestCase):
                                    recipe_url = u'http://www.example.com/recipeurl/',
                                    unit = 'g')
         dish.cooks.add(test_user)
-        dish.contained_comestibles_set.create(contained_comestible = ingredient_one,
-                                              quantity = 50)
-        dish.contained_comestibles_set.create(contained_comestible = ingredient_two,
-                                              quantity = 150)
+        dish.amount_set.create(contained_comestible = ingredient_one,
+                               quantity = 50)
+        dish.amount_set.create(contained_comestible = ingredient_two,
+                               quantity = 150)
 
         response = self.client.get(reverse('dish_detail',
                                            kwargs={'pk': dish.id}))
@@ -538,10 +538,10 @@ class FoodViewsTestCase(TestCase):
                                    recipe_url = u'http://www.example.com/recipeurl/',
                                    unit = 'g')
         dish.cooks.add(test_user)
-        dish.contained_comestibles_set.create(contained_comestible = ingredient_one,
-                                              quantity = 50)
-        dish.contained_comestibles_set.create(contained_comestible = ingredient_two,
-                                              quantity = 150)
+        dish.amount_set.create(contained_comestible = ingredient_one,
+                               quantity = 50)
+        dish.amount_set.create(contained_comestible = ingredient_two,
+                               quantity = 150)
 
         response = self.client.get(reverse('dish_delete',
                                            kwargs={'pk': dish.id}))
@@ -611,17 +611,17 @@ class FoodViewsTestCase(TestCase):
                                           'recipe_url': u'http://www.example.com/recipeurl/',
                                           'cooks': test_user.id,
                                           'unit': 'g',
-                                          'contained_comestibles_set-TOTAL_FORMS': 6,
-                                          'contained_comestibles_set-INITIAL_FORMS': 0,
-                                          'contained_comestibles_set-0-contained_comestible': 1,
-                                          'contained_comestibles_set-0-quantity': 50,
+                                          'amount_set-TOTAL_FORMS': 6,
+                                          'amount_set-INITIAL_FORMS': 0,
+                                          'amount_set-0-contained_comestible': 1,
+                                          'amount_set-0-quantity': 50,
                                           # Leave the default values for these
                                           # fields unchanged
-                                          'contained_comestibles_set-1-quantity': 0,
-                                          'contained_comestibles_set-2-quantity': 0,
-                                          'contained_comestibles_set-3-quantity': 0,
-                                          'contained_comestibles_set-4-quantity': 0,
-                                          'contained_comestibles_set-5-quantity': 0},
+                                          'amount_set-1-quantity': 0,
+                                          'amount_set-2-quantity': 0,
+                                          'amount_set-3-quantity': 0,
+                                          'amount_set-4-quantity': 0,
+                                          'amount_set-5-quantity': 0},
                                     follow=True)
         # Redirects to dish_detail
         self.assertEqual(response.status_code, 200)
@@ -647,18 +647,18 @@ class FoodViewsTestCase(TestCase):
                                           'recipe_url': u'http://www.example.com/recipeurl/',
                                           'cooks': test_user.id,
                                           'unit': 'g',
-                                          'contained_comestibles_set-TOTAL_FORMS': 6,
-                                          'contained_comestibles_set-INITIAL_FORMS': 0,
-                                          'contained_comestibles_set-0-contained_comestible': 1,
+                                          'amount_set-TOTAL_FORMS': 6,
+                                          'amount_set-INITIAL_FORMS': 0,
+                                          'amount_set-0-contained_comestible': 1,
                                           # quantity should be positive
-                                          'contained_comestibles_set-0-quantity': -1,
+                                          'amount_set-0-quantity': -1,
                                           # Leave the default values for these
                                           # fields unchanged
-                                          'contained_comestibles_set-1-quantity': 0,
-                                          'contained_comestibles_set-2-quantity': 0,
-                                          'contained_comestibles_set-3-quantity': 0,
-                                          'contained_comestibles_set-4-quantity': 0,
-                                          'contained_comestibles_set-5-quantity': 0})
+                                          'amount_set-1-quantity': 0,
+                                          'amount_set-2-quantity': 0,
+                                          'amount_set-3-quantity': 0,
+                                          'amount_set-4-quantity': 0,
+                                          'amount_set-5-quantity': 0})
         self.assertEqual(response.status_code, 200)
         self.assertEqual(len(response.templates), 2)
         self.assertTemplateUsed(response, 'food/dish_edit.html')
@@ -693,10 +693,10 @@ class FoodViewsTestCase(TestCase):
                                    recipe_url = u'http://www.example.com/recipeurl/',
                                    unit = 'g')
         dish.cooks.add(test_user)
-        amount_one = dish.contained_comestibles_set.create(contained_comestible = ingredient_one,
-                                                           quantity = 50)
-        amount_two = dish.contained_comestibles_set.create(contained_comestible = ingredient_two,
-                                                           quantity = 150)
+        amount_one = dish.amount_set.create(contained_comestible = ingredient_one,
+                                            quantity = 50)
+        amount_two = dish.amount_set.create(contained_comestible = ingredient_two,
+                                            quantity = 150)
 
         response = self.client.get(reverse('dish_edit',
                                            kwargs={'dish_id': dish.id}))
@@ -721,26 +721,26 @@ class FoodViewsTestCase(TestCase):
                                           'recipe_url': u'http://www.example.com/recipeurl/',
                                           'cooks': test_user.id,
                                           'unit': 'ml', # was 'g'
-                                          'contained_comestibles_set-TOTAL_FORMS': 8,
-                                          'contained_comestibles_set-INITIAL_FORMS': 2,
+                                          'amount_set-TOTAL_FORMS': 8,
+                                          'amount_set-INITIAL_FORMS': 2,
                                           # amount id needed here, since a new
                                           # amount is being added to the formset
-                                          'contained_comestibles_set-0-id': amount_one.id,
-                                          'contained_comestibles_set-0-contained_comestible': 1,
-                                          'contained_comestibles_set-0-quantity': 50,
-                                          'contained_comestibles_set-1-id': amount_two.id,
-                                          'contained_comestibles_set-1-contained_comestible': 2,
-                                          'contained_comestibles_set-1-quantity': 180, # was 150
+                                          'amount_set-0-id': amount_one.id,
+                                          'amount_set-0-contained_comestible': 1,
+                                          'amount_set-0-quantity': 50,
+                                          'amount_set-1-id': amount_two.id,
+                                          'amount_set-1-contained_comestible': 2,
+                                          'amount_set-1-quantity': 180, # was 150
                                           # new amount
-                                          'contained_comestibles_set-2-contained_comestible': 2,
-                                          'contained_comestibles_set-2-quantity': 100,
+                                          'amount_set-2-contained_comestible': 2,
+                                          'amount_set-2-quantity': 100,
                                           # Leave the default values for these
                                           # fields unchanged
-                                          'contained_comestibles_set-3-quantity': 0,
-                                          'contained_comestibles_set-4-quantity': 0,
-                                          'contained_comestibles_set-5-quantity': 0,
-                                          'contained_comestibles_set-6-quantity': 0,
-                                          'contained_comestibles_set-7-quantity': 0},
+                                          'amount_set-3-quantity': 0,
+                                          'amount_set-4-quantity': 0,
+                                          'amount_set-5-quantity': 0,
+                                          'amount_set-6-quantity': 0,
+                                          'amount_set-7-quantity': 0},
                                     follow=True)
         # Redirects to dish_detail
         self.assertEqual(response.status_code, 200)
@@ -771,29 +771,29 @@ class FoodViewsTestCase(TestCase):
                                           'recipe_url': u'http://www.example.com/recipeurl/',
                                           'cooks': test_user.id,
                                           'unit': 'ml',
-                                          'contained_comestibles_set-TOTAL_FORMS': 9,
-                                          'contained_comestibles_set-INITIAL_FORMS': 3,
+                                          'amount_set-TOTAL_FORMS': 9,
+                                          'amount_set-INITIAL_FORMS': 3,
                                           # amount id needed here, apparently -
                                           # because 2 amounts have the same
                                           # comestible?
-                                          'contained_comestibles_set-0-id': amount_one.id,
-                                          'contained_comestibles_set-0-contained_comestible': 1,
-                                          'contained_comestibles_set-0-quantity': 50,
-                                          'contained_comestibles_set-1-id': amount_two.id,
-                                          'contained_comestibles_set-1-contained_comestible': 2,
+                                          'amount_set-0-id': amount_one.id,
+                                          'amount_set-0-contained_comestible': 1,
+                                          'amount_set-0-quantity': 50,
+                                          'amount_set-1-id': amount_two.id,
+                                          'amount_set-1-contained_comestible': 2,
                                           # quantity should be positive
-                                          'contained_comestibles_set-1-quantity': -100, # was 180
-                                          'contained_comestibles_set-2-id': amount_three.id,
-                                          'contained_comestibles_set-2-contained_comestible': 2,
-                                          'contained_comestibles_set-2-quantity': 100,
+                                          'amount_set-1-quantity': -100, # was 180
+                                          'amount_set-2-id': amount_three.id,
+                                          'amount_set-2-contained_comestible': 2,
+                                          'amount_set-2-quantity': 100,
                                           # Leave the default values for these
                                           # fields unchanged
-                                          'contained_comestibles_set-3-quantity': 0,
-                                          'contained_comestibles_set-4-quantity': 0,
-                                          'contained_comestibles_set-5-quantity': 0,
-                                          'contained_comestibles_set-6-quantity': 0,
-                                          'contained_comestibles_set-7-quantity': 0,
-                                          'contained_comestibles_set-8-quantity': 0})
+                                          'amount_set-3-quantity': 0,
+                                          'amount_set-4-quantity': 0,
+                                          'amount_set-5-quantity': 0,
+                                          'amount_set-6-quantity': 0,
+                                          'amount_set-7-quantity': 0,
+                                          'amount_set-8-quantity': 0})
         self.assertEqual(response.status_code, 200)
         self.assertEqual(len(response.templates), 2)
         self.assertTemplateUsed(response, 'food/dish_edit.html')
@@ -822,28 +822,28 @@ class FoodViewsTestCase(TestCase):
                                           'recipe_url': u'http://www.example.com/recipeurl/',
                                           'cooks': test_user.id,
                                           'unit': 'ml',
-                                          'contained_comestibles_set-TOTAL_FORMS': 9,
-                                          'contained_comestibles_set-INITIAL_FORMS': 3,
+                                          'amount_set-TOTAL_FORMS': 9,
+                                          'amount_set-INITIAL_FORMS': 3,
                                           # amount id needed here, apparently -
                                           # because 2 amounts have the same
                                           # comestible?
-                                          'contained_comestibles_set-0-id': amount_one.id,
-                                          'contained_comestibles_set-0-contained_comestible': 1,
-                                          'contained_comestibles_set-0-quantity': 50,
-                                          'contained_comestibles_set-1-id': amount_two.id,
-                                          'contained_comestibles_set-1-contained_comestible': dish.id, # was 2
-                                          'contained_comestibles_set-1-quantity': 180,
-                                          'contained_comestibles_set-2-id': amount_three.id,
-                                          'contained_comestibles_set-2-contained_comestible': 2,
-                                          'contained_comestibles_set-2-quantity': 75, # was 100
+                                          'amount_set-0-id': amount_one.id,
+                                          'amount_set-0-contained_comestible': 1,
+                                          'amount_set-0-quantity': 50,
+                                          'amount_set-1-id': amount_two.id,
+                                          'amount_set-1-contained_comestible': dish.id, # was 2
+                                          'amount_set-1-quantity': 180,
+                                          'amount_set-2-id': amount_three.id,
+                                          'amount_set-2-contained_comestible': 2,
+                                          'amount_set-2-quantity': 75, # was 100
                                           # Leave the default values for these
                                           # fields unchanged
-                                          'contained_comestibles_set-3-quantity': 0,
-                                          'contained_comestibles_set-4-quantity': 0,
-                                          'contained_comestibles_set-5-quantity': 0,
-                                          'contained_comestibles_set-6-quantity': 0,
-                                          'contained_comestibles_set-7-quantity': 0,
-                                          'contained_comestibles_set-8-quantity': 0},
+                                          'amount_set-3-quantity': 0,
+                                          'amount_set-4-quantity': 0,
+                                          'amount_set-5-quantity': 0,
+                                          'amount_set-6-quantity': 0,
+                                          'amount_set-7-quantity': 0,
+                                          'amount_set-8-quantity': 0},
                                     follow=True)
         # This produces no error message at the moment, to allow following
         # correctly edited amounts to be saved; find a way to get around this!
@@ -913,29 +913,29 @@ class FoodViewsTestCase(TestCase):
                                           'recipe_url': u'http://www.example.com/recipeurl/',
                                           'cooks': test_user.id,
                                           'unit': 'ml',
-                                          'contained_comestibles_set-TOTAL_FORMS': 9,
-                                          'contained_comestibles_set-INITIAL_FORMS': 3,
+                                          'amount_set-TOTAL_FORMS': 9,
+                                          'amount_set-INITIAL_FORMS': 3,
                                           # amount id needed here, since a new
                                           # amount is being added to the formset
-                                          'contained_comestibles_set-0-id': amount_one.id,
-                                          'contained_comestibles_set-0-contained_comestible': 1,
-                                          'contained_comestibles_set-0-quantity': 50,
-                                          'contained_comestibles_set-1-id': amount_two.id,
-                                          'contained_comestibles_set-1-contained_comestible': 2,
-                                          'contained_comestibles_set-1-quantity': 180, # was 150
+                                          'amount_set-0-id': amount_one.id,
+                                          'amount_set-0-contained_comestible': 1,
+                                          'amount_set-0-quantity': 50,
+                                          'amount_set-1-id': amount_two.id,
+                                          'amount_set-1-contained_comestible': 2,
+                                          'amount_set-1-quantity': 180, # was 150
                                           # Delete this amount
-                                          'contained_comestibles_set-2-id': amount_three.id,
-                                          'contained_comestibles_set-2-contained_comestible': 2,
-                                          'contained_comestibles_set-2-quantity': 100,
-                                          'contained_comestibles_set-2-DELETE': True,
+                                          'amount_set-2-id': amount_three.id,
+                                          'amount_set-2-contained_comestible': 2,
+                                          'amount_set-2-quantity': 100,
+                                          'amount_set-2-DELETE': True,
                                           # Leave the default values for these
                                           # fields unchanged
-                                          'contained_comestibles_set-3-quantity': 0,
-                                          'contained_comestibles_set-4-quantity': 0,
-                                          'contained_comestibles_set-5-quantity': 0,
-                                          'contained_comestibles_set-6-quantity': 0,
-                                          'contained_comestibles_set-7-quantity': 0,
-                                          'contained_comestibles_set-8-quantity': 0},
+                                          'amount_set-3-quantity': 0,
+                                          'amount_set-4-quantity': 0,
+                                          'amount_set-5-quantity': 0,
+                                          'amount_set-6-quantity': 0,
+                                          'amount_set-7-quantity': 0,
+                                          'amount_set-8-quantity': 0},
                                     follow=True)
         # Redirects to dish_detail
         self.assertEqual(response.status_code, 200)
@@ -979,10 +979,10 @@ class FoodViewsTestCase(TestCase):
                                    recipe_url = u'http://www.example.com/recipeurl/',
                                    unit = 'g')
         dish.cooks.add(test_user)
-        dish.contained_comestibles_set.create(contained_comestible = ingredient_one,
-                                              quantity = 50)
-        dish.contained_comestibles_set.create(contained_comestible = ingredient_two,
-                                              quantity = 150)
+        dish.amount_set.create(contained_comestible = ingredient_one,
+                               quantity = 50)
+        dish.amount_set.create(contained_comestible = ingredient_two,
+                               quantity = 150)
 
         response = self.client.get(reverse('dish_multiply',
                                            kwargs={'dish_id': dish.id}))
@@ -1078,10 +1078,10 @@ class FoodViewsTestCase(TestCase):
                                        recipe_url = u'http://www.example.com/recipeurl/',
                                        unit = 'g')
         old_dish.cooks.add(test_user)
-        old_dish.contained_comestibles_set.create(contained_comestible = ingredient_one,
-                                              quantity = 50)
-        old_dish.contained_comestibles_set.create(contained_comestible = ingredient_two,
-                                                  quantity = 150)
+        old_dish.amount_set.create(contained_comestible = ingredient_one,
+                                   quantity = 50)
+        old_dish.amount_set.create(contained_comestible = ingredient_two,
+                                   quantity = 150)
 
         response = self.client.get(reverse('dish_duplicate',
                                            kwargs={'dish_id': old_dish.id}))
@@ -1450,10 +1450,10 @@ class FoodViewsTestCase(TestCase):
                                    recipe_url = u'http://www.example.com/recipeurl/',
                                    unit = 'g')
         dish.cooks.add(test_user)
-        dish.contained_comestibles_set.create(contained_comestible = ingredient_one,
-                                              quantity = 50)
-        dish.contained_comestibles_set.create(contained_comestible = ingredient_two,
-                                              quantity = 150)
+        dish.amount_set.create(contained_comestible = ingredient_one,
+                               quantity = 50)
+        dish.amount_set.create(contained_comestible = ingredient_two,
+                               quantity = 150)
         meal = Meal.objects.create(name = 'breakfast',
                                    date = datetime.date(2012, 01, 18),
                                    time = datetime.time(7, 30),
@@ -1499,10 +1499,10 @@ class FoodViewsTestCase(TestCase):
                                    recipe_url = u'http://www.example.com/recipeurl/',
                                    unit = 'g')
         dish.cooks.add(test_user)
-        dish.contained_comestibles_set.create(contained_comestible = ingredient_one,
-                                              quantity = 50)
-        dish.contained_comestibles_set.create(contained_comestible = ingredient_two,
-                                              quantity = 150)
+        dish.amount_set.create(contained_comestible = ingredient_one,
+                               quantity = 50)
+        dish.amount_set.create(contained_comestible = ingredient_two,
+                               quantity = 150)
         meal = Meal.objects.create(name = 'breakfast',
                                    date = datetime.date(2012, 01, 18),
                                    time = datetime.time(7, 30),
@@ -1574,10 +1574,10 @@ class FoodViewsTestCase(TestCase):
                                    recipe_url = u'http://www.example.com/recipeurl/',
                                    unit = 'g')
         dish.cooks.add(test_user)
-        dish.contained_comestibles_set.create(contained_comestible = ingredient_one,
-                                              quantity = 50)
-        dish.contained_comestibles_set.create(contained_comestible = ingredient_two,
-                                              quantity = 150)
+        dish.amount_set.create(contained_comestible = ingredient_one,
+                               quantity = 50)
+        dish.amount_set.create(contained_comestible = ingredient_two,
+                               quantity = 150)
 
         response = self.client.get(reverse('meal_add'))
         self.assertEqual(response.status_code, 200)
@@ -1766,10 +1766,10 @@ class FoodViewsTestCase(TestCase):
                                    recipe_url = u'http://www.example.com/recipeurl/',
                                    unit = 'g')
         dish.cooks.add(test_user)
-        dish.contained_comestibles_set.create(contained_comestible = ingredient_one,
-                                              quantity = 50)
-        dish.contained_comestibles_set.create(contained_comestible = ingredient_two,
-                                              quantity = 150)
+        dish.amount_set.create(contained_comestible = ingredient_one,
+                               quantity = 50)
+        dish.amount_set.create(contained_comestible = ingredient_two,
+                               quantity = 150)
         meal = Meal.objects.create(name = 'breakfast',
                                    date = datetime.date(2012, 01, 18),
                                    time = datetime.time(7, 30),
@@ -2107,10 +2107,10 @@ class FoodViewsTestCase(TestCase):
                                    recipe_url = u'http://www.example.com/recipeurl/',
                                    unit = 'g')
         dish.cooks.add(test_user)
-        dish.contained_comestibles_set.create(contained_comestible = ingredient_one,
-                                              quantity = 50)
-        dish.contained_comestibles_set.create(contained_comestible = ingredient_two,
-                                              quantity = 150)
+        dish.amount_set.create(contained_comestible = ingredient_one,
+                               quantity = 50)
+        dish.amount_set.create(contained_comestible = ingredient_two,
+                               quantity = 150)
         old_meal = Meal.objects.create(name = 'breakfast',
                                        date = datetime.date(2012, 01, 18),
                                        time = datetime.time(7, 30),

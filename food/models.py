@@ -148,7 +148,7 @@ class Dish(Comestible):
         # calculate calories
         if self.id: # (if this dish already exists)
             self.calories = sum(amount.calories for amount in
-                                self.contained_comestibles_set.all())
+                                self.amount_set.all())
         # Call the "real" save() method
         super(Dish, self).save(*args, **kwargs)
 
@@ -163,10 +163,9 @@ class DishForm(ModelForm):
 
 
 class Amount(models.Model):
-    containing_dish = models.ForeignKey(Dish,
-        related_name='contained_comestibles_set') # shorten this, align better
+    containing_dish = models.ForeignKey(Dish)
     contained_comestible = models.ForeignKey(Comestible,
-        related_name='containing_dishes_set') # shorten this, align better
+        related_name='containing_dishes_set') # shorten this? & align better
     quantity = models.DecimalField(max_digits=8, decimal_places=2, blank=True,
                                    default=0, null=True,
                                    validators=[validate_positive_or_zero])

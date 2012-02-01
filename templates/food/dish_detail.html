@@ -28,7 +28,7 @@
     
     Ingredients:
         <table>
-            {% for amount in dish.contained_comestibles_set.all %}
+            {% for amount in dish.amount_set.all %}
                  <tr>
                 {% if amount.contained_comestible.unit == "items" %}
                     <td>{{ amount.quantity|apnumber|intcomma }}</td>

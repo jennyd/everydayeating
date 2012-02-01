@@ -168,7 +168,7 @@ def dish_multiply(request, dish_id):
             else:
                 dish.quantity = dish.quantity / factor
             dish.save()
-            for amount in dish.contained_comestibles_set.all():
+            for amount in dish.amount_set.all():
                 if operation == u'multiply':
                     amount.quantity = amount.quantity * factor
                 else:
@@ -204,7 +204,7 @@ def dish_duplicate(request, dish_id):
             new_dish = old_dish.clone()
             new_dish.date_cooked = date
             new_dish.save()
-            for old_amount in old_dish.contained_comestibles_set.all():
+            for old_amount in old_dish.amount_set.all():
                 new_amount = old_amount.clone()
                 new_amount.containing_dish = new_dish
                 new_amount.save()
