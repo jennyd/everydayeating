@@ -18,7 +18,7 @@
 # make most views login_required and restricted to user.household
 # and make household- and user-based views & templates
 
-# rename related_names on contained_comestible and containing_dish
+# rename related_name on contained_comestible?
 
 # create & edit portions of a dish
 
