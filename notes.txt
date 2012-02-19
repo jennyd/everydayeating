@@ -20,13 +20,13 @@
 
 # rename related_name on contained_comestible?
 
-# create & edit portions of a dish
+# view to create & edit portions of a dish
 
-# convert a portion of a dish to an amount in another dish
+# view to convert a portion of a dish to an amount in another dish
 
-# convert some portions from a meal to a new dish with amounts
+# view to convert some portions from a meal to a new dish with amounts
 
-# prevent a dish having the same name as an ingredient
+# validation: prevent a dish having the same name as an ingredient
 
 # add a comment field to Amount, for e.g. preparation instructions
 
