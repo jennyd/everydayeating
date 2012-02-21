@@ -27,6 +27,7 @@ def ingredient_manage(request):
         context_instance=RequestContext(request) # needed for csrf token
     )
 
+@login_required
 def dish_amounts_form(request, dish_id=None):
     DishFormSet = inlineformset_factory(Dish, Amount,
             # I think fk_name shouldn't be needed any more, since Amount

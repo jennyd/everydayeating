@@ -640,12 +640,29 @@ class FoodViewsTestCase(TestCase):
         self.assertTemplateUsed(response, '404.html')
 
     def test_dish_add(self):
-        # Create a user, household and ingredients
-        # Use setUp for this instead of fixtures? FIXME
-        test_user = User.objects.create(username = 'testuser',
-                                        password = 'testpassword')
+        # Create a user
+        test_user = User.objects.create_user('testuser', # username
+                                             'test@example.com', # email
+                                             'testpassword') # password
+        # Create a household
         test_household = Household.objects.create(name = 'Test household',
                                                   admin = test_user)
+
+        # Login correctly
+        response = self.client.post(reverse('login'),
+                                    data={'username': 'testuser',
+                                          'password': 'testpassword'},
+                                    follow=True)
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(len(response.templates), 2)
+        # LOGIN_REDIRECT_URL = '/food/' in settings.py is used here, because no
+        # value is given for 'next'
+        self.assertTemplateUsed(response, 'food/food_index.html')
+        self.assertTemplateUsed(response, 'food/base.html')
+        self.assertTrue(response.context['user'].is_authenticated())
+
+        # Create some ingredients
+        # Use setUp for this instead of fixtures? FIXME
         ingredient_one = Ingredient.objects.create(name = 'Test ingredient 1',
                                                    quantity = 100,
                                                    unit = 'g',
@@ -738,11 +755,28 @@ class FoodViewsTestCase(TestCase):
                                               name='Test dish bad')
 
     def test_dish_edit(self):
-        # Create a user, household, ingredients, dish & amounts
-        test_user = User.objects.create(username = 'testuser',
-                                        password = 'testpassword')
+        # Create a user
+        test_user = User.objects.create_user('testuser', # username
+                                             'test@example.com', # email
+                                             'testpassword') # password
+        # Create a household
         test_household = Household.objects.create(name = 'Test household',
                                                   admin = test_user)
+
+        # Login correctly
+        response = self.client.post(reverse('login'),
+                                    data={'username': 'testuser',
+                                          'password': 'testpassword'},
+                                    follow=True)
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(len(response.templates), 2)
+        # LOGIN_REDIRECT_URL = '/food/' in settings.py is used here, because no
+        # value is given for 'next'
+        self.assertTemplateUsed(response, 'food/food_index.html')
+        self.assertTemplateUsed(response, 'food/base.html')
+        self.assertTrue(response.context['user'].is_authenticated())
+
+        # Create ingredients, dish & amounts
         ingredient_one = Ingredient.objects.create(name = 'Test ingredient 1',
                                                    quantity = 100,
                                                    unit = 'g',
