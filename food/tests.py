@@ -91,7 +91,7 @@ class FoodViewsTestCase(TestCase):
         response = self.client.post(reverse('login'),
                                     data={'username': 'jenny',
                                           'password': 'jenny',
-                                          'next': '/food/ingredients/'},
+                                          'next': reverse('ingredient_list')},
                                     follow=True)
         self.assertEqual(response.status_code, 200)
         self.assertEqual(len(response.templates), 2)
