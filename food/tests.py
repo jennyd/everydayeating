@@ -43,37 +43,62 @@ class FoodViewsTestCase(TestCase):
 #        print response.context
 
     def test_login(self):
-        # Create a user first.
+        # Create a user first:         (username, email,             password)
         user = User.objects.create_user('jenny', 'jenny@example.com', 'jenny')
-#        self.client.login(username='jenny', password='jenny')
-#        self.client.logout()
+
         response = self.client.get(reverse('login'))
         self.assertEqual(response.status_code, 200)
         self.assertEqual(len(response.templates), 2)
         self.assertTemplateUsed(response, 'food/login.html')
         self.assertTemplateUsed(response, 'food/base.html')
-        # Not sure if it's necessary to check these - should all be provided by
+        # Not sure if it's necessary to check these - they are provided by
         # django.contrib.auth.views.login
         self.assertTrue('csrf_token' in response.context)
         self.assertTrue('form' in response.context)
+        # user is AnonymousUser here:
+        self.assertFalse(response.context['user'].is_authenticated())
 
+        # Try to login with the wrong password
+        # If the correct login test comes before this one, this one has an
+        # authenticated user in the response, which seems pretty broken...
         response = self.client.post(reverse('login'),
                                     data={'username': 'jenny',
-                                          'password': 'jenny'},
-                                    follow=False)
-        self.assertEqual(response.status_code, 302)
-        self.assertEqual(len(response.templates), 0)
+                                          'password': 'wrong'},
+                                    follow=True)
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(len(response.templates), 2)
+        self.assertTemplateUsed(response, 'food/login.html')
+        self.assertTemplateUsed(response, 'food/base.html')
+        # user is still AnonymousUser here:
+        self.assertFalse(response.context['user'].is_authenticated())
+        self.assertTrue(u"Please enter a correct username and password. Note that both fields are case-sensitive." in
+                                response.context['form'].non_field_errors())
+
+        # Login correctly
         response = self.client.post(reverse('login'),
                                     data={'username': 'jenny',
                                           'password': 'jenny'},
                                     follow=True)
-#        print response.redirect_chain
-        # Redirects through a 404 here...
-        #### This isn't complete - login and logout aren't being done as shown
-        #### in the documentation - fix it first
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(len(response.templates), 2)
+        # LOGIN_REDIRECT_URL = '/food/' in settings.py is used here, because no
+        # value is given for 'next' - test again with 'next' set...
+        self.assertTemplateUsed(response, 'food/food_index.html')
+        self.assertTemplateUsed(response, 'food/base.html')
+        self.assertTrue(response.context['user'].is_authenticated())
 
-#        self.assertTemplateUsed(response, 'food/login.html')
-#        self.assertTemplateUsed(response, 'food/base.html')
+        # Login correctly, with 'next' set
+        response = self.client.post(reverse('login'),
+                                    data={'username': 'jenny',
+                                          'password': 'jenny',
+                                          'next': '/food/ingredients/'},
+                                    follow=True)
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(len(response.templates), 2)
+        # redirects to ingredient_list
+        self.assertTemplateUsed(response, 'food/ingredient_list.html')
+        self.assertTemplateUsed(response, 'food/base.html')
+        self.assertTrue(response.context['user'].is_authenticated())
 
     def test_logout(self):
         #### This isn't complete - login and logout aren't being done as shown

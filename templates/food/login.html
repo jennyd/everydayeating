@@ -3,9 +3,7 @@
 
 {% block content %}
 
-{% if form.errors %}
-<p>Your username and password didn't match. Please try again.</p>
-{% endif %}
+{{ form.non_field_errors }}
 
 <form method="post" action="{% url 'django.contrib.auth.views.login' %}">
 {% csrf_token %}
@@ -20,8 +18,8 @@
 </tr>
 </table>
 
-<input type="submit" value="login" />
-<input type="hidden" name="next" value="/food/" />
+<input type="submit" value="Log in" />
+<input type="hidden" name="next" value="{{ next }}" />
 </form>
 
 {% endblock content %}
