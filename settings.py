@@ -43,6 +43,10 @@ USE_I18N = True
 # calendars according to the current locale
 USE_L10N = True
 
+# The URL where requests are redirected for login, especially when using the
+# login_required() decorator
+LOGIN_URL = '/food/login/'
+
 # If 'next' isn't set, this is where a successful login redirects to:
 LOGIN_REDIRECT_URL = '/food/'
 

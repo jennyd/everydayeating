@@ -2,6 +2,7 @@ import datetime
 import sys
 
 from django import forms
+from django.contrib.auth.decorators import login_required
 from django.core.exceptions import ValidationError
 from django.shortcuts import HttpResponse, HttpResponseRedirect, render_to_response, get_object_or_404, redirect
 from django.template import RequestContext
@@ -11,6 +12,7 @@ from django.forms.models import modelformset_factory, BaseInlineFormSet, inlinef
 
 from food.models import validate_positive, Ingredient, Dish, DishForm, Amount, Meal, MealForm, Portion
 
+@login_required
 def ingredient_manage(request):
     IngredientFormSet = modelformset_factory(Ingredient, extra=3)
     if request.method == 'POST':

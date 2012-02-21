@@ -300,6 +300,23 @@ class FoodViewsTestCase(TestCase):
         self.assertTemplateUsed(response, '404.html')
 
     def test_ingredient_manage(self):
+        # Create a user first:         (username, email,             password)
+        user = User.objects.create_user('jenny', 'jenny@example.com', 'jenny')
+
+        # Login correctly
+        response = self.client.post(reverse('login'),
+                                    data={'username': 'jenny',
+                                          'password': 'jenny'},
+                                    follow=True)
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(len(response.templates), 2)
+        # LOGIN_REDIRECT_URL = '/food/' in settings.py is used here, because no
+        # value is given for 'next'
+        self.assertTemplateUsed(response, 'food/food_index.html')
+        self.assertTemplateUsed(response, 'food/base.html')
+        self.assertTrue(response.context['user'].is_authenticated())
+
+        # Create some ingredients
         ingredient_one = Ingredient.objects.create(name = 'Test ingredient 1',
                                                    quantity = 100,
                                                    unit = 'g',
@@ -308,6 +325,7 @@ class FoodViewsTestCase(TestCase):
                                                    quantity = 100,
                                                    unit = 'ml',
                                                    calories = 828)
+
         response = self.client.get(reverse('ingredient_manage'))
         self.assertEqual(response.status_code, 200)
         self.assertEqual(len(response.templates), 2)
