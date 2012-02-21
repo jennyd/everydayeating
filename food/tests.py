@@ -101,9 +101,31 @@ class FoodViewsTestCase(TestCase):
         self.assertTrue(response.context['user'].is_authenticated())
 
     def test_logout(self):
-        #### This isn't complete - login and logout aren't being done as shown
-        #### in the documentation - fix it first
-        pass
+        # Create a user first:         (username, email,             password)
+        user = User.objects.create_user('jenny', 'jenny@example.com', 'jenny')
+
+        # Login correctly
+        response = self.client.post(reverse('login'),
+                                    data={'username': 'jenny',
+                                          'password': 'jenny'},
+                                    follow=True)
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(len(response.templates), 2)
+        # LOGIN_REDIRECT_URL = '/food/' in settings.py is used here, because no
+        # value is given for 'next'
+        self.assertTemplateUsed(response, 'food/food_index.html')
+        self.assertTemplateUsed(response, 'food/base.html')
+        self.assertTrue(response.context['user'].is_authenticated())
+
+        # Logout
+        response = self.client.get(reverse('logout'), follow=True)
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(len(response.templates), 2)
+        # Redirects to food index
+        self.assertTemplateUsed(response, 'food/food_index.html')
+        self.assertTemplateUsed(response, 'food/base.html')
+        # user is still AnonymousUser here:
+        self.assertFalse(response.context['user'].is_authenticated())
 
 ################################################################################
 # Ingredient views tests
