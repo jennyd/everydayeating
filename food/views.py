@@ -231,6 +231,7 @@ class MealDuplicateForm(forms.Form):
     # and another user? would make it easier to create the same meal for more
     # than one user
 
+@login_required
 def meal_duplicate(request, meal_id):
     # Creates a copy of meal with same portions, eaten on the given date.
 
