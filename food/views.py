@@ -155,6 +155,7 @@ class DishMultiplyForm(forms.Form):
     operation = forms.ChoiceField(choices=OPERATION_CHOICES, initial='multiply')
     factor = forms.DecimalField(validators=[validate_positive])
 
+@login_required
 def dish_multiply(request, dish_id):
     try:
         dish = Dish.objects.get(pk=dish_id) # select_related?
