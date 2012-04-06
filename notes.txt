@@ -30,6 +30,8 @@
 
 # add a comment field to Amount, for e.g. preparation instructions
 
+# fridge & freezer as special hidden meals for each household? - would save creating a separate model for them, but could be more complicated
+
 # add get_week_start(date): while (date - 1).week == date.week: date -= 1
     - use in get_avg_week_calories to make it work for any date, not assuming it's being given a week start?
 
