@@ -193,6 +193,7 @@ class DishDuplicateForm(forms.Form):
     # form for entry of date for new instance of the dish
     date = forms.DateField(initial=datetime.date.today, label='Cook this dish again on')
 
+@login_required
 def dish_duplicate(request, dish_id):
     # create copy of dish with same amounts, cooked on the given date
     try:
