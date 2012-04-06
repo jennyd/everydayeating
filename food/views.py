@@ -113,7 +113,7 @@ class BaseMealInlineFormSet(BaseInlineFormSet):
                     raise ValidationError, u"The remaining quantity of %s (%s %s) is less than the total quantity of it in this meal." % (dish, remaining_quantity, unit)
 
 @login_required
-def meal_portion_form(request, meal_id=None):
+def meal_portions_form(request, meal_id=None):
     MealFormSet = inlineformset_factory(Meal, Portion, extra=6,
                                         formset=BaseMealInlineFormSet)
     if meal_id:
