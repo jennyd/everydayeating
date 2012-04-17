@@ -23,7 +23,9 @@
         {% endif %}
     {% endfor %}
     ({{ dish.calories|floatformat:0|intcomma }} calories)</br>
-    <a href="{{ dish.recipe_url }}">Link to recipe</a>
+    {% if dish.recipe_url %}
+        <a href="{{ dish.recipe_url }}">Link to recipe</a>
+    {% endif %}
     <p/>
     
     Ingredients:
