@@ -56,14 +56,24 @@
 
     <h3>Portions of this dish</h3>
 
-    <p>
+    <table>
     {% for portion in dish.comestible.portion_set.all %}
-        {{ portion.quantity }}{{ portion.comestible.unit }} for <a href="{% url meal_detail portion.meal.id %}">{{ portion.meal|capfirst }}</a></br>
+        <tr>
+        <td>{{ portion.quantity }}{{ portion.comestible.unit }}</td>
+        <td>for</td>
+        <td><a href="{% url meal_detail portion.meal.id %}">{{ portion.meal|capfirst }}</a></td>
+        <td>({{ portion.calories }} calories)</td>
+        </tr>
     {% empty %}
-        This dish doesn't have any portions yet.</br>
+        <tr><td>This dish doesn't have any portions yet.</td></tr>
     {% endfor %}
-    {{ dish.get_remaining_quantity|floatformat:0|intcomma }}{{ dish.unit }} not yet assigned to portions
-    </p>
+    <tr>
+    <td>{{ dish.get_remaining_quantity|floatformat:0|intcomma }}{{ dish.unit }}</td>
+    <td></td>
+    <td>not yet assigned<td>
+    </tr>
+    </table>
+    </br>
 
     <a href="{% url dish_duplicate dish.id %}">Cook this dish again</a>
 
