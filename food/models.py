@@ -122,15 +122,17 @@ class Dish(Comestible):
         return self.quantity - used_quantity
 
     def pretty_cooks(self):
+        """
+        Returns all cooks for a dish as a string with commas and 'and'.
+        """
         usernames = [cook.username for cook in self.cooks.all()]
-        last_cook = usernames.pop()
-        if usernames:
-            pretty_cooks = u', '.join(usernames)
-            pretty_cooks += u' and '+last_cook
-        else:
-            pretty_cooks = last_cook
-        print pretty_cooks
-        return pretty_cooks
+        if not usernames: # although cooks has null=False (by default)...
+            return u'unknown cook'
+        if len(usernames) == 1:
+            return usernames[0]
+        # if there is more than one cook:
+        result = u', '.join(usernames[:-1])+u' and '+usernames[-1]
+        return result
 
     def clone(self):
         """
