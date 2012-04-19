@@ -30,6 +30,43 @@ class ValidatorsTestCase(TestCase):
         self.assertRaises(ValidationError, validate_positive, -1)
 
 
+class FoodModelsTestCase(TestCase):
+    def test_dish_pretty_cooks(self):
+        # Create users, household & dish
+        test_user_one = User.objects.create(username = 'testuser1',
+                                        password = 'testpassword')
+        test_user_two = User.objects.create(username = 'testuser2',
+                                        password = 'testpassword')
+        test_user_three = User.objects.create(username = 'testuser3',
+                                        password = 'testpassword')
+        test_user_four = User.objects.create(username = 'testuser4',
+                                        password = 'testpassword')
+        test_household = Household.objects.create(name = 'Test household',
+                                                  admin = test_user_one)
+        dish = Dish.objects.create(name = 'Test dish',
+                                   quantity = 500,
+                                   date_cooked = datetime.date(2012, 04, 19),
+                                   household = test_household,
+                                   recipe_url = u'http://www.example.com/recipeurl/',
+                                   unit = 'g')
+
+        dish.cooks.add(test_user_one)
+        self.assertEqual(dish.pretty_cooks(),
+                         u'testuser1')
+
+        dish.cooks.add(test_user_two)
+        self.assertEqual(dish.pretty_cooks(),
+                         u'testuser1 and testuser2')
+
+        dish.cooks.add(test_user_three)
+        self.assertEqual(dish.pretty_cooks(),
+                         u'testuser1, testuser2 and testuser3')
+
+        dish.cooks.add(test_user_four)
+        self.assertEqual(dish.pretty_cooks(),
+                         u'testuser1, testuser2, testuser3 and testuser4')
+
+
 class FoodViewsTestCase(TestCase):
     def test_food_index(self):
         response = self.client.get(reverse('food_index'))

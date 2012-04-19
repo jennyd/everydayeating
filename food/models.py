@@ -121,6 +121,17 @@ class Dish(Comestible):
         used_quantity = sum(p.quantity for p in self.portion_set.all())
         return self.quantity - used_quantity
 
+    def pretty_cooks(self):
+        usernames = [cook.username for cook in self.cooks.all()]
+        last_cook = usernames.pop()
+        if usernames:
+            pretty_cooks = u', '.join(usernames)
+            pretty_cooks += u' and '+last_cook
+        else:
+            pretty_cooks = last_cook
+        print pretty_cooks
+        return pretty_cooks
+
     def clone(self):
         """
         Returns an unsaved instance the same as this one, but with no
