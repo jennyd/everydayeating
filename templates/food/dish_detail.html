@@ -10,18 +10,7 @@
     {% else %}
         {{ dish.quantity|intcomma }}{{ dish.unit }},
     {% endif %}
-    cooked: {{ dish.date_cooked|naturalday }} by
-    {% for cook in dish.cooks.all %}
-        {% if dish.cooks.all|length >= 3 and forloop.revcounter >= 3 %}
-            {{ cook.username }},
-        {% else %}
-            {% if dish.cooks.all|length >= 2 and forloop.last %}
-                and {{ cook.username }}
-            {% else %}
-                {{ cook.username }}
-            {% endif %}
-        {% endif %}
-    {% endfor %}
+    cooked: {{ dish.date_cooked|naturalday }} by {{ dish.pretty_cooks }}
     ({{ dish.calories|floatformat:0|intcomma }} calories)</br>
     {% if dish.recipe_url %}
         <a href="{{ dish.recipe_url }}">Link to recipe</a>
