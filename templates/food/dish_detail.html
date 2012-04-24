@@ -60,8 +60,7 @@
     {% for portion in dish.comestible.portion_set.all %}
         <tr>
         <td>{{ portion.quantity }}{{ portion.comestible.unit }}</td>
-        <td>for</td>
-        <td><a href="{% url meal_detail portion.meal.id %}">{{ portion.meal|capfirst }}</a></td>
+        <td>for <a href="{% url meal_detail portion.meal.id %}">{{ portion.meal|capfirst }}</a></td>
         <td>({{ portion.calories }} calories)</td>
         </tr>
     {% empty %}
@@ -69,7 +68,6 @@
     {% endfor %}
     <tr>
     <td>{{ dish.get_remaining_quantity|floatformat:0|intcomma }}{{ dish.unit }}</td>
-    <td></td>
     <td>not yet assigned<td>
     </tr>
     </table>
