@@ -1,8 +1,18 @@
-{% block title %}
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN"
+    "http://www.w3.org/TR/html4/strict.dtd">
 
-{% endblock title %}
+<html>
+<head>
+    <meta http-equiv="Content-Style-Type" content="text/css">
+    <link rel="stylesheet" href="{{ STATIC_URL }}style.css">
+    <title>
+    {% block title %}
 
+    {% endblock title %}
+    </title>
+</head>
 
+<body>
 {% block links %}
 
     <p>
@@ -37,3 +47,6 @@
 {% block content %}
 
 {% endblock content %}
+
+</body>
+</html>
