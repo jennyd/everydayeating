@@ -40,9 +40,10 @@
             {% endfor %}
         </table>
 
-    </br>
-    <a href="{% url dish_edit dish.id %}">Edit this dish</a></br>
-    <a href="{% url dish_multiply dish.id %}">Multiply quantities</a><p/>
+    <ul>
+    <li><a href="{% url dish_edit dish.id %}">Edit this dish</a></li>
+    <li><a href="{% url dish_multiply dish.id %}">Multiply quantities</a></li>
+    </ul>
 
     <h3>Dishes containing this dish</h3>
 
