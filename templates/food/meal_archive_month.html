@@ -3,17 +3,22 @@
 
 {% block content %}
 
-    <h2>Meals</h2>
+    <h1>Meals</h1>
 
-    <h3>{{ month|date:'F Y' }}</h3>
+    <h2>{{ month|date:'F Y' }}</h2>
 
-    <h3>Weekly index</h3>
+    <h2>Weekly index</h2>
 
     {% for week in week_list %}
         <a href="{% url meal_archive_week week.date.year week.date|date:'W' %}">Week beginning {{ week.date|date:'jS F Y' }}</a> {{ week.calories|floatformat:0|intcomma }} calories per day<br />
     {% endfor %}
 
-    <h3>Daily index</h3>
+    <h2>Daily index</h2>
+
+    {% for date in date_list %}
+        <h3>
+        <a href="{% url meal_archive_day date.year date|date:'m' date|date:'d' %}">{{ date|date:'l jS F' }}</a>
+        </h3>
 
     <p>{% for date in date_list %}
         <a href="{% url meal_archive_day date.year date|date:'m' date|date:'d' %}">{{ date|date:'l jS F' }} </a>:<br />

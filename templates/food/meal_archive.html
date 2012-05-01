@@ -3,16 +3,16 @@
 
 {% block content %}
 
-    <h2>Meals</h2>
+    <h1>Meals</h1>
 
-    <h3>Yearly index</h3>
+    <h2>Yearly index</h2>
 
     <p>{% for date in date_list %}
         <a href="{% url meal_archive_year date.year %}">{{ date.year }}</a><br />
     {% endfor %}
     </p>
 
-    <h3>Latest meals</h3>
+    <h2>Latest meals</h2>
 
     <table>
         {% for meal in latest %}

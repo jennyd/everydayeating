@@ -3,7 +3,9 @@
 
 {% block content %}
 
-    <p>Do you really want to delete {{ meal.name }} for {{ meal.date|naturalday }}?
+    <h1>{{ meal.name }} for {{ meal.date|naturalday }}</h1>
+
+    <p>Do you really want to delete this meal?
 
     <form action="." method="post">{% csrf_token %}
     <input type="submit" value="Yes, delete this meal" />
