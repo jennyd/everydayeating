@@ -8,3 +8,4 @@ body {max-width: 900px;}
 
 #main {position: absolute; left: 12%; width: 800px;}
 #content {float: top;}
+td.calories {text-align: right;}  /* This assumes that calories are rounded */

@@ -47,7 +47,7 @@
         {% else %}
             <td><a href="{% url ingredient_detail amount.contained_comestible.id %}">{{ amount.contained_comestible }}</a></td>
         {% endif %}
-        <td>({{ amount.calories|floatformat:0|intcomma }} calories)</td>
+        <td class="calories">({{ amount.calories|floatformat:0|intcomma }} calories)</td>
         </tr>
     {% empty %}
         <tr><td>This dish doesn't have any ingredients.</td></tr>

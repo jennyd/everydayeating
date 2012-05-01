@@ -13,8 +13,8 @@
     {% for ingredient in ingredient_list %}
         <tr>
         <td><a href="{% url ingredient_detail ingredient.id %}">{{ ingredient.name }}</a></td>
-        <td>{{ ingredient.calories|intcomma }} calories</td>
-        <td>per
+        <td class="calories">{{ ingredient.calories|intcomma }}</td>
+        <td>calories per
         {% if ingredient.unit == "items" %}
             {% if ingredient.quantity == 1 %}
                 {{ ingredient.name }}
