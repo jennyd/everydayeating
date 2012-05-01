@@ -1,6 +1,18 @@
 {% extends "food/base.html" %}
 {% load humanize %}
 
+{% block style %}
+
+    #nav-dishes {font-size: larger; font-weight: bold;}
+
+{% endblock style %}
+
+{% block title %}
+
+    {{ block.super }} Dish detail: {{ dish.name }}
+
+{% endblock title %}
+
 {% block content %}
 
     <h1>{{ dish.name }}</h1>
