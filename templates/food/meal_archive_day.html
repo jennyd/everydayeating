@@ -50,10 +50,10 @@
 
     <p>
     {% if previous_day %}
-        <a href="{% url meal_archive_day previous_day.year previous_day|date:'m' previous_day|date:'d' %}"><-- {{ previous_day|date:'jS F Y' }}</a>
+        <a href="{% url meal_archive_day previous_day.year previous_day|date:'m' previous_day|date:'d' %}" title="Previous day"><-- {{ previous_day|date:'jS F Y' }}</a>
     {% endif %}
     {% if next_day %}
-        <a href="{% url meal_archive_day next_day.year next_day|date:'m' next_day|date:'d' %}">{{ next_day|date:'jS F Y' }} --></a><br />
+        <a href="{% url meal_archive_day next_day.year next_day|date:'m' next_day|date:'d' %}" title="Next day">{{ next_day|date:'jS F Y' }} --></a>
     {% endif %}
     </p>
 
