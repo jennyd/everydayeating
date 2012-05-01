@@ -74,7 +74,7 @@
         <tr>
         <td>{{ portion.quantity }}{{ portion.comestible.unit }}</td>
         <td>for <a href="{% url meal_detail portion.meal.id %}">{{ portion.meal|capfirst }}</a></td>
-        <td>({{ portion.calories }} calories)</td>
+        <td>({{ portion.calories|floatformat:0|intcomma }} calories)</td>
         </tr>
         <tr>
         <td>{{ dish.get_remaining_quantity|floatformat:0|intcomma }}{{ dish.unit }}</td>
