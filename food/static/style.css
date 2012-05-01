@@ -11,3 +11,5 @@ body {max-width: 900px;}
 tr.odd {background-color: #EBECE4;}
 tr.even {background-color: white;}
 td.calories {text-align: right;}  /* This assumes that calories are rounded */
+
+*.test-border {border: 1px solid black;}
