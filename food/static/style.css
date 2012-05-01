@@ -8,4 +8,6 @@ body {max-width: 900px;}
 
 #main {position: absolute; left: 12%; width: 800px;}
 #content {float: top;}
+tr.odd {background-color: #EBECE4;}
+tr.even {background-color: white;}
 td.calories {text-align: right;}  /* This assumes that calories are rounded */
