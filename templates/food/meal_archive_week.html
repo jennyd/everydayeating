@@ -10,7 +10,7 @@
     Average {{ avg_week_calories|floatformat:0|intcomma }} calories per day
 
     <p>{% for date in date_list %}
-        <a href="{% url meal_archive_day date.year date|date:'m' date|date:'d' %}">{{ date|date:'l jS F' }} </a>:</br>
+        <a href="{% url meal_archive_day date.year date|date:'m' date|date:'d' %}">{{ date|date:'l jS F' }} </a>:<br />
         <table>
             {% for meal in meal_list %}
                 {% if date.date == meal.date %}
@@ -28,12 +28,12 @@
     {% endfor %}
     </p>
 
-    <a href="{% url meal_add %}">Add a new meal</a></br>
+    <a href="{% url meal_add %}">Add a new meal</a><br />
     {% if previous_week %}
         <a href="{% url meal_archive_week previous_week.year previous_week|date:'W' %}"><-- Week beginning {{ previous_week|date:'jS F Y' }}</a>
     {% endif %}
     {% if next_week %}
-        <a href="{% url meal_archive_week next_week.year next_week|date:'W' %}">Week beginning {{ next_week|date:'jS F Y' }} --></a></br>
+        <a href="{% url meal_archive_week next_week.year next_week|date:'W' %}">Week beginning {{ next_week|date:'jS F Y' }} --></a><br />
     {% endif %}
 
 {% endblock content %}

@@ -2,7 +2,7 @@
 
 {% block content %}
 
-    <p>Do you really want to delete {{ dish }}?</br>
+    <p>Do you really want to delete {{ dish }}?<br />
     (All meals and dishes which contain this dish will also be updated.)
 
     <form action="." method="post">{% csrf_token %}

@@ -23,7 +23,7 @@
         {{ dish.quantity|intcomma }}{{ dish.unit }},
     {% endif %}
     cooked: {{ dish.date_cooked|naturalday }} by {{ dish.pretty_cooks }}
-    ({{ dish.calories|floatformat:0|intcomma }} calories)</br>
+    ({{ dish.calories|floatformat:0|intcomma }} calories)<br />
     {% if dish.recipe_url %}
         <a href="{{ dish.recipe_url }}">Link to recipe</a>
     {% endif %}
@@ -61,7 +61,7 @@
 
     <p>
     {% for amount in dish.comestible.containing_dishes_set.all %}
-        <a href="{% url dish_detail amount.containing_dish.id %}">{{ amount.containing_dish }}</a> ({{ amount.quantity }} {{ amount.contained_comestible.unit }})</br>
+        <a href="{% url dish_detail amount.containing_dish.id %}">{{ amount.containing_dish }}</a> ({{ amount.quantity }} {{ amount.contained_comestible.unit }})<br />
     {% empty %}
         This dish isn't in any dishes.
     {% endfor %}

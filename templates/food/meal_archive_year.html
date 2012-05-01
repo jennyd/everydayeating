@@ -8,7 +8,7 @@
     <h3>{{ year }} monthly index</h3>
 
     <p>{% for date in date_list %}
-        {{ date.year }}, <a href="{% url meal_archive_month date.year date|date:'m' %}">{{ date|date:'F' }}</a></br>
+        {{ date.year }}, <a href="{% url meal_archive_month date.year date|date:'m' %}">{{ date|date:'F' }}</a><br />
     {% endfor %}
     </p>
 

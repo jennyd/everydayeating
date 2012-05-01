@@ -13,14 +13,14 @@
     {% endif %}
     </p>
 
-    <a href="{% url ingredient_edit ingredient.id %}">Edit this ingredient</a></br>
+    <a href="{% url ingredient_edit ingredient.id %}">Edit this ingredient</a><br />
     <a href="{% url ingredient_delete ingredient.id %}">Delete this ingredient</a>
 
     <h3>Dishes containing this ingredient</h3>
 
     <p>
     {% for amount in ingredient.comestible.containing_dishes_set.all %}
-        <a href="{% url dish_detail amount.containing_dish.id %}">{{ amount.containing_dish }}</a> ({{ amount.quantity }} {{ amount.contained_comestible.unit }})</br>
+        <a href="{% url dish_detail amount.containing_dish.id %}">{{ amount.containing_dish }}</a> ({{ amount.quantity }} {{ amount.contained_comestible.unit }})<br />
     {% empty %}
         This ingredient isn't in any dishes.
     {% endfor %}
@@ -30,7 +30,7 @@
 
     <p>
     {% for portion in ingredient.comestible.portion_set.all %}
-        <a href="{% url meal_detail portion.meal.id %}">{{ portion.meal|capfirst }}</a> ({{ portion.quantity }} {{ portion.comestible.unit }})</br>
+        <a href="{% url meal_detail portion.meal.id %}">{{ portion.meal|capfirst }}</a> ({{ portion.quantity }} {{ portion.comestible.unit }})<br />
     {% empty %}
         This ingredient isn't in any meals.
     {% endfor %}

@@ -4,7 +4,7 @@
 {% block content %}
 
     <h1>{{ meal.user }}'s {{ meal.name }}, {{ meal.date|naturalday }} at {{ meal.time }}</h1>
-    ({{ meal.calories|floatformat:0|intcomma }} calories)</br>
+    ({{ meal.calories|floatformat:0|intcomma }} calories)<br />
     <ul>
     {% for portion in meal.portion_set.all %}
         {% if portion.comestible.unit == "items" %}
@@ -17,7 +17,7 @@
         {% else %}
             <a href="{% url ingredient_detail portion.comestible.id %}">{{ portion.comestible }}</a>
         {% endif %}
-        ({{ portion.calories|floatformat:0|intcomma }} calories)</br>
+        ({{ portion.calories|floatformat:0|intcomma }} calories)<br />
     {% empty %}
         Don't skip meals!
     {% endfor %}
@@ -27,10 +27,10 @@
 
     <p>
     {% with date=meal.date %}
-        <a href="{% url meal_archive_day date|date:'Y' date|date:'m' date|date:'d' %}">This day</a></br>
-        <a href="{% url meal_archive_week date|date:'Y' date|date:'W' %}">This week</a></br>
-        <a href="{% url meal_archive_month date|date:'Y' date|date:'m' %}">This month</a></br>
-        <a href="{% url meal_archive_year date|date:'Y' %}">This year</a></br>
+        <a href="{% url meal_archive_day date|date:'Y' date|date:'m' date|date:'d' %}">This day</a><br />
+        <a href="{% url meal_archive_week date|date:'Y' date|date:'W' %}">This week</a><br />
+        <a href="{% url meal_archive_month date|date:'Y' date|date:'m' %}">This month</a><br />
+        <a href="{% url meal_archive_year date|date:'Y' %}">This year</a><br />
     {% endwith %}
     </p>
 
