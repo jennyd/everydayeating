@@ -13,40 +13,46 @@
 </head>
 
 <body>
-{% block links %}
+    <div id="header">
 
-    <p>
-    {% if user.is_authenticated %}
-        Logged in as {{ user.username }}
-        <a href="{% url logout %}">Log out</a>
-    {% else %}
-        Not logged in
-        <a href="{% url login %}">Log in</a>
-    {% endif %}
-    </p>
+        Everyday Eating
 
-    <p>
-    <a href="{% url food_index %}">Food</a></br>
-    <a href="{% url ingredient_list %}">Ingredients</a></br>
-    <a href="{% url dish_list %}">Dishes</a></br>
-    <a href="{% url meal_archive %}">Meals</a>
-    </p>
+        <div id="login-information">
+        {% if user.is_authenticated %}
+            Logged in as {{ user.username }}
+            <a href="{% url logout %}">Log out</a>
+        {% else %}
+            Not logged in
+            <a href="{% url login %}">Log in</a>
+        {% endif %}
+        </div>
+    </div>
 
-{% endblock links %}
+    <div id="sidebar">
+        <div id="navigation">
+            <ul>
+                <li id="nav-food"><a href="{% url food_index %}">Food</a></li>
+                <li id="nav-ingredients"><a href="{% url ingredient_list %}">Ingredients</a></li>
+                <li id="nav-dishes"><a href="{% url dish_list %}">Dishes</a></li>
+                <li id="nav-meals"><a href="{% url meal_archive %}">Meals</a></li>
+            </ul>
+        </div>
+    </div>
 
+    <div id="main">
 
-{% block message %}
+        {% block message %}
+            {% if message %}
+                {{ message }}
+            {% endif %}
+        {% endblock message %}
 
-    {% if message %}
-        {{ message }}
-    {% endif %}
+        <div id="content">
+            {% block content %}
 
-{% endblock message %}
-
-
-{% block content %}
-
-{% endblock content %}
+            {% endblock content %}
+        </div>
+    </div>
 
 </body>
 </html>
