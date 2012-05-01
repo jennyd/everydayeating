@@ -12,7 +12,7 @@
     <th></th>
     </tr>
     {% for dish in dish_list %}
-        <tr>
+        <tr class="{% cycle 'odd' 'even' %}">
         <td><a href="{% url dish_detail dish.id %}">{{ dish.name }}</a></td>
         <td>{{ dish.date_cooked|naturalday }}</td>
         <td><a href="{% url dish_delete dish.id %}">Delete</a></td>
