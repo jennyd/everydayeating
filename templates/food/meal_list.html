@@ -6,18 +6,21 @@
     <h1>Meals</h1>
 
     <table>
-        {% for meal in meal_list %}
-            <tr>
-            <td><a href="{% url meal_detail meal.id %}">{{ meal.name }}</a></td>
-            <td>{{ meal.date|naturalday }}</td>
-            <td>at</td>
-            <td>{{ meal.time }}</td>
-            <td>({{ meal.calories|floatformat:0|intcomma }} calories)</td>
-            <td><a href="{% url meal_delete meal.id %}">Delete</a></td>
-            </tr>
-        {% endfor %}
-    </table><br />
-    <a href="{% url meal_add %}">Add a new meal</a><br />
-    <a href="{% url meal_archive %}">Meal archive index</a>
+    {% for meal in meal_list %}
+        <tr>
+        <td><a href="{% url meal_detail meal.id %}">{{ meal.name }}</a></td>
+        <td>{{ meal.date|naturalday }}</td>
+        <td>at</td>
+        <td>{{ meal.time }}</td>
+        <td>({{ meal.calories|floatformat:0|intcomma }} calories)</td>
+        <td><a href="{% url meal_delete meal.id %}">Delete</a></td>
+        </tr>
+    {% endfor %}
+    </table>
+
+    <p>
+        <a href="{% url meal_add %}">Add a new meal</a><br />
+        <a href="{% url meal_archive %}">Meal archive index</a>
+    </p>
 
 {% endblock content %}

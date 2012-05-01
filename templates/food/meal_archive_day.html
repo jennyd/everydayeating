@@ -18,40 +18,47 @@
         </h3>
 
         <table>
-            {% for portion in meal.portion_set.all %}
-                <tr>
-                    <td>
-                        {% if portion.comestible.is_dish %}
-                            <a href="{% url dish_detail portion.comestible.id %}">{{ portion.comestible }}</a>
-                        {% else %}
-                            <a href="{% url ingredient_detail portion.comestible.id %}">{{ portion.comestible }}</a>
-                        {% endif %}
-                    </td>
-                    <td>
-                        {% if portion.comestible.unit == "items" %}
-                            {{ portion.quantity|intcomma }}
-                        {% else %}
-                            {{ portion.quantity|intcomma }}{{ portion.comestible.unit }}
-                        {% endif %}
-                    </td>
-                    <td>
-                        ({{ portion.calories|floatformat:0|intcomma }} calories)
-                    </td>
-                </tr>
-            {% empty %}
-                Don't skip meals!
-            {% endfor %}
-       </table><br />
+        {% for portion in meal.portion_set.all %}
+            <tr>
+                <td>
+                    {% if portion.comestible.is_dish %}
+                        <a href="{% url dish_detail portion.comestible.id %}">{{ portion.comestible }}</a>
+                    {% else %}
+                        <a href="{% url ingredient_detail portion.comestible.id %}">{{ portion.comestible }}</a>
+                    {% endif %}
+                </td>
+                <td>
+                    {% if portion.comestible.unit == "items" %}
+                        {{ portion.quantity|intcomma }}
+                    {% else %}
+                        {{ portion.quantity|intcomma }}{{ portion.comestible.unit }}
+                    {% endif %}
+                </td>
+                <td>
+                    ({{ portion.calories|floatformat:0|intcomma }} calories)
+                </td>
+            </tr>
+        {% empty %}
+            Don't skip meals!
+        {% endfor %}
+       </table>
     {% endfor %}
 
-    <a href="{% url meal_add %}">Add a new meal</a><br />
+    <p>
+    <a href="{% url meal_add %}">Add a new meal</a>
+    </p>
+
+    <p>
     {% if previous_day %}
         <a href="{% url meal_archive_day previous_day.year previous_day|date:'m' previous_day|date:'d' %}"><-- {{ previous_day|date:'jS F Y' }}</a>
     {% endif %}
     {% if next_day %}
         <a href="{% url meal_archive_day next_day.year next_day|date:'m' next_day|date:'d' %}">{{ next_day|date:'jS F Y' }} --></a><br />
     {% endif %}
+    </p>
 
-    <a href="{% url meal_archive_week day.year day|date:'W' %}">This week</a>
+    <p>
+        <a href="{% url meal_archive_week day.year day|date:'W' %}">This week</a>
+    </p>
 
 {% endblock content %}

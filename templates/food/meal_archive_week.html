@@ -16,28 +16,32 @@
         <a href="{% url meal_archive_day date.year date|date:'m' date|date:'d' %}">{{ date|date:'l jS F' }}</a>
         </h3>
         <table>
-            {% for meal in meal_list %}
-                {% if date.date == meal.date %}
-                    <tr>
-                    <td><a href="{% url meal_detail meal.id %}">{{ meal.name }}</a></td>
-                    <td>{{ meal.date|naturalday }}</td>
-                    <td>at</td>
-                    <td>{{ meal.time }}</td>
-                    <td>({{ meal.calories|floatformat:0|intcomma }} calories)</td>
-                    <td><a href="{% url meal_delete meal.id %}">Delete</a></td>
-                    </tr>
-                {% endif %}
-            {% endfor %}
-        </table><br />
+        {% for meal in meal_list %}
+            {% if date.date == meal.date %}
+                <tr>
+                <td><a href="{% url meal_detail meal.id %}">{{ meal.name }}</a></td>
+                <td>{{ meal.date|naturalday }}</td>
+                <td>at</td>
+                <td>{{ meal.time }}</td>
+                <td>({{ meal.calories|floatformat:0|intcomma }} calories)</td>
+                <td><a href="{% url meal_delete meal.id %}">Delete</a></td>
+                </tr>
+            {% endif %}
+        {% endfor %}
+        </table>
     {% endfor %}
+
+    <p>
+    <a href="{% url meal_add %}">Add a new meal</a>
     </p>
 
-    <a href="{% url meal_add %}">Add a new meal</a><br />
+    <p>
     {% if previous_week %}
         <a href="{% url meal_archive_week previous_week.year previous_week|date:'W' %}"><-- Week beginning {{ previous_week|date:'jS F Y' }}</a>
     {% endif %}
     {% if next_week %}
-        <a href="{% url meal_archive_week next_week.year next_week|date:'W' %}">Week beginning {{ next_week|date:'jS F Y' }} --></a><br />
+        <a href="{% url meal_archive_week next_week.year next_week|date:'W' %}">Week beginning {{ next_week|date:'jS F Y' }} --></a>
     {% endif %}
+    </p>
 
 {% endblock content %}

@@ -4,9 +4,14 @@
 {% block content %}
 
     <h1>{{ meal.user }}'s {{ meal.name }}, {{ meal.date|naturalday }} at {{ meal.time }}</h1>
-    ({{ meal.calories|floatformat:0|intcomma }} calories)<br />
+
+    <p>
+    ({{ meal.calories|floatformat:0|intcomma }} calories)
+    </p>
+
     <ul>
     {% for portion in meal.portion_set.all %}
+        <li>
         {% if portion.comestible.unit == "items" %}
             {{ portion.quantity|intcomma }}
         {% else %}
@@ -17,13 +22,16 @@
         {% else %}
             <a href="{% url ingredient_detail portion.comestible.id %}">{{ portion.comestible }}</a>
         {% endif %}
-        ({{ portion.calories|floatformat:0|intcomma }} calories)<br />
+        ({{ portion.calories|floatformat:0|intcomma }} calories)
+        </li>
     {% empty %}
         Don't skip meals!
     {% endfor %}
     </ul>
 
-    <a href="{% url meal_edit meal.id %}">Edit this meal</a>
+    <p>
+        <a href="{% url meal_edit meal.id %}">Edit this meal</a>
+    </p>
 
     <p>
     {% with date=meal.date %}
@@ -34,6 +42,8 @@
     {% endwith %}
     </p>
 
-    <a href="{% url meal_duplicate meal.id %}">Eat this meal again</a>
+    <p>
+        <a href="{% url meal_duplicate meal.id %}">Eat this meal again</a>
+    </p>
 
 {% endblock content %}

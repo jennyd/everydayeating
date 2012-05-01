@@ -3,11 +3,13 @@
 
 {% block content %}
 
-    <h1>{% if meal.name %}
-            {{ meal.name }}, {{ meal.date|naturalday }} at {{ meal.time }}
-        {% else %}
-            New meal
-        {% endif %}</h1>
+    <h1>
+    {% if meal.name %}
+        {{ meal.name }}, {{ meal.date|naturalday }} at {{ meal.time }}
+    {% else %}
+        New meal
+    {% endif %}
+    </h1>
 
     <form action="." method="post">{% csrf_token %}
     {{ form.as_p }}

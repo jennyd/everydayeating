@@ -6,15 +6,18 @@
     <h1>Dishes</h1>
 
     <table>
-        {% for dish in dish_list %}
-            <tr>
-            <td><a href="{% url dish_detail dish.id %}">{{ dish.name }}</a></td>
-            <td>cooked</td>
-            <td>{{ dish.date_cooked|naturalday }}</td>
-            <td><a href="{% url dish_delete dish.id %}">Delete</a></td>
-            </tr>
-        {% endfor %}
-    </table><br />
-    <a href="{% url dish_add %}">Add a new dish</a>
+    {% for dish in dish_list %}
+        <tr>
+        <td><a href="{% url dish_detail dish.id %}">{{ dish.name }}</a></td>
+        <td>cooked</td>
+        <td>{{ dish.date_cooked|naturalday }}</td>
+        <td><a href="{% url dish_delete dish.id %}">Delete</a></td>
+        </tr>
+    {% endfor %}
+    </table>
+
+    <p>
+        <a href="{% url dish_add %}">Add a new dish</a>
+    </p>
 
 {% endblock content %}
