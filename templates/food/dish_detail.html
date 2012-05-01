@@ -85,8 +85,9 @@
         <tr><td>{{ dish.get_remaining_quantity|floatformat:0|intcomma }}{{ dish.unit }} not yet assigned<td></tr>
     {% endfor %}
     </table>
-    </br>
 
-    <a href="{% url dish_duplicate dish.id %}">Cook this dish again</a>
+    <p>
+        <a href="{% url dish_duplicate dish.id %}">Cook this dish again</a>
+    </p>
 
 {% endblock content %}
