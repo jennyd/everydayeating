@@ -33,6 +33,11 @@
     <h2>Ingredients:</h2>
 
     <table>
+    <tr>
+    <th>Ingredient</th>
+    <th>Quantity</th>
+    <th>Calories</th>
+    </tr>
     {% for amount in dish.amount_set.all %}
         <tr>
         {% if amount.contained_comestible.is_dish %}
