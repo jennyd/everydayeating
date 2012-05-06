@@ -11,11 +11,11 @@
 
     <h2>Yearly index</h2>
 
-    <p>
+    <ul>
     {% for date in date_list %}
-        <a href="{% url meal_archive_year date.year %}">{{ date.year }}</a><br />
+        <li><a href="{% url meal_archive_year date.year %}">{{ date.year }}</a></li>
     {% endfor %}
-    </p>
+    </ul>
 
     <h2>Latest meals</h2>
 
