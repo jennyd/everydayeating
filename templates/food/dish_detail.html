@@ -83,23 +83,23 @@
         </tr>
     </table>
 
-    <h3>Dishes containing this dish</h3>
+    {% if dish.comestible.containing_dishes_set.all %}
+        <h3>Dishes containing this dish</h3>
 
-    <table>
-    <tr>
-    <th>Containing dish</th>
-    <th>Quantity</th>
-    <th>Calories</th>
-    </tr>
-    {% for amount in dish.comestible.containing_dishes_set.all %}
-        <tr class="{% cycle 'odd' 'even' %}">
-        <td><a href="{% url dish_detail amount.containing_dish.id %}">{{ amount.containing_dish }}</a></td>
-        <td>{{ amount.quantity }} {{ amount.contained_comestible.unit }}</td>
-        <td class="calories">{{ amount.calories|floatformat:0|intcomma }} calories</td>
+        <table>
+        <tr>
+        <th>Containing dish</th>
+        <th>Quantity</th>
+        <th>Calories</th>
         </tr>
-    {% empty %}
-        <tr><td colspan="3">This dish isn't in any dishes.</td></tr>
-    {% endfor %}
-    </table>
+        {% for amount in dish.comestible.containing_dishes_set.all %}
+            <tr class="{% cycle 'odd' 'even' %}">
+            <td><a href="{% url dish_detail amount.containing_dish.id %}">{{ amount.containing_dish }}</a></td>
+            <td>{{ amount.quantity }} {{ amount.contained_comestible.unit }}</td>
+            <td class="calories">{{ amount.calories|floatformat:0|intcomma }} calories</td>
+            </tr>
+        {% endfor %}
+        </table>
+    {% endif %}
 
 {% endblock content %}
