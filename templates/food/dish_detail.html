@@ -24,7 +24,7 @@
         {{ dish.quantity|intcomma }}{{ dish.unit }},
     {% endif %}
     cooked: {{ dish.date_cooked|naturalday }} by {{ dish.pretty_cooks }}
-    ({{ dish.calories|floatformat:0|intcomma }} calories) <a href="{% url dish_delete dish.id %}">Delete this dish</a><br />
+    ({{ dish.calories|floatformat:0|intcomma }} calories)<br />
     {% if dish.recipe_url %}
         <a href="{{ dish.recipe_url }}">Link to recipe</a>
     {% endif %}
@@ -57,9 +57,11 @@
     {% endfor %}
     </table>
 
-    <ul>
-    <li><a href="{% url dish_edit dish.id %}">Edit this dish</a></li>
-    <li><a href="{% url dish_multiply dish.id %}">Multiply quantities</a></li>
+    <ul class="actionlinks">
+    <li><a class="changelink" href="{% url dish_edit dish.id %}">Edit this dish</a></li>
+    <li><a class="changelink" href="{% url dish_multiply dish.id %}">Multiply quantities</a></li>
+    <li><a class="deletelink" href="{% url dish_delete dish.id %}">Delete this dish</a></li>
+    <li><a class="addlink" href="{% url dish_duplicate dish.id %}">Cook this dish again</a></li>
     </ul>
 
     <h3>Dishes containing this dish</h3>
@@ -90,9 +92,5 @@
         <td></td>
         </tr>
     </table>
-
-    <p>
-        <a href="{% url dish_duplicate dish.id %}">Cook this dish again</a>
-    </p>
 
 {% endblock content %}

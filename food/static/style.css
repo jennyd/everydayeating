@@ -57,3 +57,26 @@ td.calories {text-align: right;  /* This assumes that calories are rounded */
 
 *.test-border {border: 1px solid black;
 }
+
+/* Link formatting */
+ul.actionlinks {list-style-type: none;
+                margin: 0;
+                padding-left: 0; /* 40px by default */
+                padding-top: 15px;
+                padding-bottom: 15px;
+}
+/* These rules and icons are from the Django admin interface */
+.addlink {
+    padding-left: 16px;
+    background: url(icons/admin/icon_addlink.gif) 0 .2em no-repeat;
+}
+
+.changelink {
+    padding-left: 16px;
+    background: url(icons/admin/icon_changelink.gif) 0 .2em no-repeat;
+}
+
+.deletelink {
+    padding-left: 16px;
+    background: url(icons/admin/icon_deletelink.gif) 0 .25em no-repeat;
+}
