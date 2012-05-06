@@ -17,7 +17,7 @@
     {% endfor %}
     </ul>
 
-    <h2>Meals this year</h2>
+    <h2>Meals in {{ year }}</h2>
 
     <table>
     <tr>
@@ -31,7 +31,7 @@
     {% for meal in meal_list %}
         <tr class="{% cycle 'odd' 'even' %}">
         <td><a href="{% url meal_detail meal.id %}">{{ meal.name }}</a></td>
-        <td>{{ meal.date|naturalday }}</td>
+        <td>{{ meal.date|date:'N j'|naturalday }}</td>
         <td>at</td>
         <td>{{ meal.time }}</td>
         <td class="calories">{{ meal.calories|floatformat:0|intcomma }} calories</td>
