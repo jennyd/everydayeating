@@ -5,6 +5,10 @@
 
     <h1>Meals</h1>
 
+    <ul class="actionlinks">
+    <li><a class="addlink" href="{% url meal_add %}">Add a new meal</a></li>
+    </ul>
+
     <h2>Yearly index</h2>
 
     <p>
@@ -29,8 +33,7 @@
     </table>
 
     <p>
-        <a href="{% url meal_add %}">Add a new meal</a><br />
-        <a href="{% url meal_list %}">All meals</a>
+    <a href="{% url meal_list %}">Show all meals</a>
     </p>
 
 {% endblock content %}
