@@ -6,12 +6,12 @@ body {padding: 10px;
       font-family: sans-serif;
 }
 
-#header {background-color: #99FF66;
+#header {/* background-color: #99FF66; */
          /* max-width: 900px; */
          margin: 0px;
          margin-bottom: 30px;
          padding: 20px;
-         border: 1px solid black;
+         /* border: 1px solid black; */
          font-size: 3em;
          letter-spacing: 5px;
          color: black;
