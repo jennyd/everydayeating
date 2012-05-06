@@ -20,6 +20,14 @@
     <h2>Latest meals</h2>
 
     <table>
+    <tr>
+    <th>Meal</th>
+    <th>Date</th>
+    <th></th>
+    <th>Time</th>
+    <th>Calories</th>
+    <th></th>
+    </tr>
     {% for meal in latest %}
         <tr class="{% cycle 'odd' 'even' %}">
         <td><a href="{% url meal_detail meal.id %}">{{ meal.name }}</a></td>
