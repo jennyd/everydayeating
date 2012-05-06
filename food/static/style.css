@@ -60,10 +60,9 @@ td.calories {text-align: right;  /* This assumes that calories are rounded */
 
 /* Link formatting */
 ul.actionlinks {list-style-type: none;
-                margin: 0;
                 padding-left: 0; /* 40px by default */
-                padding-top: 15px;
-                padding-bottom: 15px;
+                margin-top: 15px;
+                margin-bottom: 15px;
 }
 /* These rules and icons are from the Django admin interface */
 .addlink {
