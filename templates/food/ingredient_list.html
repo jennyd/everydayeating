@@ -10,6 +10,11 @@
     </ul>
 
     <table>
+    <tr>
+    <th>Ingredient</th>
+    <th>Calories</th>
+    <th>Reference<br />quantity</th>
+    </tr>
     {% for ingredient in ingredient_list %}
         <tr class="{% cycle 'odd' 'even' %}">
         <td><a href="{% url ingredient_detail ingredient.id %}">{{ ingredient.name }}</a></td>
