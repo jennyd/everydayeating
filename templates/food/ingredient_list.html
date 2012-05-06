@@ -17,9 +17,9 @@
         <td>calories per
         {% if ingredient.unit == "items" %}
             {% if ingredient.quantity == 1 %}
-                {{ ingredient.name }}
+                item
             {% else %}
-                {{ ingredient.quantity|apnumber|intcomma }} {{ ingredient.name }}s
+                {{ ingredient.quantity|apnumber|intcomma }} items
             {% endif %}
         {% else %}
             {{ ingredient.quantity|intcomma }}{{ ingredient.unit }}
