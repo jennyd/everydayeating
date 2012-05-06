@@ -64,16 +64,6 @@
     <li><a class="addlink" href="{% url dish_duplicate dish.id %}">Cook this dish again</a></li>
     </ul>
 
-    <h3>Dishes containing this dish</h3>
-
-    <p>
-    {% for amount in dish.comestible.containing_dishes_set.all %}
-        <a href="{% url dish_detail amount.containing_dish.id %}">{{ amount.containing_dish }}</a> ({{ amount.quantity }} {{ amount.contained_comestible.unit }})<br />
-    {% empty %}
-        This dish isn't in any dishes.
-    {% endfor %}
-    </p>
-
     <h3>Portions of this dish</h3>
 
     <table>
@@ -92,5 +82,15 @@
         <td></td>
         </tr>
     </table>
+
+    <h3>Dishes containing this dish</h3>
+
+    <p>
+    {% for amount in dish.comestible.containing_dishes_set.all %}
+        <a href="{% url dish_detail amount.containing_dish.id %}">{{ amount.containing_dish }}</a> ({{ amount.quantity }} {{ amount.contained_comestible.unit }})<br />
+    {% empty %}
+        This dish isn't in any dishes.
+    {% endfor %}
+    </p>
 
 {% endblock content %}
