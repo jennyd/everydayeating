@@ -46,6 +46,8 @@ h1 {margin-top: 5px;
 }
 
 /* Table formatting */
+table {border-collapse: collapse;
+}
 th {text-align: left;
 }
 tr.odd {background-color: #EBECE4;
