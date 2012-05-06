@@ -23,7 +23,7 @@
         <td>at</td>
         <td>{{ meal.time }}</td>
         <td>({{ meal.calories|floatformat:0|intcomma }} calories)</td>
-        <td><a href="{% url meal_delete meal.id %}">Delete</a></td>
+        <td><a class="deletelink" href="{% url meal_delete meal.id %}">Delete</a></td>
         </tr>
     {% endfor %}
     </table>
