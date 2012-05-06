@@ -5,6 +5,10 @@
 
     <h1>Dishes</h1>
 
+    <ul class="actionlinks">
+    <li><a class="addlink" href="{% url dish_add %}">Add a new dish</a></li>
+    </ul>
+
     <table>
     <tr>
     <th>Dish</th>
@@ -19,9 +23,5 @@
         </tr>
     {% endfor %}
     </table>
-
-    <p>
-        <a href="{% url dish_add %}">Add a new dish</a>
-    </p>
 
 {% endblock content %}
