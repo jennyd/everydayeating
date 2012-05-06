@@ -13,10 +13,10 @@
     {% endif %}
     </p>
 
-    <p>
-    <a href="{% url ingredient_edit ingredient.id %}">Edit this ingredient</a><br />
-    <a href="{% url ingredient_delete ingredient.id %}">Delete this ingredient</a>
-    </p>
+    <ul class="actionlinks">
+    <li><a class="changelink" href="{% url ingredient_edit ingredient.id %}">Edit this ingredient</a><li/>
+    <li><a class="deletelink" href="{% url ingredient_delete ingredient.id %}">Delete this ingredient</a></li>
+    </ul>
 
     <h3>Dishes containing this ingredient</h3>
 
