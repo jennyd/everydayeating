@@ -11,11 +11,11 @@
 
     <h2>{{ year }} monthly index</h2>
 
-    <p>
+    <ul>
     {% for date in date_list %}
-        {{ date.year }}, <a href="{% url meal_archive_month date.year date|date:'m' %}">{{ date|date:'F' }}</a><br />
+        <li>{{ date.year }}, <a href="{% url meal_archive_month date.year date|date:'m' %}">{{ date|date:'F' }}</a></li>
     {% endfor %}
-    </p>
+    </ul>
 
     <h2>Meals this year</h2>
 
