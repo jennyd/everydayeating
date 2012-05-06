@@ -5,9 +5,9 @@
 
     <h1>Ingredients</h1>
 
-    <p>
-        <a href="{% url ingredient_add %}">Add a new ingredient</a>
-    </p>
+    <ul class="actionlinks">
+    <li><a class="addlink" href="{% url ingredient_add %}">Add a new ingredient</a></li>
+    </ul>
 
     <table>
     {% for ingredient in ingredient_list %}
@@ -28,8 +28,8 @@
     {% endfor %}
     </table>
 
-    <p>
-        <a href="{% url ingredient_manage %}">Edit all ingredients</a>
-    </p>
+    <ul class="actionlinks">
+    <li><a class="changelink" href="{% url ingredient_manage %}">Edit all ingredients</a></li>
+    </ul>
 
 {% endblock content %}
