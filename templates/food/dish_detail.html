@@ -78,7 +78,7 @@
 
     <table>
     {% for portion in dish.comestible.portion_set.all %}
-        <tr>
+        <tr class="{% cycle 'odd' 'even' %}">
         <td><a href="{% url meal_detail portion.meal.id %}">{{ portion.meal|capfirst }}</a>:</td>
         <td>{{ portion.quantity }}{{ portion.comestible.unit }}</td>
         <td class="calories">({{ portion.calories|floatformat:0|intcomma }} calories)</td>
@@ -86,7 +86,7 @@
     {% empty %}
         <tr><td colspan="3">This dish doesn't have any portions yet.</td></tr>
     {% endfor %}
-        <tr>
+        <tr class="{% cycle 'odd' 'even' %}">
         <td>Not yet assigned:</td>
         <td>{{ dish.get_remaining_quantity|floatformat:0|intcomma }}{{ dish.unit }}</td>
         <td></td>
