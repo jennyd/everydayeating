@@ -9,25 +9,34 @@
     ({{ meal.calories|floatformat:0|intcomma }} calories)
     </p>
 
-    <ul>
+    <table>
+    <tr>
+    <th>Ingredient/Dish</th>
+    <th>Quantity</th>
+    <th>Calories</th>
+    </tr>
     {% for portion in meal.portion_set.all %}
-        <li>
-        {% if portion.comestible.unit == "items" %}
-            {{ portion.quantity|intcomma }}
-        {% else %}
-            {{ portion.quantity|intcomma }}{{ portion.comestible.unit }} of
-        {% endif %}
+        <tr class="{% cycle 'odd' 'even' %}">
+        <td>
         {% if portion.comestible.is_dish %}
             <a href="{% url dish_detail portion.comestible.id %}">{{ portion.comestible }}</a>
         {% else %}
             <a href="{% url ingredient_detail portion.comestible.id %}">{{ portion.comestible }}</a>
         {% endif %}
-        ({{ portion.calories|floatformat:0|intcomma }} calories)
-        </li>
+        </td>
+        <td>
+        {% if portion.comestible.unit == "items" %}
+            {{ portion.quantity|intcomma }}
+        {% else %}
+            {{ portion.quantity|intcomma }}{{ portion.comestible.unit }}
+        {% endif %}
+        </td>
+        <td class="calories">{{ portion.calories|floatformat:0|intcomma }} calories</td>
+        </tr>
     {% empty %}
-        Don't skip meals!
+        <tr><td colspan="3">Don't skip meals!</td></tr>
     {% endfor %}
-    </ul>
+    </table>
 
     <ul class="actionlinks">
     <li><a class="changelink" href="{% url meal_edit meal.id %}">Edit this meal</a></li>
