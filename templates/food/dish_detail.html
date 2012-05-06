@@ -77,18 +77,18 @@
     <table>
     {% for portion in dish.comestible.portion_set.all %}
         <tr>
+        <td><a href="{% url meal_detail portion.meal.id %}">{{ portion.meal|capfirst }}</a>:</td>
         <td>{{ portion.quantity }}{{ portion.comestible.unit }}</td>
-        <td>for <a href="{% url meal_detail portion.meal.id %}">{{ portion.meal|capfirst }}</a></td>
         <td>({{ portion.calories|floatformat:0|intcomma }} calories)</td>
         </tr>
-        <tr>
-        <td>{{ dish.get_remaining_quantity|floatformat:0|intcomma }}{{ dish.unit }}</td>
-        <td>not yet assigned<td>
-        </tr>
     {% empty %}
-        <tr><td>This dish doesn't have any portions yet.</td></tr>
-        <tr><td>{{ dish.get_remaining_quantity|floatformat:0|intcomma }}{{ dish.unit }} not yet assigned<td></tr>
+        <tr><td colspan="3">This dish doesn't have any portions yet.</td></tr>
     {% endfor %}
+        <tr>
+        <td>Not yet assigned:</td>
+        <td>{{ dish.get_remaining_quantity|floatformat:0|intcomma }}{{ dish.unit }}</td>
+        <td></td>
+        </tr>
     </table>
 
     <p>
