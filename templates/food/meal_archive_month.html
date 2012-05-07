@@ -5,6 +5,10 @@
 
     <h1>Meals in {{ month|date:'F Y' }}</h1>
 
+    <ul class="actionlinks">
+    <li><a class="addlink" href="{% url meal_add %}">Add a new meal</a></li>
+    </ul>
+
     <h2>Weekly index</h2>
 
     <table>
@@ -43,9 +47,6 @@
         </table>
     {% endfor %}
 
-    <p>
-    <a href="{% url meal_add %}">Add a new meal</a>
-    </p>
 
     <p>
     {% if previous_month %}
