@@ -5,6 +5,10 @@
 
     <h1>Meals</h1>
 
+    <ul class="actionlinks">
+    <li><a class="addlink" href="{% url meal_add %}">Add a new meal</a></li>
+    </ul>
+
     <table>
     {% for meal in meal_list %}
         <tr>
@@ -18,9 +22,8 @@
     {% endfor %}
     </table>
 
-    <p>
-        <a href="{% url meal_add %}">Add a new meal</a><br />
-        <a href="{% url meal_archive %}">Meal archive index</a>
-    </p>
+    <ul>
+    <li><a href="{% url meal_archive %}">Meal archive index</a></li>
+    </ul>
 
 {% endblock content %}
