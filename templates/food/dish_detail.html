@@ -64,7 +64,7 @@
     <li><a class="addlink" href="{% url dish_duplicate dish.id %}">Cook this dish again</a></li>
     </ul>
 
-    <h3>Portions of this dish</h3>
+    <h2>Portions of this dish</h2>
 
     <table>
     {% for portion in dish.comestible.portion_set.all %}
@@ -84,7 +84,7 @@
     </table>
 
     {% if dish.comestible.containing_dishes_set.all %}
-        <h3>Dishes containing this dish</h3>
+        <h2>Dishes containing this dish</h2>
 
         <table>
         <tr>
