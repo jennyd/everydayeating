@@ -44,6 +44,14 @@ body {padding: 10px;
 }
 h1 {margin-top: 5px;
 }
+h2, h3, h4 {margin-top: 1.5em;
+            /* <h2> in firefox:
+                    1.0em = 24px
+                    1.2em = 28px
+                    1.4em = 33px
+                    1.5em = 36px
+            */
+}
 
 /* Table formatting */
 table {border-collapse: collapse;
