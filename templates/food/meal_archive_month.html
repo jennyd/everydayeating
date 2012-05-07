@@ -7,9 +7,18 @@
 
     <h2>Weekly index</h2>
 
+    <table>
+    <tr>
+    <th>Week beginning</th>
+    <th>Mean calories per day</th>
+    </tr>
     {% for week in week_list %}
-        <a href="{% url meal_archive_week week.date.year week.date|date:'W' %}">Week beginning {{ week.date|date:'jS F Y' }}</a> {{ week.calories|floatformat:0|intcomma }} calories per day<br />
+        <tr class="{% cycle 'odd' 'even' %}">
+        <td><a href="{% url meal_archive_week week.date.year week.date|date:'W' %}">{{ week.date|date:'jS F Y' }}</a></td>
+        <td class="calories">{{ week.calories|floatformat:0|intcomma }} calories</td>
+        </tr>
     {% endfor %}
+    </table>
 
     <h2>Daily index</h2>
 
