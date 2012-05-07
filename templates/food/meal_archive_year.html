@@ -3,13 +3,13 @@
 
 {% block content %}
 
-    <h1>Meals</h1>
+    <h1>Meals in {{ year }}</h1>
 
     <ul class="actionlinks">
     <li><a class="addlink" href="{% url meal_add %}">Add a new meal</a></li>
     </ul>
 
-    <h2>{{ year }} monthly index</h2>
+    <h2>Monthly index</h2>
 
     <ul>
     {% for date in date_list %}
