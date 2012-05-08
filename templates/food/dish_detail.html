@@ -40,12 +40,14 @@
     </tr>
     {% for amount in dish.amount_set.all %}
         <tr class="{% cycle 'odd' 'even' %}">
-        <td>
+        <td class="comestible">
+        <div>
         {% if amount.contained_comestible.is_dish %}
             <a href="{% url dish_detail amount.contained_comestible.id %}">{{ amount.contained_comestible }}</a>
         {% else %}
             <a href="{% url ingredient_detail amount.contained_comestible.id %}">{{ amount.contained_comestible }}</a>
         {% endif %}
+        </div>
         </td>
         <td>
         {% if amount.contained_comestible.unit == "items" %}
