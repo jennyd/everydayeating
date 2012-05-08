@@ -13,43 +13,6 @@
     <li><a class="addlink" href="{% url meal_add %}">Add a new meal</a></li>
     </ul>
 
-    {% for meal in meal_list %}
-        <h3>
-        <a href="{% url meal_detail meal.id %}">{{ meal.name|capfirst }}</a>, {{ meal.date|naturalday }} at {{ meal.time }} ({{ meal.calories|floatformat:0|intcomma }} calories)
-        <a class="deletelink" href="{% url meal_delete meal.id %}">Delete</a>
-        </h3>
-
-        <table>
-        {% for portion in meal.portion_set.all %}
-            <tr>
-                <td>
-                    {% if portion.comestible.is_dish %}
-                        <a href="{% url dish_detail portion.comestible.id %}">{{ portion.comestible }}</a>
-                    {% else %}
-                        <a href="{% url ingredient_detail portion.comestible.id %}">{{ portion.comestible }}</a>
-                    {% endif %}
-                </td>
-                <td>
-                    {% if portion.comestible.unit == "items" %}
-                        {{ portion.quantity|intcomma }}
-                    {% else %}
-                        {{ portion.quantity|intcomma }}{{ portion.comestible.unit }}
-                    {% endif %}
-                </td>
-                <td>
-                    ({{ portion.calories|floatformat:0|intcomma }} calories)
-                </td>
-            </tr>
-        {% empty %}
-            Don't skip meals!
-        {% endfor %}
-       </table>
-    {% endfor %}
-
-<!-- new meals table -->
-
-    <h2>New meals table</h2>
-
     <table>
     {% for meal in meal_list %}
     <tbody class="meal-group">
