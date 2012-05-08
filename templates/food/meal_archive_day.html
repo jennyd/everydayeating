@@ -54,7 +54,7 @@
     {% for meal in meal_list %}
     <tbody class="meal-group">
         <tr>
-        <td class="meal" colspan=2><a href="{% url meal_detail meal.id %}">{{ meal.name|capfirst }}</a> at {{ meal.time }}</td>
+        <td class="meal" colspan=2><a href="{% url meal_detail meal.id %}">{{ meal.name|capfirst }}</a> at {{ meal.time }} <a class="changelink" href="{% url meal_edit meal.id %}">Edit</a> <a class="deletelink" href="{% url meal_delete meal.id %}">Delete</a></td>
         <td class="meal calories">{{ meal.calories|floatformat:0|intcomma }} calories</td>
         </tr>
         <!--
