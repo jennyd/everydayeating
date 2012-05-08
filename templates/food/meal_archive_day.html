@@ -11,10 +11,14 @@
     {{ day_calories|floatformat:0|intcomma }} calories in total
     </p>
 
+    <ul class="actionlinks">
+    <li><a class="addlink" href="{% url meal_add %}">Add a new meal</a></li>
+    </ul>
+
     {% for meal in meal_list %}
         <h3>
         <a href="{% url meal_detail meal.id %}">{{ meal.name|capfirst }}</a>, {{ meal.date|naturalday }} at {{ meal.time }} ({{ meal.calories|floatformat:0|intcomma }} calories)
-        <a href="{% url meal_delete meal.id %}">Delete</a>
+        <a class="deletelink" href="{% url meal_delete meal.id %}">Delete</a>
         </h3>
 
         <table>
@@ -43,10 +47,6 @@
         {% endfor %}
        </table>
     {% endfor %}
-
-    <p>
-    <a href="{% url meal_add %}">Add a new meal</a>
-    </p>
 
     <p>
     {% if previous_day %}
