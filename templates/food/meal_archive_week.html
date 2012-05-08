@@ -3,17 +3,17 @@
 
 {% block content %}
 
-    <h1>Meals</h1>
+    <h1>Meals in the week beginning {{ week|date:'jS F Y' }}</h1>
+
+    <p>
+    Average {{ avg_week_calories|floatformat:0|intcomma }} calories per day
+    </p>
 
     <ul class="actionlinks">
     <li><a class="addlink" href="{% url meal_add %}">Add a new meal</a></li>
     </ul>
 
-    <h2>Week beginning {{ week|date:'jS F Y' }}</h2>
-
-    <p>
-    Average {{ avg_week_calories|floatformat:0|intcomma }} calories per day
-    </p>
+    <h2>Daily index</h2>
 
     {% for date in date_list %}
         <h3>
