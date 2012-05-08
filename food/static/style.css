@@ -53,6 +53,9 @@ h2, h3, h4 {margin-top: 1.5em;
             */
 }
 
+*.test-border {border: 1px solid black;
+}
+
 /* Table formatting */
 table {border-collapse: collapse;
 }
@@ -69,9 +72,6 @@ tr.odd {background-color: #EBECE4;
 tr.even {background-color: white;
 }
 td.calories {text-align: right;  /* This assumes that calories are rounded */
-}
-
-*.test-border {border: 1px solid black;
 }
 
 /* Link formatting */
