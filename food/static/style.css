@@ -76,6 +76,8 @@ tr.odd {background-color: #EBECE4;
 }
 tr.even {background-color: white;
 }
+td {vertical-align: top;
+}
 td.calories {text-align: right;  /* This assumes that calories are rounded */
 }
 td.comestible div {max-width: 400px;
