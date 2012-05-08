@@ -68,7 +68,13 @@
             <td class="comestible">
             <div>
             {% if portion.comestible.is_dish %}
-                <a href="{% url dish_detail portion.comestible.id %}">{{ portion.comestible }}</a>
+                <a href="{% url dish_detail portion.comestible.id %}">
+                {% if portion.comestible.dish.date_cooked == day %}
+                    {{ portion.comestible.dish.name }}
+                {% else %}
+                    {{ portion.comestible }}
+                {% endif %}
+                </a>
             {% else %}
                 <a href="{% url ingredient_detail portion.comestible.id %}">{{ portion.comestible }}</a>
             {% endif %}
