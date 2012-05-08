@@ -62,9 +62,10 @@ table {border-collapse: collapse;
 th {text-align: left;
     padding: 3px 10px 3px 5px;
 }
-tbody.day-group td.day {font-weight: bold;
-                        font-size: larger;
-                        padding: 15px 0px;
+tbody.day-group td.day,
+tbody.meal-group td.meal {font-weight: bold;
+                          font-size: larger;
+                          padding: 15px 0px;
 }
 tr {
 }
@@ -76,6 +77,8 @@ tr.odd {background-color: #EBECE4;
 tr.even {background-color: white;
 }
 td.calories {text-align: right;  /* This assumes that calories are rounded */
+}
+td.comestible div {max-width: 400px;
 }
 
 /* Link formatting */

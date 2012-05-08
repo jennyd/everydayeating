@@ -46,6 +46,54 @@
        </table>
     {% endfor %}
 
+<!-- new meals table -->
+
+    <h2>New meals table</h2>
+
+    <table>
+    {% for meal in meal_list %}
+    <tbody class="meal-group">
+        <tr>
+        <td class="meal" colspan=2><a href="{% url meal_detail meal.id %}">{{ meal.name|capfirst }}</a> at {{ meal.time }}</td>
+        <td class="meal calories">{{ meal.calories|floatformat:0|intcomma }} calories</td>
+        </tr>
+        <!--
+        <tr>
+        <td><a class="changelink" href="{% url meal_edit meal.id %}">Edit</a></td>
+        <td><a class="deletelink" href="{% url meal_delete meal.id %}">Delete</a></td>
+        </tr>
+        -->
+        {% for portion in meal.portion_set.all %}
+            <tr class="{% cycle 'odd' 'even' %}">
+            <td class="comestible">
+            <div>
+            {% if portion.comestible.is_dish %}
+                <a href="{% url dish_detail portion.comestible.id %}">{{ portion.comestible }}</a>
+            {% else %}
+                <a href="{% url ingredient_detail portion.comestible.id %}">{{ portion.comestible }}</a>
+            {% endif %}
+            </div>
+            </td>
+            <td>
+            {% if portion.comestible.unit == "items" %}
+                {{ portion.quantity|intcomma }}
+            {% else %}
+                {{ portion.quantity|intcomma }}{{ portion.comestible.unit }}
+            {% endif %}
+            </td>
+            <td class="calories">
+                {{ portion.calories|floatformat:0|intcomma }} calories
+            </td>
+            </tr>
+        {% empty %}
+            <tr>
+            <td>Nothing in this meal</td>
+            </tr>
+        {% endfor %}
+    </tbody>
+    {% endfor %}
+    </table>
+
     <p>
     {% if previous_day %}
         <a href="{% url meal_archive_day previous_day.year previous_day|date:'m' previous_day|date:'d' %}" title="Previous day"><-- {{ previous_day|date:'jS F Y' }}</a>
