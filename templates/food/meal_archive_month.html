@@ -48,10 +48,10 @@
 
     <p>
     {% if previous_month %}
-        <a href="{% url meal_archive_month previous_month.year previous_month|date:'m' %}"><-- {{ previous_month|date:'F Y' }}</a>
+        <a href="{% url meal_archive_month previous_month.year previous_month|date:'m' %}" title="Previous month"><-- {{ previous_month|date:'F Y' }}</a>
     {% endif %}
     {% if next_month %}
-        <a href="{% url meal_archive_month next_month.year next_month|date:'m' %}">{{ next_month|date:'F Y' }} --></a><br />
+        <a href="{% url meal_archive_month next_month.year next_month|date:'m' %}" title="Next month">{{ next_month|date:'F Y' }} --></a><br />
     {% endif %}
     </p>
 
