@@ -3,9 +3,7 @@
 
 {% block content %}
 
-    <h1>Meals</h2>
-
-    <h2>{{ day|date:'jS F Y' }}</h2>
+    <h1>Meals on {{ day|date:'jS F Y' }}</h1>
 
     <p>
     {{ day_calories|floatformat:0|intcomma }} calories in total
