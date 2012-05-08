@@ -5,6 +5,10 @@
 
     <h1>Meals</h1>
 
+    <ul class="actionlinks">
+    <li><a class="addlink" href="{% url meal_add %}">Add a new meal</a></li>
+    </ul>
+
     <h2>Week beginning {{ week|date:'jS F Y' }}</h2>
 
     <p>
@@ -24,16 +28,12 @@
                 <td>at</td>
                 <td>{{ meal.time }}</td>
                 <td>({{ meal.calories|floatformat:0|intcomma }} calories)</td>
-                <td><a href="{% url meal_delete meal.id %}">Delete</a></td>
+                <td><a class="deletelink" href="{% url meal_delete meal.id %}">Delete</a></td>
                 </tr>
             {% endif %}
         {% endfor %}
         </table>
     {% endfor %}
-
-    <p>
-    <a href="{% url meal_add %}">Add a new meal</a>
-    </p>
 
     <p>
     {% if previous_week %}
