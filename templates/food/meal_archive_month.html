@@ -47,6 +47,29 @@
         </table>
     {% endfor %}
 
+<!-- new version -->
+
+    <h2>New daily index table</h2>
+
+    <table>
+    {% for date in date_list %}
+    <tbody class="day-group">
+        <tr>
+        <td colspan=4 class="day"><a href="{% url meal_archive_day date.year date|date:'m' date|date:'d' %}">{{ date|date:'l jS F Y' }}</a></td>
+        </tr>
+        {% for meal in meal_list %}
+            {% if date.date == meal.date %}
+                <tr class="{% cycle 'odd' 'even' %}">
+                <td><a href="{% url meal_detail meal.id %}">{{ meal.name }}</a></td>
+                <td>at {{ meal.time }}</td>
+                <td class="calories">{{ meal.calories|floatformat:0|intcomma }} calories</td>
+                <td><a class="deletelink" href="{% url meal_delete meal.id %}">Delete</a></td>
+                </tr>
+            {% endif %}
+        {% endfor %}
+    </tbody>
+    {% endfor %}
+    </table>
 
     <p>
     {% if previous_month %}
