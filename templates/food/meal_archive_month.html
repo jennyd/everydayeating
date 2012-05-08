@@ -26,31 +26,6 @@
 
     <h2>Daily index</h2>
 
-    {% for date in date_list %}
-        <h3>
-        <a href="{% url meal_archive_day date.year date|date:'m' date|date:'d' %}">{{ date|date:'l jS F' }}</a>
-        </h3>
-
-        <table>
-        {% for meal in meal_list %}
-            {% if date.date == meal.date %}
-                <tr class="{% cycle 'odd' 'even' %}">
-                <td><a href="{% url meal_detail meal.id %}">{{ meal.name }}</a></td>
-                <td>{{ meal.date|naturalday }}</td>
-                <td>at</td>
-                <td>{{ meal.time }}</td>
-                <td class="calories">({{ meal.calories|floatformat:0|intcomma }} calories)</td>
-                <td><a class="deletelink" href="{% url meal_delete meal.id %}">Delete</a></td>
-                </tr>
-            {% endif %}
-        {% endfor %}
-        </table>
-    {% endfor %}
-
-<!-- new version -->
-
-    <h2>New daily index table</h2>
-
     <table>
     {% for date in date_list %}
     <tbody class="day-group">
