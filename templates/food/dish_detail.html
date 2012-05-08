@@ -40,16 +40,20 @@
     </tr>
     {% for amount in dish.amount_set.all %}
         <tr class="{% cycle 'odd' 'even' %}">
+        <td>
         {% if amount.contained_comestible.is_dish %}
-            <td><a href="{% url dish_detail amount.contained_comestible.id %}">{{ amount.contained_comestible }}</a></td>
+            <a href="{% url dish_detail amount.contained_comestible.id %}">{{ amount.contained_comestible }}</a>
         {% else %}
-            <td><a href="{% url ingredient_detail amount.contained_comestible.id %}">{{ amount.contained_comestible }}</a></td>
+            <a href="{% url ingredient_detail amount.contained_comestible.id %}">{{ amount.contained_comestible }}</a>
         {% endif %}
+        </td>
+        <td>
         {% if amount.contained_comestible.unit == "items" %}
-            <td>{{ amount.quantity|apnumber|intcomma }}</td>
+            {{ amount.quantity|apnumber|intcomma }}
         {% else %}
-            <td>{{ amount.quantity|intcomma }}{{ amount.contained_comestible.unit }}</td>
+            {{ amount.quantity|intcomma }}{{ amount.contained_comestible.unit }}
         {% endif %}
+        </td>
         <td class="calories">{{ amount.calories|floatformat:0|intcomma }} calories</td>
         </tr>
     {% empty %}
