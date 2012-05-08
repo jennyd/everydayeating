@@ -17,7 +17,11 @@
     </tr>
     {% for ingredient in ingredient_list %}
         <tr class="{% cycle 'odd' 'even' %}">
-        <td><a href="{% url ingredient_detail ingredient.id %}">{{ ingredient.name }}</a></td>
+        <td class="comestible">
+            <div>
+            <a href="{% url ingredient_detail ingredient.id %}">{{ ingredient.name }}</a>
+            </div>
+        </td>
         <td class="calories">{{ ingredient.calories|intcomma }} calories per</td>
         <td>
         {% if ingredient.unit == "items" %}
