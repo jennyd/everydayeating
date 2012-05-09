@@ -43,6 +43,13 @@ USE_I18N = True
 # calendars according to the current locale
 USE_L10N = True
 
+# Email Console backend: Instead of sending out real emails the console backend
+# just writes the emails that would be send to the standard output. By default,
+# the console backend writes to stdout. You can use a different stream-like
+# object by providing the stream keyword argument when constructing the
+# connection.
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+
 # The URL where requests are redirected for login, especially when using the
 # login_required() decorator
 LOGIN_URL = '/food/login/'
