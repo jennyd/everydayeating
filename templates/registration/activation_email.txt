@@ -1,0 +1,7 @@
+Welcome to Everyday Eating!
+
+Please click on the link below to activate your account (or copy and paste it into your browser):
+
+http://localhost:8000{% url registration_activate activation_key %}
+
+This link will expire in {{ expiration_days }} days.
