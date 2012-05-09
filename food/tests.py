@@ -12,6 +12,32 @@ from food.views import BaseMealInlineFormSet, DishMultiplyForm, DishDuplicateFor
 
 fake_pk = 9999999999
 
+class RegistrationTestCase(TestCase):
+    def test_register(self):
+        response = self.client.get(reverse('registration_register'))
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(len(response.templates), 2)
+        self.assertTemplateUsed(response, 'registration/registration_form.html')
+        self.assertTemplateUsed(response, 'food/base.html')
+        # Not sure if it's necessary to check these - they are provided by
+        # django.contrib.auth.views.login
+        self.assertTrue('csrf_token' in response.context)
+        self.assertTrue('form' in response.context)
+        # user is AnonymousUser here:
+        self.assertFalse(response.context['user'].is_authenticated())
+
+        response = self.client.post(reverse('registration_register'),
+                                    data={'username': 'jenny',
+                                          'email': 'jenny@example.com',
+                                          'password1': 'right',
+                                          'password2': 'right'},
+                                    follow=True)
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(len(response.templates), 2)
+        self.assertTemplateUsed(response, 'registration/registration_complete.html')
+        self.assertTemplateUsed(response, 'food/base.html')
+        self.assertTrue(User.objects.get(username='jenny'))
+
 class ValidatorsTestCase(TestCase):
     def test_validate_positive(self):
         validate_positive(1)
