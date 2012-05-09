@@ -21,13 +21,15 @@
         Everyday Eating
 
         <div id="login-information">
+        <ul>
         {% if user.is_authenticated %}
-            Logged in as {{ user.username }}
-            <a href="{% url logout %}">Log out</a>
+            <li>Logged in as {{ user.username }}</li>
+            <li><a href="{% url logout %}">Log out</a></li>
         {% else %}
-            Not logged in
-            <a href="{% url login %}">Log in</a>
+            <li>Not logged in <a href="{% url login %}">Log in</a></li>
+            <li>New user? <a href="{% url registration_register %}">Register</a></li>
         {% endif %}
+        </ul>
         </div>
     </div>
 
