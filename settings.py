@@ -103,6 +103,9 @@ SECRET_KEY = '0_frzdvlq&b%vho$!7zatuk1wdtir48)t&!qr^h@9itub-qv=n'
 # into a RequestContext.
 INTERNAL_IPS = ('127.0.0.1',)
 
+# This is for django-registration
+ACCOUNT_ACTIVATION_DAYS = 7 # One-week activation window
+
 # List of callables that know how to import templates from various sources.
 TEMPLATE_LOADERS = (
     'django.template.loaders.filesystem.Loader',
@@ -139,6 +142,7 @@ INSTALLED_APPS = (
     # Uncomment the next line to enable admin documentation:
     # 'django.contrib.admindocs',
     'django.contrib.humanize',
+    'registration',
     'south',
 #    'django_pdb',
     'food',
