@@ -7,8 +7,11 @@ from django.db.models.signals import post_save, post_delete
 from django.dispatch import receiver
 from django.core.exceptions import ValidationError
 from django.forms import ModelForm
+
+from django.contrib.auth import login
 from django.contrib.auth.models import User
 
+from registration.signals import user_activated
 
 # Quantities for Ingredient and Dish must be greater than 0, to avoid
 # dividing by 0 in calories calculations for Amount and Portion. (They
@@ -440,6 +443,13 @@ def update_on_portion_delete(sender, **kwargs):
     except Meal.DoesNotExist:
         print >> sys.stderr, "Instance deleted: portion (can't get name); meal has already been deleted"
 
+# When a newly registered user activates their account, log them in immediately
+# (helpful gist: https://gist.github.com/1823320 )
+@receiver(user_activated)
+def login_on_activation(sender, user, request, **kwargs):
+    """Logs in the user after activation"""
+    user.backend = 'django.contrib.auth.backends.ModelBackend'
+    login(request, user)
 
 #################################
 
