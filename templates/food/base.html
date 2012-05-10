@@ -26,8 +26,8 @@
             <li>Logged in as {{ user.username }}</li>
             <li><a href="{% url logout %}">Log out</a></li>
         {% else %}
-            <li>Not logged in <a href="{% url login %}">Log in</a></li>
             <li>New user? <a href="{% url registration_register %}">Register</a></li>
+            <li>Not logged in <a href="{% url login %}">Log in</a></li>
         {% endif %}
         </ul>
         </div>
