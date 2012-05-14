@@ -36,6 +36,207 @@
     - use in get_avg_week_calories to make it work for any date, not assuming it's being given a week start?
 
 ##########################################################
+#### user - profile - household relationships
+
+Profile needs foreign keys to User and Household:
+
+    User <------user--- Profile ---household---> Household
+
+Household has a foreign key to User for its admin:
+
+    User <---           Profile              --- Household
+             \                              /
+              \----------admin-------------/
+
+Other Household fields:
+    - name
+    - is_active (boolean)
+    - fridge: one-to-one key to special hidden Meal created when Household created
+    - freezer: one-to-one key to special hidden Meal created when Household created
+    - larder: one-to-one key to special hidden Meal created when Household created
+    - settings for using fridge, freezer & larder? (boolean fields)
+
+
+class Household(models.Model):
+    # Should name be unique? Perhaps for publishing recipes...
+    name = models.CharField(max_length=200)
+    admin = models.ForeignKey(User, related_name='is_admin')
+    is_active = models.BooleanField(default=True)
+    # These probably need different related_names:
+    fridge = models.OneToOneField(Meal, related_name='household')
+    freezer = models.OneToOneField(Meal, related_name='household')
+    larder = models.OneToOneField(Meal, related_name='household')
+
+AUTOCREATE_DEFAULT_MEALS_CHOICES = (
+        ('n', 'never'),
+        ('d', 'daily'),
+        ('l', 'on login')
+    )
+
+START_PAGE_PERIOD_CHOICES = (
+        ('d', 'day'),
+        ('tw', 'this week',
+        ('lw', 'last week'),
+        ('nw', 'next week'),
+    )
+
+START_PAGE_USER_CHOICES = (
+        ('u', 'user'),
+        ('h', 'household',
+    )
+
+class Profile(models.Model):
+    user = models.OneToOneField(User, related_name='profile')
+    # This is the current household of the user:
+    household = models.ForeignKey(Household, related_name='user_profiles')
+    display_name = models.CharField(max_length=80) # max_length ok?
+    autocreate_default_meals = models.CharField(max_length=1,
+                                        choices=AUTOCREATE_DEFAULT_MEALS_CHOICES,
+                                        default="n")
+    # This should hold a list of tuples of meal names and times:
+    #     [('breakfast', datetime.time(7, 00)),
+    #      ('lunch', datetime.time(13, 30)),
+    #      ('dinner', datetime.time(20, 00))]
+    # Or should it refer to a template day which is set up with default meals,
+    # including portions?
+    default_meals = models.CharField(max_length=200) # max_length ok?
+    start_page_period = models.CharField(max_length=2,
+                                         choices=START_PAGE_PERIOD_CHOICES,
+                                         default="tw")
+    start_page_user = models.CharField(max_length=1,
+                                       choices=START_PAGE_USER_CHOICES,
+                                       default="u")
+
+A Profile needs to store:
+    - default meals to create for each day
+        - portions (e.g. same breakfast each day)
+        - times
+    - name to display within the site
+        - always alongside username, or should it also be unique?
+    - nutritional goals (optional)
+    - display settings for start page:
+        - Household/User
+        - day/last week/coming week
+
+Inactive (old) Households still keep their admins
+    - a User can still be admin for multiple Households
+    - a User can view but not edit Dishes from their old Households
+
+Profile needs some record of the history of its User's Households:
+    - start date (required), end date (not required, set when leaving a Household)
+    - other overlapping users? or filter on their history?
+
+class History(models.Model):
+    user = models.ForeignKey(User, related_name='previous_households')
+    household = models.ForeignKey(Household, related_name='previous_members')
+    join_datetime = models.DateField(default=datetime.datetime.today())
+    leave_datetime = models.DateField(null=True)
+
+
+
+A User who is their Household's admin can:
+    - create new Users within their Household
+    - invite other existing Users to join their Household
+    - set viewing and editing permissions for all Users in their Household
+    - offer to merge their Household with another Household
+    - change their Household's admin (make another User admin instead of themselves)
+
+
+
+Ingredient:
+    - has no relationship with User, Profile or Household
+    - all normal Ingredients should be viewable and usable by all Users
+
+Dish:
+    - has M2M to User for cooks
+    - has FK to Household
+    - should only be viewable by Users in the same Household
+        - unless published as a Recipe...
+    - should only be editable by cooks, or all Users in the same Household?
+
+Amount:
+    - has no relationship with User, Profile or Household
+        - except through Dish
+    - should be convertible to a Portion
+
+Portion:
+    - has no relationship with User, Profile or Household
+        - except through Meal
+    - should be convertible to an Amount
+
+Meal:
+    - has FK to User for the person who eats it
+    - has FK to Household
+    - has choice field indicating if fridge, freezer, larder or normal meal
+        - only normal meals should be counted in calorie calculations etc
+        - storage meals should have their Household's admin as their User
+    - should only be viewable by Users in the same Household
+        - unless published as a Recipe...
+    - should only be editable by User eating it, or all Users in the same Household?
+
+
+#### Permissions, hypothetical:
+
+# Should this be the same for dishes, or should different criteria apply?
+def user_meal_permissions(user, meal):
+    permissions = {'can_view': False,
+                   'can_edit': False,}
+    # A user can always view and edit their own meals:
+    if user == meal.user:
+        permissions['can_view'] = True
+        permissions['can_edit'] = True
+        return permissions
+    # A user can have permission to edit the meals of another user in their
+    # household:
+    # FIXME: add a permissions model with M2M on User with symmetrical=False
+        # - context needs an edit list for the user, containing the user ids of
+        # members of their household whose meals and dishes they may edit
+        # - User (or the permissions model) needs a get_edit_list method
+
+    # See if the user can view the meal for another reason:
+    # FIXME: Meal (and Dish) needs a published field
+    if meal.published:
+        # Published meals are visible to all logged-in users (or anyone?)
+        permissions['can_view'] = True
+    elif meal.household == user.profile.household:
+        # A user can view all meals in their current household since they joined it:
+        start_datetime = History.objects.get(user=user,
+                                             household=user.household).start_datetime
+        if start_datetime =< meal.date:
+            permissions['can_view'] = True
+    else:
+        try:
+            # See if this user has ever been a member of the meal's household:
+            old_household = user.previous_households.get(household=meal.household)
+            # ...and if so, was the meal during that time?
+            # do ranges work with this? and can a date be compared to datetimes?
+            if meal.date is in range(old_household.start_datetime,
+                                     old_household.leave_datetime):
+#            if start < meal.date < leave:
+                # A user can view meals in households which they were in at the time:
+                permissions['can_view'] = True
+        except History.DoesNotExist:
+            # This user has never been a member of the meal's household
+            pass
+    return permissions
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+##########################################################
 #### planned apps
 
 # food: add and edit basic foods (which are for our purposes in infinite supply)
