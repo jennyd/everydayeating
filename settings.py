@@ -145,6 +145,7 @@ INSTALLED_APPS = (
     'registration',
     'south',
 #    'django_pdb',
+    'accounts',
     'food',
 )
 
