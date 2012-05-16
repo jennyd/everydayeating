@@ -60,7 +60,7 @@ Other Household fields:
 class Household(models.Model):
     # Should name be unique? Perhaps for publishing recipes...
     name = models.CharField(max_length=200)
-    admin = models.ForeignKey(User, related_name='is_admin')
+    admin = models.ForeignKey(User, related_name='admin_for_set')
     is_active = models.BooleanField(default=True)
     # These probably need different related_names:
     fridge = models.OneToOneField(Meal, related_name='household')
@@ -86,7 +86,8 @@ START_PAGE_USER_CHOICES = (
     )
 
 class Profile(models.Model):
-    user = models.OneToOneField(User, related_name='profile')
+    # We don't need related_name here - user.profile returns a single object anyway:
+    user = models.OneToOneField(User)
     # This is the current household of the user:
     household = models.ForeignKey(Household, related_name='user_profiles')
     display_name = models.CharField(max_length=80) # max_length ok?
@@ -106,6 +107,12 @@ class Profile(models.Model):
     start_page_user = models.CharField(max_length=1,
                                        choices=START_PAGE_USER_CHOICES,
                                        default="u")
+
+# in settings.py:
+
+# Indicates that this model is the user profile model for the site.
+AUTH_PROFILE_MODULE = 'food.Profile'
+
 
 A Profile needs to store:
     - default meals to create for each day
