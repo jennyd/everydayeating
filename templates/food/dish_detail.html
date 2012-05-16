@@ -24,6 +24,7 @@
         {{ dish.quantity|intcomma }}{{ dish.unit }},
     {% endif %}
     cooked: {{ dish.date_cooked|naturalday }} by {{ dish.pretty_cooks }}
+    in {{ dish.household }}
     ({{ dish.calories|floatformat:0|intcomma }} calories)<br />
     {% if dish.recipe_url %}
         <a href="{{ dish.recipe_url }}">Link to recipe</a>
