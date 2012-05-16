@@ -130,6 +130,9 @@ TEMPLATE_DIRS = (
     "/home/jenny/Python/everydayeating/templates"
 )
 
+# This is to stop the accounts 0002 datamigration causing nonsense:
+SOUTH_TESTS_MIGRATE = False
+
 INSTALLED_APPS = (
     'django.contrib.auth',
     'django.contrib.contenttypes',

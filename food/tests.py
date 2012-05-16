@@ -6,9 +6,9 @@ from django.contrib.auth.models import User
 from django.forms.models import ModelForm, BaseInlineFormSet, BaseModelFormSet
 from django.test import TestCase
 
-# from accounts.models import Household, Profile
+from accounts.models import Household, Profile
 
-from food.models import validate_positive, validate_positive_or_zero, Household, Comestible, Ingredient, Dish, Amount, Meal, Portion
+from food.models import validate_positive, validate_positive_or_zero, Comestible, Ingredient, Dish, Amount, Meal, Portion
 from food.views import BaseMealInlineFormSet, DishMultiplyForm, DishDuplicateForm, MealDuplicateForm, get_sum_day_calories, get_avg_week_calories, get_week_starts_in_month
 
 

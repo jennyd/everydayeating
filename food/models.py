@@ -29,20 +29,6 @@ def validate_positive_or_zero(value):
         raise ValidationError(u'Enter a number not less than 0')
 
 
-class Household(models.Model):
-    # Should name be unique? Perhaps for publishing recipes...
-    name = models.CharField(max_length=200)
-    # Not sure about related_name here:
-    admin = models.ForeignKey(User, related_name='is_admin')
-    # Use is_active to allow people to rearrange households?
-    # is_active = models.BooleanField(default=True)
-
-    def __unicode__(self):
-        return self.name
-
-
-# Also need an Invitation model
-
 
 UNIT_CHOICES = (
         ('g', 'grams'),
@@ -105,7 +91,7 @@ class Dish(Comestible):
                                    default=500, null=True,
                                    validators=[validate_positive])
     date_cooked = models.DateField("Cooked on:", default=datetime.date.today)
-    household = models.ForeignKey(Household, related_name='dishes')
+    household = models.ForeignKey('accounts.Household', related_name='dishes')
     cooks = models.ManyToManyField(User, related_name='cooked_dishes')
     recipe_url = models.URLField("Link to the recipe for this dish", blank=True,
                                  null=True)
@@ -239,7 +225,7 @@ class Meal(models.Model):
     name = models.CharField(max_length=16, choices=NAME_CHOICES)
     date = models.DateField("On:", default=datetime.date.today)
     time = models.TimeField("at:")  # make defaults for each name choice...
-    household = models.ForeignKey(Household, related_name='meals')
+    household = models.ForeignKey('accounts.Household', related_name='meals')
     user = models.ForeignKey(User, related_name='meals')
     comestibles = models.ManyToManyField(Comestible, through='Portion',
                                          editable=False)
