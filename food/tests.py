@@ -6,11 +6,23 @@ from django.contrib.auth.models import User
 from django.forms.models import ModelForm, BaseInlineFormSet, BaseModelFormSet
 from django.test import TestCase
 
+# from accounts.models import Household, Profile
+
 from food.models import validate_positive, validate_positive_or_zero, Household, Comestible, Ingredient, Dish, Amount, Meal, Portion
 from food.views import BaseMealInlineFormSet, DishMultiplyForm, DishDuplicateForm, MealDuplicateForm, get_sum_day_calories, get_avg_week_calories, get_week_starts_in_month
 
 
 fake_pk = 9999999999
+
+#class ProfileTestCase(TestCase):
+#    def test_profile_auto_created(self):
+#        # Add a user
+#        user = User.objects.create_user('jenny', 'jenny@example.com', 'password')
+#        # Household should have been created by the signal receiver:
+#        self.assertTrue(Household.objects.get(admin__username='jenny'))
+#        # Profile should have been created by the signal receiver:
+#        self.assertTrue(Profile.objects.get(user__username='jenny'))
+
 
 class RegistrationTestCase(TestCase):
     def test_register(self):
