@@ -8,6 +8,7 @@ urlpatterns = patterns('',
     # Example:
     # (r'^everydayeating/', include('everydayeating.foo.urls')),
     (r'^food/', include('food.urls')),
+    (r'^accounts/', include('accounts.urls')),
     (r'^accounts/', include('registration.backends.default.urls')),
     # Uncomment the admin/doc line below to enable admin documentation:
     # (r'^admin/doc/', include('django.contrib.admindocs.urls')),

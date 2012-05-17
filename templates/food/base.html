@@ -23,7 +23,7 @@
         <div id="login-information">
         <ul>
         {% if user.is_authenticated %}
-            <li>Logged in as {{ user.username }}</li>
+            <li>Logged in as <a href="{% url profile_detail user.username %}" title="User profile">{{ user.username }}</a></li>
             <li><a href="{% url logout %}">Log out</a></li>
         {% else %}
             <li>New user? <a href="{% url registration_register %}">Register</a></li>
