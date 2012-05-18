@@ -2,7 +2,7 @@ from django.conf.urls.defaults import *
 from django.contrib.auth.views import login, logout
 from django.views.generic import TemplateView, ListView, CreateView, DetailView, UpdateView, DeleteView, ArchiveIndexView, YearArchiveView
 
-from food.views import IngredientListView, ingredient_manage, dish_amounts_form, meal_portions_form, dish_multiply, dish_duplicate, meal_duplicate, MealMonthArchiveView, MealWeekArchiveView, MealDayArchiveView
+from food.views import IngredientListView, IngredientCreateView, ingredient_manage, dish_amounts_form, meal_portions_form, dish_multiply, dish_duplicate, meal_duplicate, MealMonthArchiveView, MealWeekArchiveView, MealDayArchiveView
 from food.models import Ingredient, Dish, Amount, Meal, Portion
 
 # Uncomment the next two lines to enable the admin:
@@ -29,7 +29,7 @@ urlpatterns += patterns('',
     url(r'^logout/$', 'django.contrib.auth.views.logout', { 'next_page': '/food/' }, name="logout"),
 
     url(r'^ingredients/$', IngredientListView.as_view(), name="ingredient_list"),
-    url(r'^ingredients/add/$', CreateView.as_view( model=Ingredient, success_url="/food/ingredients/" ), name="ingredient_add"),
+    url(r'^ingredients/add/$', IngredientCreateView.as_view(), name="ingredient_add"),
     url(r'^ingredients/(?P<pk>\d+)/$', DetailView.as_view( model=Ingredient ), name="ingredient_detail"),
     url(r'^ingredients/(?P<pk>\d+)/edit/$', UpdateView.as_view( model=Ingredient, success_url="/food/ingredients/"), name="ingredient_edit"),
     url(r'^ingredients/(?P<pk>\d+)/delete/$', DeleteView.as_view( model=Ingredient, success_url="/food/ingredients/"), name="ingredient_delete"),
