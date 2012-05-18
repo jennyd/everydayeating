@@ -7,10 +7,17 @@ from django.core.exceptions import ValidationError
 from django.shortcuts import HttpResponse, HttpResponseRedirect, render_to_response, get_object_or_404, redirect
 from django.template import RequestContext
 from django.http import Http404
-from django.views.generic import MonthArchiveView, WeekArchiveView, DayArchiveView
+from django.views.generic import ListView, MonthArchiveView, WeekArchiveView, DayArchiveView
 from django.forms.models import modelformset_factory, BaseInlineFormSet, inlineformset_factory
 
 from food.models import validate_positive, Ingredient, Dish, DishForm, Amount, Meal, MealForm, Portion
+
+
+class IngredientListView(ListView):
+
+    model = Ingredient
+
+
 
 @login_required
 def ingredient_manage(request):
