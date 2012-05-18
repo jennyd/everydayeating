@@ -8,7 +8,7 @@ from accounts.models import Profile, Household
 
 class ProfileDetailView(DetailView):
 
-    model = Profile
+    queryset = Profile.objects.select_related('user', 'household').all()
 
     def get_object(self):
         user = get_object_or_404(User, username=self.kwargs['username'])
