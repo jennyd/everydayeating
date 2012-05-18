@@ -14,12 +14,13 @@ class ProfileDetailView(DetailView):
         user = get_object_or_404(User, username=self.kwargs['username'])
 
         # Just use this instead of the following two lines?
+        # Looks simpler but actually makes more queries...
+
         # object = user.profile
 
         self.kwargs['pk'] = user.profile.id
         object = super(ProfileDetailView, self).get_object()
 
-        # Return the object
         return object
 
 
