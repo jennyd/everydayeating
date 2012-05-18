@@ -68,4 +68,16 @@ class AccountsViewsTestCase(TestCase):
             print "admin:", response.context['household'].admin
         self.assertTrue("members" in response.context)
 
+    def test_profile_detail(self):
+        # Create a user (household and profile created by signal receiver):
+        user = User.objects.create_user("jenny", "a@b.com", "password")
+
+        with self.assertNumQueries(3):
+            response = self.client.get(reverse("profile_detail",
+                                           kwargs={'username': user.username}),)
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(len(response.templates), 2)
+        self.assertTemplateUsed(response, "accounts/profile_detail.html")
+        self.assertTemplateUsed(response, "food/base.html")
+        self.assertTrue("profile" in response.context)
 
