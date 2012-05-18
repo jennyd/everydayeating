@@ -11,6 +11,8 @@ admin.autodiscover()
 
 
 urlpatterns = patterns('food.views',
+    url(r'^ingredients/$', IngredientListView.as_view(), name="ingredient_list"),
+    url(r'^ingredients/add/$', IngredientCreateView.as_view(), name="ingredient_add"),
     url(r'^ingredients/manage/$', "ingredient_manage", name="ingredient_manage"),
 
     url(r'^dishes/add/$', "dish_amounts_form", name="dish_add"),
@@ -28,8 +30,6 @@ urlpatterns += patterns('',
     url(r'^login/$', 'django.contrib.auth.views.login', { 'template_name': 'food/login.html' }, name="login"),
     url(r'^logout/$', 'django.contrib.auth.views.logout', { 'next_page': '/food/' }, name="logout"),
 
-    url(r'^ingredients/$', IngredientListView.as_view(), name="ingredient_list"),
-    url(r'^ingredients/add/$', IngredientCreateView.as_view(), name="ingredient_add"),
     url(r'^ingredients/(?P<pk>\d+)/$', DetailView.as_view( model=Ingredient ), name="ingredient_detail"),
     url(r'^ingredients/(?P<pk>\d+)/edit/$', UpdateView.as_view( model=Ingredient, success_url="/food/ingredients/"), name="ingredient_edit"),
     url(r'^ingredients/(?P<pk>\d+)/delete/$', DeleteView.as_view( model=Ingredient, success_url="/food/ingredients/"), name="ingredient_delete"),
