@@ -14,15 +14,6 @@ from food.views import BaseMealInlineFormSet, DishMultiplyForm, DishDuplicateFor
 
 fake_pk = 9999999999
 
-#class ProfileTestCase(TestCase):
-#    def test_profile_auto_created(self):
-#        # Add a user
-#        user = User.objects.create_user('jenny', 'jenny@example.com', 'password')
-#        # Household should have been created by the signal receiver:
-#        self.assertTrue(Household.objects.get(admin__username='jenny'))
-#        # Profile should have been created by the signal receiver:
-#        self.assertTrue(Profile.objects.get(user__username='jenny'))
-
 
 class ValidatorsTestCase(TestCase):
     def test_validate_positive(self):
