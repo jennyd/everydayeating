@@ -1,4 +1,8 @@
+import sys
+
 from django.db import models
+from django.db.models.signals import post_save
+from django.dispatch import receiver
 
 from django.contrib.auth.models import User
 
@@ -22,4 +26,19 @@ class Profile(models.Model):
 
     def __unicode__(self):
         return self.display_name+u"'s profile"
+
+
+
+@receiver(post_save, sender=User)
+def create_household_and_profile_on_create_user(sender, **kwargs):
+    if kwargs['created']: # if the user has just been created:
+        user = kwargs['instance']
+        print >> sys.stderr, "New user created:", user
+        household = Household.objects.create(name=user.username+u"'s household",
+                                             admin=user,
+                                             )
+        profile = Profile.objects.create(user=user,
+                                         household=household,
+                                         display_name=user.username
+                                         )
 

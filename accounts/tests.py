@@ -1,16 +1,19 @@
-"""
-This file demonstrates writing tests using the unittest module. These will pass
-when you run "manage.py test".
-
-Replace this with more appropriate tests for your application.
-"""
-
 from django.test import TestCase
 
+from django.contrib.auth.models import User
 
-class SimpleTest(TestCase):
-    def test_basic_addition(self):
+from accounts.models import Household, Profile
+
+
+class SignalTestCase(TestCase):
+    def test_create_household_and_profile_on_create_user(self):
         """
-        Tests that 1 + 1 always equals 2.
+        Tests that a household and profile are created for a new user.
         """
-        self.assertEqual(1 + 1, 2)
+        # Create a new user:
+        user = User.objects.create_user("jenny", "a@b.com", "password")
+
+        # A new household and a profile should have been created for the user:
+        self.assertTrue(Household.objects.get(admin=user, name="jenny's household"))
+        self.assertTrue(Profile.objects.get(user=user))
+
