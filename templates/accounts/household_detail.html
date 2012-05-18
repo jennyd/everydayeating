@@ -1,0 +1,23 @@
+{% extends "food/base.html" %}
+
+{% block title %}
+
+    {{ block.super }} {{ household.name }}
+
+{% endblock title %}
+
+{% block content %}
+
+    <h1>Household: {{ household.name }}</h1>
+
+    <p>Household admin: {{ household.admin }}</p>
+
+    <h2>Household members</h2>
+
+    <ul>
+    {% for member in members %}
+        <li>{{ member }}</li>
+    {% endfor %}
+    </ul>
+
+{% endblock content %}

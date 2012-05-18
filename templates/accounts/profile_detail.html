@@ -12,7 +12,7 @@
 
     <dl>
     <dt>Username</dt><dd>{{ profile.user.username }}</dd>
-    <dt>Household</dt><dd>{{ profile.household }}</dd>
+    <dt>Household</dt><dd><a href="{% url household_detail profile.household.id %}">{{ profile.household }}</a></dd>
     <dt>Display name</dt><dd>{{ profile.display_name }}</dd>
     </dl>
 

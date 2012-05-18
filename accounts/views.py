@@ -22,3 +22,22 @@ class ProfileDetailView(DetailView):
         # Return the object
         return object
 
+
+class HouseholdDetailView(DetailView):
+
+    # select_related just adds the household's admin user here:
+    queryset = Household.objects.select_related().all()
+
+    def get_context_data(self, **kwargs):
+
+        # Call the base implementation first to get a context
+        context = super(HouseholdDetailView, self).get_context_data(**kwargs)
+
+        # Add in household members
+        members = User.objects.filter(profile__household__id=self.kwargs['pk'])
+
+        context.update({
+            'members': members,
+        })
+        return context
+
