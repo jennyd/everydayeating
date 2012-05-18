@@ -49,3 +49,23 @@ class RegistrationTestCase(TestCase):
         self.assertTrue(Household.objects.get(name="jenny's household"))
         self.assertTrue(Profile.objects.get(user__username="jenny"))
 
+
+class AccountsViewsTestCase(TestCase):
+    def test_household_detail(self):
+        # Create a user (household and profile created by signal receiver):
+        user = User.objects.create_user("jenny", "a@b.com", "password")
+
+        with self.assertNumQueries(4):
+            response = self.client.get(reverse("household_detail",
+                                           kwargs={'pk': user.profile.household.id}),)
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(len(response.templates), 2)
+        self.assertTemplateUsed(response, "accounts/household_detail.html")
+        self.assertTemplateUsed(response, "food/base.html")
+        self.assertTrue("household" in response.context)
+        # admin should be here already via select_related():
+        with self.assertNumQueries(0):
+            print "admin:", response.context['household'].admin
+        self.assertTrue("members" in response.context)
+
+
