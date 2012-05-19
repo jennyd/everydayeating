@@ -106,6 +106,7 @@ class Dish(Comestible):
 
     comestible = property(get_comestible)
 
+    # FIXME This needs to check amounts of the dish as well
     def get_remaining_quantity(self):
         used_quantity = sum(p.quantity for p in self.portion_set.all())
         return self.quantity - used_quantity
