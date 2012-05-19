@@ -28,6 +28,21 @@ class IngredientDetailView(DetailView):
 
     model=Ingredient
 
+    def get_context_data(self, **kwargs):
+
+        # Call the base implementation first to get a context
+        context = super(IngredientDetailView, self).get_context_data(**kwargs)
+
+        # Add in amounts and portions of the ingredient
+        amounts = Amount.objects.select_related("containing_dish", "contained_comestible").filter(contained_comestible__id=self.kwargs["pk"])
+        portions = Portion.objects.select_related("comestible", "meal").filter(comestible__id=self.kwargs["pk"])
+
+        context.update({
+            "amounts": amounts,
+            "portions": portions,
+        })
+        return context
+
 
 
 @login_required

@@ -228,8 +228,9 @@ class FoodViewsTestCase(TestCase):
                                                quantity = 100,
                                                unit = 'g',
                                                calories = 75)
-        response = self.client.get(reverse('ingredient_detail',
-                                           kwargs={'pk': ingredient.id}))
+        with self.assertNumQueries(3):
+            response = self.client.get(reverse('ingredient_detail',
+                                               kwargs={'pk': ingredient.id}))
         self.assertEqual(response.status_code, 200)
         self.assertEqual(len(response.templates), 2)
         self.assertTemplateUsed(response, 'food/ingredient_detail.html')

@@ -21,7 +21,7 @@
     <h3>Dishes containing this ingredient</h3>
 
     <p>
-    {% for amount in ingredient.comestible.containing_dishes_set.all %}
+    {% for amount in amounts %}
         <a href="{% url dish_detail amount.containing_dish.id %}">{{ amount.containing_dish }}</a> ({{ amount.quantity }} {{ amount.contained_comestible.unit }})<br />
     {% empty %}
         This ingredient isn't in any dishes.
@@ -31,7 +31,7 @@
     <h3>Meals containing this ingredient</h3>
 
     <p>
-    {% for portion in ingredient.comestible.portion_set.all %}
+    {% for portion in portions %}
         <a href="{% url meal_detail portion.meal.id %}">{{ portion.meal|capfirst }}</a> ({{ portion.quantity }} {{ portion.comestible.unit }})<br />
     {% empty %}
         This ingredient isn't in any meals.
