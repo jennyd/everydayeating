@@ -39,7 +39,7 @@
     <th>Quantity</th>
     <th>Calories</th>
     </tr>
-    {% for amount in dish.amount_set.all %}
+    {% for amount in comestibles_in_dish %}
         <tr class="{% cycle 'odd' 'even' %}">
         <td class="comestible">
         <div>
@@ -74,7 +74,7 @@
     <h2>Portions of this dish</h2>
 
     <table>
-    {% for portion in dish.comestible.portion_set.all %}
+    {% for portion in portions_of_dish %}
         <tr class="{% cycle 'odd' 'even' %}">
         <td><a href="{% url meal_detail portion.meal.id %}">{{ portion.meal|capfirst }}</a>:</td>
         <td>{{ portion.quantity }}{{ portion.comestible.unit }}</td>
@@ -90,7 +90,7 @@
         </tr>
     </table>
 
-    {% if dish.comestible.containing_dishes_set.all %}
+    {% if amounts_of_dish %}
         <h2>Dishes containing this dish</h2>
 
         <table>
@@ -99,7 +99,7 @@
         <th>Quantity</th>
         <th>Calories</th>
         </tr>
-        {% for amount in dish.comestible.containing_dishes_set.all %}
+        {% for amount in amounts_of_dish %}
             <tr class="{% cycle 'odd' 'even' %}">
             <td><a href="{% url dish_detail amount.containing_dish.id %}">{{ amount.containing_dish }}</a></td>
             <td>{{ amount.quantity }} {{ amount.contained_comestible.unit }}</td>

@@ -126,6 +126,34 @@ def dish_amounts_form(request, dish_id=None):
         context_instance=RequestContext(request) # needed for csrf token
     )
 
+
+class DishDetailView(DetailView):
+
+    # prefetch_related could also get cooks - needs django 1.4, though
+    queryset=Dish.objects.select_related("household").all()
+
+    def get_context_data(self, **kwargs):
+
+        # Call the base implementation first to get a context
+        context = super(DishDetailView, self).get_context_data(**kwargs)
+
+        # Add in amounts and portions of the dish
+        comestibles_in_dish = Amount.objects.select_related("contained_comestible__ingredient", "contained_comestible__dish").filter(containing_dish__id=self.kwargs["pk"])
+        portions_of_dish = Portion.objects.select_related("comestible", "meal").filter(comestible__id=self.kwargs["pk"])
+        amounts_of_dish = Amount.objects.select_related("containing_dish", "contained_comestible").filter(contained_comestible__id=self.kwargs["pk"])
+
+        # dish.get_remaining_quantity in the template makes another query on
+        # Portion which duplicates part of portions_of_dish here - not sure that
+        # this can be avoided...
+
+        context.update({
+            "comestibles_in_dish": comestibles_in_dish,
+            "portions_of_dish": portions_of_dish,
+            "amounts_of_dish": amounts_of_dish,
+        })
+        return context
+
+
 class BaseMealInlineFormSet(BaseInlineFormSet):
     def clean(self):
         '''

@@ -677,13 +677,17 @@ class FoodViewsTestCase(TestCase):
         dish.amount_set.create(contained_comestible = ingredient_two,
                                quantity = 150)
 
-        response = self.client.get(reverse('dish_detail',
+        with self.assertNumQueries(6):
+            response = self.client.get(reverse('dish_detail',
                                            kwargs={'pk': dish.id}))
         self.assertEqual(response.status_code, 200)
         self.assertEqual(len(response.templates), 2)
         self.assertTemplateUsed(response, 'food/dish_detail.html')
         self.assertTemplateUsed(response, 'food/base.html')
         self.assertTrue('dish' in response.context)
+        self.assertTrue('comestibles_in_dish' in response.context)
+        self.assertTrue('portions_of_dish' in response.context)
+        self.assertTrue('amounts_of_dish' in response.context)
 
         # Try to display a dish which doesn't exist
         self.assertRaises(ObjectDoesNotExist, Dish.objects.get, pk=fake_pk)
