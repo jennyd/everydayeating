@@ -54,6 +54,10 @@ class IngredientUpdateView(UpdateView):
     model=Ingredient
     success_url="/food/ingredients/"
 
+    @method_decorator(login_required)
+    def dispatch(self, *args, **kwargs):
+        return super(IngredientUpdateView, self).dispatch(*args, **kwargs)
+
 
 @login_required
 def ingredient_manage(request):
