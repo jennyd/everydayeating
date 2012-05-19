@@ -352,10 +352,33 @@ class FoodViewsTestCase(TestCase):
         self.assertTemplateUsed(response, '404.html')
 
     def test_ingredient_delete(self):
+        # Create an ingredient
         ingredient = Ingredient.objects.create(name = 'Test ingredient',
                                                quantity = 100,
                                                unit = 'g',
                                                calories = 75)
+        # @login_required so can't delete an ingredient yet
+        response = self.client.get(reverse('ingredient_delete',
+                                           kwargs={'pk': ingredient.id}),
+                                           follow=True)
+        self.assertFalse(response.context['user'].is_authenticated())
+        # Redirects to login page
+        self.assertRedirects(response,
+                             u'food/login/?next=/food/ingredients/1/delete/',
+                             status_code=302,
+                             target_status_code=200,
+                             )
+        self.assertEqual(len(response.templates), 2)
+        self.assertTemplateUsed(response, 'food/login.html')
+        self.assertTemplateUsed(response, 'food/base.html')
+        self.assertEqual(response.context['next'], u'/food/ingredients/1/delete/')
+
+        # Create a user
+        test_user = User.objects.create_user('testuser', # username
+                                             'test@example.com', # email
+                                             'testpassword') # password
+        self.client.login(username=test_user.username, password='testpassword')
+
         response = self.client.get(reverse('ingredient_delete',
                                            kwargs={'pk': ingredient.id}))
         self.assertEqual(response.status_code, 200)
@@ -363,6 +386,7 @@ class FoodViewsTestCase(TestCase):
         self.assertTemplateUsed(response, 'food/ingredient_confirm_delete.html')
         self.assertTemplateUsed(response, 'food/base.html')
         self.assertTrue('ingredient' in response.context)
+        self.assertTrue(response.context['user'].is_authenticated())
 
         # Delete an ingredient
         response = self.client.post(reverse('ingredient_delete',

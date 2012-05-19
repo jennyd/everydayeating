@@ -7,7 +7,7 @@ from django.core.exceptions import ValidationError
 from django.shortcuts import HttpResponse, HttpResponseRedirect, render_to_response, get_object_or_404, redirect
 from django.template import RequestContext
 from django.http import Http404
-from django.views.generic import ListView, CreateView, DetailView, UpdateView, MonthArchiveView, WeekArchiveView, DayArchiveView
+from django.views.generic import ListView, CreateView, DetailView, UpdateView, DeleteView, MonthArchiveView, WeekArchiveView, DayArchiveView
 from django.forms.models import modelformset_factory, BaseInlineFormSet, inlineformset_factory
 from django.utils.decorators import method_decorator
 
@@ -57,6 +57,16 @@ class IngredientUpdateView(UpdateView):
     @method_decorator(login_required)
     def dispatch(self, *args, **kwargs):
         return super(IngredientUpdateView, self).dispatch(*args, **kwargs)
+
+
+class IngredientDeleteView(DeleteView):
+
+    model=Ingredient
+    success_url="/food/ingredients/"
+
+    @method_decorator(login_required)
+    def dispatch(self, *args, **kwargs):
+        return super(IngredientDeleteView, self).dispatch(*args, **kwargs)
 
 
 @login_required
