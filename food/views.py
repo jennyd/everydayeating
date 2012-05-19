@@ -84,6 +84,12 @@ def ingredient_manage(request):
         context_instance=RequestContext(request) # needed for csrf token
     )
 
+
+class DishListView(ListView):
+
+    model = Dish
+
+
 @login_required
 def dish_amounts_form(request, dish_id=None):
     DishFormSet = inlineformset_factory(Dish, Amount,
