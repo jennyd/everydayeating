@@ -179,6 +179,26 @@ class FoodViewsTestCase(TestCase):
         self.assertTrue('ingredient_list' in response.context)
 
     def test_ingredient_add(self):
+        # @login_required so can't add an ingredient yet
+        response = self.client.get(reverse('ingredient_add'), follow=True)
+        self.assertFalse(response.context['user'].is_authenticated())
+        # Redirects to login page
+        self.assertRedirects(response,
+                             u'food/login/?next=/food/ingredients/add/',
+                             status_code=302,
+                             target_status_code=200,
+                             )
+        self.assertEqual(len(response.templates), 2)
+        self.assertTemplateUsed(response, 'food/login.html')
+        self.assertTemplateUsed(response, 'food/base.html')
+        self.assertEqual(response.context['next'], u'/food/ingredients/add/')
+
+        # Create a user
+        test_user = User.objects.create_user('testuser', # username
+                                             'test@example.com', # email
+                                             'testpassword') # password
+        self.client.login(username=test_user.username, password='testpassword')
+
         response = self.client.get(reverse('ingredient_add'))
         self.assertEqual(response.status_code, 200)
         self.assertEqual(len(response.templates), 2)
@@ -187,6 +207,7 @@ class FoodViewsTestCase(TestCase):
         self.assertTrue('form' in response.context)
         # Is this necessary? The form is created by the generic view anyway...
         self.assertIsInstance(response.context['form'], ModelForm)
+        self.assertTrue(response.context['user'].is_authenticated())
 
         # Add a good ingredient
         response = self.client.post(reverse('ingredient_add'),

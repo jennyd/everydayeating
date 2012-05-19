@@ -9,6 +9,7 @@ from django.template import RequestContext
 from django.http import Http404
 from django.views.generic import ListView, CreateView, DetailView, UpdateView, MonthArchiveView, WeekArchiveView, DayArchiveView
 from django.forms.models import modelformset_factory, BaseInlineFormSet, inlineformset_factory
+from django.utils.decorators import method_decorator
 
 from food.models import validate_positive, Ingredient, Dish, DishForm, Amount, Meal, MealForm, Portion
 
@@ -22,6 +23,10 @@ class IngredientCreateView(CreateView):
 
     model=Ingredient
     success_url="/food/ingredients/"
+
+    @method_decorator(login_required)
+    def dispatch(self, *args, **kwargs):
+        return super(IngredientCreateView, self).dispatch(*args, **kwargs)
 
 
 class IngredientDetailView(DetailView):
