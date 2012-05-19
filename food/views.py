@@ -7,7 +7,7 @@ from django.core.exceptions import ValidationError
 from django.shortcuts import HttpResponse, HttpResponseRedirect, render_to_response, get_object_or_404, redirect
 from django.template import RequestContext
 from django.http import Http404
-from django.views.generic import ListView, CreateView, DetailView, MonthArchiveView, WeekArchiveView, DayArchiveView
+from django.views.generic import ListView, CreateView, DetailView, UpdateView, MonthArchiveView, WeekArchiveView, DayArchiveView
 from django.forms.models import modelformset_factory, BaseInlineFormSet, inlineformset_factory
 
 from food.models import validate_positive, Ingredient, Dish, DishForm, Amount, Meal, MealForm, Portion
@@ -43,6 +43,11 @@ class IngredientDetailView(DetailView):
         })
         return context
 
+
+class IngredientUpdateView(UpdateView):
+
+    model=Ingredient
+    success_url="/food/ingredients/"
 
 
 @login_required
