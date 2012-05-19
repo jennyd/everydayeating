@@ -698,8 +698,9 @@ class FoodViewsTestCase(TestCase):
 
     def test_dish_delete(self):
         # Create a user, household, ingredients, dish & amounts
-        test_user = User.objects.create(username = 'testuser',
-                                        password = 'testpassword')
+        test_user = User.objects.create_user('testuser',
+                                             'test@example.com',
+                                             'testpassword')
         test_household = Household.objects.create(name = 'Test household',
                                                   admin = test_user)
         ingredient_one = Ingredient.objects.create(name = 'Test ingredient 1',
@@ -722,6 +723,24 @@ class FoodViewsTestCase(TestCase):
         dish.amount_set.create(contained_comestible = ingredient_two,
                                quantity = 150)
 
+        # @login_required so can't delete an ingredient yet
+        response = self.client.get(reverse('dish_delete',
+                                           kwargs={'pk': dish.id}),
+                                           follow=True)
+        self.assertFalse(response.context['user'].is_authenticated())
+        # Redirects to login page
+        self.assertRedirects(response,
+                             u'food/login/?next=/food/dishes/3/delete/',
+                             status_code=302,
+                             target_status_code=200,
+                             )
+        self.assertEqual(len(response.templates), 2)
+        self.assertTemplateUsed(response, 'food/login.html')
+        self.assertTemplateUsed(response, 'food/base.html')
+        self.assertEqual(response.context['next'], u'/food/dishes/3/delete/')
+
+        login = self.client.login(username=test_user.username, password='testpassword')
+
         response = self.client.get(reverse('dish_delete',
                                            kwargs={'pk': dish.id}))
         self.assertEqual(response.status_code, 200)
@@ -729,6 +748,7 @@ class FoodViewsTestCase(TestCase):
         self.assertTemplateUsed(response, 'food/dish_confirm_delete.html')
         self.assertTemplateUsed(response, 'food/base.html')
         self.assertTrue('dish' in response.context)
+        self.assertTrue(response.context['user'].is_authenticated())
 
         # Delete a dish (and its amounts via cascade)
         response = self.client.post(reverse('dish_delete',

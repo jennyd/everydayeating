@@ -154,6 +154,16 @@ class DishDetailView(DetailView):
         return context
 
 
+class DishDeleteView(DeleteView):
+
+    model=Dish
+    success_url="/food/dishes/"
+
+    @method_decorator(login_required)
+    def dispatch(self, *args, **kwargs):
+        return super(DishDeleteView, self).dispatch(*args, **kwargs)
+
+
 class BaseMealInlineFormSet(BaseInlineFormSet):
     def clean(self):
         '''

@@ -2,7 +2,7 @@ from django.conf.urls.defaults import *
 from django.contrib.auth.views import login, logout
 from django.views.generic import TemplateView, ListView, CreateView, DetailView, UpdateView, DeleteView, ArchiveIndexView, YearArchiveView
 
-from food.views import IngredientListView, IngredientCreateView, IngredientDetailView, IngredientUpdateView, IngredientDeleteView, ingredient_manage, DishListView, DishDetailView, dish_amounts_form, meal_portions_form, dish_multiply, dish_duplicate, meal_duplicate, MealMonthArchiveView, MealWeekArchiveView, MealDayArchiveView
+from food.views import IngredientListView, IngredientCreateView, IngredientDetailView, IngredientUpdateView, IngredientDeleteView, ingredient_manage, DishListView, DishDetailView, dish_amounts_form, DishDeleteView, meal_portions_form, dish_multiply, dish_duplicate, meal_duplicate, MealMonthArchiveView, MealWeekArchiveView, MealDayArchiveView
 from food.models import Ingredient, Dish, Amount, Meal, Portion
 
 # Uncomment the next two lines to enable the admin:
@@ -24,6 +24,7 @@ urlpatterns = patterns('food.views',
     url(r'^dishes/(?P<dish_id>\d+)/edit/$', "dish_amounts_form", name="dish_edit"),
     url(r'^dishes/(?P<dish_id>\d+)/multiply/$', "dish_multiply", name="dish_multiply"),
     url(r'^dishes/(?P<dish_id>\d+)/duplicate/$', "dish_duplicate", name="dish_duplicate"),
+    url(r'^dishes/(?P<pk>\d+)/delete/$', DishDeleteView.as_view(), name="dish_delete"),
 
     url(r'^meals/add/$', "meal_portions_form", name="meal_add"),
     url(r'^meals/(?P<meal_id>\d+)/edit/$', "meal_portions_form", name="meal_edit"),
@@ -34,8 +35,6 @@ urlpatterns += patterns('',
     url(r'^$', TemplateView.as_view( template_name='food/food_index.html' ), name="food_index"),
     url(r'^login/$', 'django.contrib.auth.views.login', { 'template_name': 'food/login.html' }, name="login"),
     url(r'^logout/$', 'django.contrib.auth.views.logout', { 'next_page': '/food/' }, name="logout"),
-
-    url(r'^dishes/(?P<pk>\d+)/delete/$', DeleteView.as_view( model=Dish, success_url="/food/dishes/"), name="dish_delete"),
 
     url(r'^meals/$', ArchiveIndexView.as_view( model=Meal, date_field="date", allow_future=True ), name="meal_archive"),
     url(r'^meals/(?P<year>\d{4})/$', YearArchiveView.as_view( model=Meal, date_field="date", allow_future=True, make_object_list=True ), name="meal_archive_year"),
