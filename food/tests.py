@@ -36,14 +36,18 @@ class ValidatorsTestCase(TestCase):
 class FoodModelsTestCase(TestCase):
     def test_dish_pretty_cooks(self):
         # Create users, household & dish
-        test_user_one = User.objects.create(username = 'testuser1',
-                                        password = 'testpassword')
-        test_user_two = User.objects.create(username = 'testuser2',
-                                        password = 'testpassword')
-        test_user_three = User.objects.create(username = 'testuser3',
-                                        password = 'testpassword')
-        test_user_four = User.objects.create(username = 'testuser4',
-                                        password = 'testpassword')
+        test_user_one = User.objects.create_user('testuser1',
+                                                 'test@example.com',
+                                                 'testpassword')
+        test_user_two = User.objects.create_user('testuser2',
+                                                 'test@example.com',
+                                                 'testpassword')
+        test_user_three = User.objects.create_user('testuser3',
+                                                   'test@example.com',
+                                                   'testpassword')
+        test_user_four = User.objects.create_user('testuser4',
+                                                  'test@example.com',
+                                                  'testpassword')
         test_household = Household.objects.create(name = 'Test household',
                                                   admin = test_user_one)
         dish = Dish.objects.create(name = 'Test dish',
@@ -492,8 +496,9 @@ class FoodViewsTestCase(TestCase):
         ingredient_one = Ingredient.objects.get(pk=edited_ingredient_one.id)
         # (containing_dish and containing_meal are only created because the
         # amount and portion need values for them)
-        test_user = User.objects.create(username = 'testuser',
-                                        password = 'testpassword')
+        test_user = User.objects.create_user('testuser',
+                                             'test@example.com',
+                                             'testpassword')
         test_household = Household.objects.create(name = 'Test household',
                                                   admin = test_user)
         containing_dish = Dish.objects.create(name = "Containing dish",
@@ -653,8 +658,9 @@ class FoodViewsTestCase(TestCase):
 
     def test_dish_detail(self):
         # Create a user, household, ingredients, dish & amounts
-        test_user = User.objects.create(username = 'testuser',
-                                        password = 'testpassword')
+        test_user = User.objects.create_user('testuser',
+                                             'test@example.com',
+                                             'testpassword')
         test_household = Household.objects.create(name = 'Test household',
                                                   admin = test_user)
         ingredient_one = Ingredient.objects.create(name = 'Test ingredient 1',
@@ -1424,8 +1430,9 @@ class FoodViewsTestCase(TestCase):
         self.assertTemplateUsed(response, '404.html')
 
         # Create a user, household and meal (without portions)
-        test_user = User.objects.create(username = 'testuser',
-                                        password = 'testpassword')
+        test_user = User.objects.create_user('testuser',
+                                             'test@example.com',
+                                             'testpassword')
         test_household = Household.objects.create(name = 'Test household',
                                                   admin = test_user)
         meal = Meal.objects.create(name = 'breakfast',
@@ -1452,8 +1459,9 @@ class FoodViewsTestCase(TestCase):
         self.assertTemplateUsed(response, '404.html')
 
         # Create a user, household and meal (without portions)
-        test_user = User.objects.create(username = 'testuser',
-                                        password = 'testpassword')
+        test_user = User.objects.create_user('testuser',
+                                             'test@example.com',
+                                             'testpassword')
         test_household = Household.objects.create(name = 'Test household',
                                                   admin = test_user)
         meal = Meal.objects.create(name = 'breakfast',
@@ -1484,8 +1492,9 @@ class FoodViewsTestCase(TestCase):
         self.assertTemplateUsed(response, '404.html')
 
         # Create a user, household and meals (without portions)
-        test_user = User.objects.create(username = 'testuser',
-                                        password = 'testpassword')
+        test_user = User.objects.create_user('testuser',
+                                             'test@example.com',
+                                             'testpassword')
         test_household = Household.objects.create(name = 'Test household',
                                                   admin = test_user)
         meal = Meal.objects.create(name = 'breakfast',
@@ -1550,8 +1559,9 @@ class FoodViewsTestCase(TestCase):
         self.assertTemplateUsed(response, '404.html')
 
         # Create a user, household and meals (without portions)
-        test_user = User.objects.create(username = 'testuser',
-                                        password = 'testpassword')
+        test_user = User.objects.create_user('testuser',
+                                             'test@example.com',
+                                             'testpassword')
         test_household = Household.objects.create(name = 'Test household',
                                                   admin = test_user)
         meal = Meal.objects.create(name = 'breakfast',
@@ -1634,8 +1644,9 @@ class FoodViewsTestCase(TestCase):
         self.assertTemplateUsed(response, '404.html')
 
         # Create a user, household and meals (without portions)
-        test_user = User.objects.create(username = 'testuser',
-                                        password = 'testpassword')
+        test_user = User.objects.create_user('testuser',
+                                             'test@example.com',
+                                             'testpassword')
         test_household = Household.objects.create(name = 'Test household',
                                                   admin = test_user)
         meal = Meal.objects.create(name = 'breakfast',
@@ -1698,8 +1709,9 @@ class FoodViewsTestCase(TestCase):
 
     def test_meal_detail(self):
         # Create a user, household, ingredients, dish & amounts, meal & portions
-        test_user = User.objects.create(username = 'testuser',
-                                        password = 'testpassword')
+        test_user = User.objects.create_user('testuser',
+                                             'test@example.com',
+                                             'testpassword')
         test_household = Household.objects.create(name = 'Test household',
                                                   admin = test_user)
         ingredient_one = Ingredient.objects.create(name = 'Test ingredient 1',
@@ -1747,8 +1759,9 @@ class FoodViewsTestCase(TestCase):
 
     def test_meal_delete(self):
         # Create a user, household, ingredients, dish & amounts, meals & portions
-        test_user = User.objects.create(username = 'testuser',
-                                        password = 'testpassword')
+        test_user = User.objects.create_user('testuser',
+                                             'test@example.com',
+                                             'testpassword')
         test_household = Household.objects.create(name = 'Test household',
                                                   admin = test_user)
         ingredient_one = Ingredient.objects.create(name = 'Test ingredient 1',
@@ -2510,8 +2523,9 @@ class DateViewsTestCase(TestCase):
         # No meals for this date yet, so 0 calories
         self.assertEqual(0, day_calories)
         # Create a user, household and some meals (without portions) for this date
-        test_user = User.objects.create(username = 'testuser',
-                                        password = 'testpassword')
+        test_user = User.objects.create_user('testuser',
+                                             'test@example.com',
+                                             'testpassword')
         test_household = Household.objects.create(name = 'Test household',
                                                   admin = test_user)
         Meal.objects.create(name = 'breakfast',
@@ -2543,8 +2557,9 @@ class DateViewsTestCase(TestCase):
         self.assertEqual(0, avg_calories)
         # Create a user, household and some meals (without portions) for this
         # date and other days in the same week
-        test_user = User.objects.create(username = 'testuser',
-                                        password = 'testpassword')
+        test_user = User.objects.create_user('testuser',
+                                             'test@example.com',
+                                             'testpassword')
         test_household = Household.objects.create(name = 'Test household',
                                                   admin = test_user)
         Meal.objects.create(name = 'breakfast',
